@@ -29,7 +29,6 @@ function App() {
           <Route path='/' element={<Navigator />}>
             <Route path='/' element={<Home />}>
               <Route path='monthly' element={<Monthly />}/>
-              <Route path='weekly' element={<Weekly />}/>
               <Route path='daily' element={<Daily />}/>
             </Route>
             <Route path='message' element={<Message />}/>

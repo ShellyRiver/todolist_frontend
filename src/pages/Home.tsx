@@ -6,7 +6,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 
-const groupNames: string[] = ["Individual"];
+const groupNames: string[] = ["Personal tasks", "CS 409 Final Project"];
 
 function Home() {
     return (
@@ -15,7 +15,7 @@ function Home() {
         <div>
           <Navigator />
         </div>
-        <div>
+        <div className="groupList">
           <GroupList />
         </div>
       </>
@@ -34,7 +34,16 @@ function GroupList() {
   function __updateComponent() {
     let newComponentList: any = [];
     for (let i in groupNames) {
-      newComponentList.push(GroupItem(groupNames[i]));
+      newComponentList.push(
+        <div className="groupItem" key={i+"groupItem"}>
+          <Accordion.Item eventKey={groupNames[i]}>
+            <Accordion.Header>{groupNames[i]}</Accordion.Header>
+            <Accordion.Body>
+              tasks
+            </Accordion.Body>
+          </Accordion.Item>
+        </div>
+      );
     }
     setComponentList(newComponentList);
   }
@@ -45,20 +54,6 @@ function GroupList() {
         {componentList}
       </Accordion>
       <Outlet />
-    </>
-  )
-}
-
-// each group item in the group list
-function GroupItem(groupName : string) {
-  return (
-    <>
-      <Accordion.Item eventKey={groupName}>
-        <Accordion.Header>{groupName}</Accordion.Header>
-        <Accordion.Body>
-          tasks
-        </Accordion.Body>
-      </Accordion.Item>
     </>
   )
 }
