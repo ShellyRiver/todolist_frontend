@@ -10,7 +10,6 @@ import Home from "./pages/Home";
 import Message from './pages/Message';
 import Profile from './pages/Profile';
 import Daily from './pages/home/Daily';
-import Weekly from './pages/home/Weekly';
 import Monthly from './pages/home/Monthly';
 
 /* 
