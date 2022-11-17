@@ -12,11 +12,14 @@ function Home() {
     return (
       <>
         <h1>Home</h1>
-        <div>
+        <div className="viewChoose">
           <Navigator />
         </div>
         <div className="groupList">
           <GroupList />
+        </div>
+        <div className="taskBoard">
+          <Outlet />
         </div>
       </>
     );
@@ -28,7 +31,7 @@ function GroupList() {
 
   useEffect(() => {
     __updateComponent();
-  }, [])  // TODO: add dependency 
+  }, [])  // TODO: add dependency?
 
 
   function __updateComponent() {
@@ -53,7 +56,6 @@ function GroupList() {
       <Accordion>
         {componentList}
       </Accordion>
-      <Outlet />
     </>
   )
 }
@@ -70,9 +72,6 @@ function Navigator() {
           </Nav>
         </Container>
       </Navbar>
-      
-
-      <Outlet />
     </>
   )
 }
