@@ -13,7 +13,7 @@ let dates: any = [[-19,-18,-17,-16,-15,-14,-13],
                   [  2,  3,  4,  5,  6,  7,  8],
                   [  9, 10, 11, 12, 13, 14, 15]];
 // display tasks for the month of "today"
-let today: number = Date.now();
+let today: any = Date.now();
 
 function Monthly() {
   
@@ -29,10 +29,14 @@ function Monthly() {
     for (let i in dates) {
       let listGroupRowComponent: any = [];
       for (let j in dates[i]) {
-        listGroupRowComponent.push(DateBox(dates[i][j]));
+        listGroupRowComponent.push(
+          <div key={j}>
+            {DateBox(dates[i][j])}
+          </div>
+        );
       }
       newComponentList.push(
-        <ListGroup horizontal className='listGroupRow'>
+        <ListGroup horizontal className='listGroupRow' key={dates[i]}>
           {listGroupRowComponent}
         </ListGroup>
       );
@@ -84,6 +88,7 @@ function DateBox(difference: number) {
   return (
     <>
       <ListGroup.Item className='dateBox'>
+        {/* <p>{today}</p>   // TODO: display today's date  */}
         {taskComponent}
       </ListGroup.Item>
     </>
