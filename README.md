@@ -1,5 +1,6 @@
 # CS 409 final project: GroupTODO
 The leader can assign tasks to group members.
+The group members can view and manipulate their individual tasks and assigned tasks.
 
 # React Bootstrap
 https://react-bootstrap.github.io/components/alerts/
