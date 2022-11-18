@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
 
+
 function Navigator() {
   return (
     <>
@@ -16,12 +17,11 @@ function Navigator() {
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="message">Message</Nav.Link>
               <Nav.Link href="profile">Profile</Nav.Link>
+              <Nav.Link href="auth">SignIn</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      
-
       <Outlet />
     </>
   )

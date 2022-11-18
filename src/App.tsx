@@ -11,6 +11,7 @@ import Message from './pages/Message';
 import Profile from './pages/Profile';
 import Daily from './pages/home/Daily';
 import Monthly from './pages/home/Monthly';
+import Auth from './pages/Auth';
 
 /* 
 3 main pages:
@@ -33,6 +34,7 @@ function App() {
             </Route>
             <Route path='message' element={<Message />}/>
             <Route path='profile' element={<Profile />}/>
+            <Route path='auth' element={<Auth />}/>
           </Route>
         </Routes>
       </BrowserRouter>
