@@ -3,6 +3,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 
+import './Monthly.css'
+
 // date list: should change based today's date and week
 // represent by date difference
 // should be updated everyday
@@ -30,7 +32,7 @@ function Monthly() {
       let listGroupRowComponent: any = [];
       for (let j in dates[i]) {
         listGroupRowComponent.push(
-          <div key={j}>
+          <div key={j} className='dateBox'>
             {DateBox(dates[i][j])}
           </div>
         );
@@ -86,12 +88,10 @@ function DateBox(difference: number) {
   }
 
   return (
-    <>
-      <ListGroup.Item className='dateBox'>
-        {/* <p>{today}</p>   // TODO: display today's date  */}
-        {taskComponent}
-      </ListGroup.Item>
-    </>
+    <ListGroup.Item>
+      {/* <p>{today}</p>   // TODO: display today's date  */}
+      {taskComponent}
+    </ListGroup.Item>
   );
 }
 

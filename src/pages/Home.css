@@ -1,0 +1,21 @@
+.home {
+
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+}
+
+.groupList {
+    width: 25%;
+}
+
+.navContainer {
+    padding-left: 70%;
+    width: 10%;
+}
+
+.taskBoard {
+    width: 100%;
+}

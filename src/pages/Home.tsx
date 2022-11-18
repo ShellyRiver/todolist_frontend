@@ -1,10 +1,20 @@
 import { Outlet, Link } from "react-router-dom";
+
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Accordion from 'react-bootstrap/Accordion';
+import ListGroup from 'react-bootstrap/ListGroup';
+
 import React, { useEffect } from 'react';
 import { useState } from 'react';
+import './Home.css'
+import { Alert } from "react-bootstrap";
+
+// 3 roles in a group
+const GROUPMEMBER: number = 1;
+const GROUPLEADER: number = 2;
+const GROUPCOLLABORATOR: number = 3;
 
 const groupNames: string[] = ["Personal tasks", "CS 409 Final Project"];
 
@@ -12,15 +22,21 @@ function Home() {
     return (
       <>
         <h1>Home</h1>
-        <div className="viewChoose">
-          <Navigator />
+        <div className="home">
+          <div className="viewChoose">
+            <Navigator />
+          </div>
+          <div className="content">
+            <div className="groupList">
+              <GroupList />
+            </div>
+            <div className="taskBoard">
+              <Outlet />
+            </div>
+          </div>
+          
         </div>
-        <div className="groupList">
-          <GroupList />
-        </div>
-        <div className="taskBoard">
-          <Outlet />
-        </div>
+        
       </>
     );
   };
@@ -42,7 +58,7 @@ function GroupList() {
           <Accordion.Item eventKey={groupNames[i]}>
             <Accordion.Header>{groupNames[i]}</Accordion.Header>
             <Accordion.Body>
-              tasks
+              {Buttons(1)}
             </Accordion.Body>
           </Accordion.Item>
         </div>
@@ -60,12 +76,63 @@ function GroupList() {
   )
 }
 
+// the control buttons of the group list
+// different methods based on role: 1) group member; 2) group leader; 3) collaborator
+function Buttons(role: number) {
+  if (role === GROUPMEMBER) {
+    return (
+      <ListGroup>
+        <ListGroup.Item action>
+          button
+        </ListGroup.Item>
+        <ListGroup.Item action>
+          button
+        </ListGroup.Item>
+        <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          This one is a button
+        </ListGroup.Item>
+      </ListGroup>
+    );
+  }
+  else if (role === GROUPLEADER) {
+    return (
+      <ListGroup>
+        <ListGroup.Item action>
+          button
+        </ListGroup.Item>
+        <ListGroup.Item action>
+          button
+        </ListGroup.Item>
+        <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          This one is a button
+        </ListGroup.Item>
+      </ListGroup>
+    );
+  }
+  else {  // collaborator
+    return (
+      <ListGroup>
+        <ListGroup.Item action>
+          button
+        </ListGroup.Item>
+        <ListGroup.Item action>
+          button
+        </ListGroup.Item>
+        <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          This one is a button
+        </ListGroup.Item>
+      </ListGroup>
+    );
+  }
+}
+
+
 // navigate to monthly view or daily view
 function Navigator() {
   return (
     <>
       <Navbar bg="light" variant="light">
-        <Container>
+        <Container className="navContainer">
           <Nav className="me-auto">
             <Nav.Link href="/monthly">Monthly</Nav.Link>
             <Nav.Link href="/daily">Daily</Nav.Link>
