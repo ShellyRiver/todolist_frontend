@@ -33,7 +33,7 @@ const groupNames: string[] = ["Personal tasks", "CS 409 Final Project"];
 function Home() {
     const email = localStorage.getItem("email");
     if (email == null || email == ""){
-        return <Navigate replace to="/auth" />
+        return <Navigate replace to="/login" />
     }
     else{
         return (

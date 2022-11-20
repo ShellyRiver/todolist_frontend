@@ -17,7 +17,7 @@ function Navigator() {
     const response = await signOutUser();
     if (response === true) {
       localStorage.setItem('email', "");
-      navigate('/auth')
+      navigate('/login')
     }
   }
   return (

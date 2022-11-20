@@ -37,7 +37,7 @@ function App() {
               </Route>
               <Route path='message' element={<Message />}/>
               <Route path='profile' element={<Profile />}/>
-              <Route path='auth' element={<Auth />}/>
+              <Route path='login' element={<Auth />}/>
             </Route>
           </Routes>
         </BrowserRouter>
