@@ -6,10 +6,16 @@ import './Auth.css';
 import logo from '../imgs/group-todo-logo.png';
 import {useAuthContext} from "../context/authContext";
 import {useNavigate} from "react-router-dom";
+import Alert from 'react-bootstrap/Alert';
+
 
 export default function Auth() {
     const [showUserName, setShowUserName] = useState(false);
-    const [email, setEmail] = useState(localStorage.getItem("email") || "");
+    const [showErrorMsg, setShowErrorMsg] = useState(false);
+    const [showSuccessMsg, setShowSuccessMsg] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+
+
     const navigate = useNavigate();
     async function clickSignInTest() {
         if (showUserName === true) {
@@ -22,16 +28,21 @@ export default function Auth() {
         else {
             const response = await signIn();
             console.log(response);
-            if (response) {
+            if (response.status === "success") {
                 // @ts-ignore
-                localStorage.setItem('email', response);
-                console.log(`Logged in email is: ${response}`);
+                localStorage.setItem('email', response.message);
+                console.log(`Logged in email is: ${response.message}`);
                 navigate('/');
+                setShowErrorMsg(false);
+            }
+            else {
+                setShowErrorMsg(true);
+                setErrorMsg(response.message)
             }
         }
     }
 
-    const clickSignUpTest = () => {
+    async function clickSignUpTest() {
         if (showUserName === false) {
             setShowUserName(current => !current);
             // @ts-ignore
@@ -40,25 +51,48 @@ export default function Auth() {
             document.getElementById("password").value = "";
         }
         else {
-            signUp();
+            const response = await signUp();
+            if (response.status === "success") {
+                // @ts-ignore
+                setErrorMsg(false);
+                setShowSuccessMsg(true);
+                setShowUserName(false);
+            }
+            else {
+                setShowErrorMsg(true);
+                setErrorMsg(response.message)
+            }
         }
     }
     return (
       <>
+          {showErrorMsg && <Alert variant="danger" onClose={() => setShowErrorMsg(false)} dismissible>
+              <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+              <p>
+                  {errorMsg}
+              </p>
+          </Alert>}
+          {showSuccessMsg && <Alert variant="success" onClose={() => setShowSuccessMsg(false)} dismissible>
+              <Alert.Heading>Signed Up Successfully!</Alert.Heading>
+              <p>
+                  Now you can log in and start Group ToDo!
+              </p>
+          </Alert>}
           <div className="logo">
               <img src={logo}/>
               <div>Sign in to Group ToDo</div>
           </div>
+
           <Form className="login-form">
-              <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Group className="mb-3">
                   <Form.Label>Email address</Form.Label>
                   <Form.Control type="email" placeholder="Enter email" id="email" />
               </Form.Group>
-              {showUserName && <Form.Group className="mb-3" controlId="formBasicEmail" id="userName">
+              {showUserName && <Form.Group className="mb-3" id="userName">
                   <Form.Label>User Name</Form.Label>
                   <Form.Control placeholder="Enter user name" id="name"/>
               </Form.Group>}
-              <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Group className="mb-3">
                   <Form.Label>Password</Form.Label>
                   <Form.Control type="password" placeholder="Password" id="password"/>
               </Form.Group>

@@ -23,35 +23,46 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-export function signUp() {
+export async function signUp() {
     var name = document.getElementById('name');
     var email = document.getElementById('email');
     var password = document.getElementById('password');
     if (name.value === "") {
-        alert("User name cannot be empty!");
-        return false;
+        return {
+            status: "error",
+            message: "User name cannot be empty!"
+        }
     }
     else {
-        createUserWithEmailAndPassword(auth, email.value, password.value).then(r => {
-            axios({
+        try {
+            await createUserWithEmailAndPassword(auth, email.value, password.value);
+        }
+        catch (e) {
+            return {
+                status: "error",
+                message: e.message
+            }
+        }
+        try {
+            const response = await axios({
                 method: "post",
                 url: `${homeurl}/users`,
                 data: {
                     'name': name.value,
                     'email': email.value
                 }
-            }).then((response) => {
-                console.log(response);
-                alert("Signed Up Successfully!");
-                return true;
-            }).catch((error) => {
-                alert(error.message);
-                return false;
             });
-        }).catch(e => {
-            alert(e.message);
-            return false;
-        })
+            return {
+                status: "success",
+                message: null
+            };
+        }
+        catch (e) {
+            return {
+                status: "error",
+                message: e.message
+            }
+        }
     }
 }
 
@@ -62,20 +73,19 @@ export async function signIn() {
         const r = await signInWithEmailAndPassword(auth, email.value, password.value);
         console.log("Logged In Successfully!");
         console.log(r.user.email);
-        return r.user.email;
+        return {
+            status: "success",
+            message: r.user.email
+        }
     }
     catch (e) {
         console.log(e.message);
-        return null;
+        console.log(e.code);
+        return {
+            status: "error",
+            message: e.message
+        }
     }
-    // signInWithEmailAndPassword(auth, email.value, password.value).then(r => {
-    //     console.log("Logged In Successfully!");
-    //     console.log(r.user.email);
-    //     return true;
-    // }).catch(e => {
-    //     console.log(e.message);
-    //     return false;
-    // })
 }
 
 export async function signOutUser() {
@@ -88,9 +98,4 @@ export async function signOutUser() {
         console.log(e.message);
         return false;
     }
-    // signOut(auth).then(() => {
-    //     alert("Logged Out Successfully!");
-    // }).catch((error) => {
-    //     alert(error.message)
-    // });
 }
