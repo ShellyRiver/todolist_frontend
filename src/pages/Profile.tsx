@@ -1,5 +1,11 @@
-const Profile = () => {
-    return <h1>Profile</h1>;
-  };
+let email = "123@123"
+function Profile() {
+  return (
+    <>
+      <h1>User Profile</h1>
+      <span>Email: </span><span>{email}</span>
+    </>
+  );
+};
   
-  export default Profile;
+export default Profile;

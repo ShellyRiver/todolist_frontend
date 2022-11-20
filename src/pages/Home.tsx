@@ -392,9 +392,6 @@ function GroupList() {
   )
 }
 
-// the control buttons of the group list
-// different methods based on role: 1) group member; 2) group leader; 3) collaborator
-
 
 // navigate to monthly view or daily view
 function Navigator() {
