@@ -56,21 +56,22 @@ function GroupList() {
   const [componentList, setComponentList] = useState([]);
 
   const [showAddTask, setShowAddTask] = useState(false);
-
   const handleCloseAddTask = () => setShowAddTask(false);
-  const handleShowAddTask = () => {
-    setShowAddTask(true);
-    console.log(showAddTask);
-  }
-  let change = 0;
-  function toggleAddTask() {
-    setShowAddTask(true);
-  }
 
-  useEffect(() => {
-    console.log(change)
-    toggleAddTask();
-  }, [change])
+  const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const handleCloseGroupInfo = () => setShowGroupInfo(false);
+
+  const [showInviteGroupMember, setShowInviteGroupMember] = useState(false);
+  const handleCloseInviteGroupMember = () => setShowInviteGroupMember(false);
+
+  const [showInviteGroupCollaborator, setShowInviteGroupCollaborator] = useState(false);
+  const handleCloseInviteGroupCollaborator = () => setShowInviteGroupCollaborator(false);
+
+  const [showLeaveGroup, setShowLeaveGroup] = useState(false);
+  const handleCloseLeaveGroup = () => setShowLeaveGroup(false);
+
+  const [showDeleteGroup, setShowDeleteGroup] = useState(false);
+  const handleCloseDeleteGroup = () => setShowDeleteGroup(false);
 
   useEffect(() => {
     __updateComponent();
@@ -85,7 +86,7 @@ function GroupList() {
           <Accordion.Item eventKey={groupNames[i]}>
             <Accordion.Header>{groupNames[i]}</Accordion.Header>
             <Accordion.Body>
-              {Buttons(0)}
+              {Buttons(2)}
             </Accordion.Body>
           </Accordion.Item>
         </div>
@@ -104,7 +105,7 @@ function GroupList() {
               Add a task
             </ListGroup.Item>
             
-            <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+            <ListGroup.Item action onClick={() => setShowGroupInfo(true)}>
               Group information
             </ListGroup.Item>
           </ListGroup>
@@ -118,7 +119,7 @@ function GroupList() {
           <ListGroup.Item action>
             Leave group
           </ListGroup.Item>
-          <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          <ListGroup.Item action onClick={() => setShowGroupInfo(true)}>
             Group information
           </ListGroup.Item>
         </ListGroup>
@@ -127,25 +128,25 @@ function GroupList() {
     else if (role === GROUPLEADER) {
       return (
         <ListGroup>
-          <ListGroup.Item action onClick={()=>console.log()}>
+          <ListGroup.Item action onClick={() => setShowAddTask(true)}>
             Add a task
           </ListGroup.Item>
-          <ListGroup.Item action>
+          <ListGroup.Item action onClick={() => setShowInviteGroupMember(true)}>
             Invite group member
           </ListGroup.Item>
-          <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          <ListGroup.Item action onClick={() => setShowInviteGroupCollaborator(true)}>
             Invite collaborator
           </ListGroup.Item>
           <ListGroup.Item action onClick={()=>console.log('button clicked')}>
             Delete group member
           </ListGroup.Item>
-          <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          <ListGroup.Item action onClick={() => setShowLeaveGroup(true)}>
             Leave group
           </ListGroup.Item>
-          <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          <ListGroup.Item action onClick={() => setShowDeleteGroup(true)}>
             Delete group
           </ListGroup.Item>
-          <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          <ListGroup.Item action onClick={() => setShowGroupInfo(true)}>
             Group information
           </ListGroup.Item>
         </ListGroup>
@@ -154,19 +155,22 @@ function GroupList() {
     else {  // collaborator
       return (
         <ListGroup>
-          <ListGroup.Item action>
+          <ListGroup.Item action onClick={() => setShowAddTask(true)}>
             Add a task
           </ListGroup.Item>
-          <ListGroup.Item action>
+          <ListGroup.Item action onClick={() => setShowLeaveGroup(true)}>
             Leave group
           </ListGroup.Item>
-          <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+          <ListGroup.Item action onClick={() => setShowGroupInfo(true)}>
             Group information
           </ListGroup.Item>
         </ListGroup>
       );
     }
   }
+
+  // TODO: load group tasks, load group members
+  // TODO: leave a group, delete a group
 
   return (
     <>
@@ -176,25 +180,44 @@ function GroupList() {
       <div className="modal">
         <Modal show={showAddTask} onHide={handleCloseAddTask}>
           <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
+            <Modal.Title>Add a task</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
+
               <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                <Form.Label>Email address</Form.Label>
+                <Form.Label>Task name</Form.Label>
                 <Form.Control
-                  type="email"
-                  placeholder="name@example.com"
+                  type="input"
+                  placeholder="Play with cats"
                   autoFocus
                 />
               </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Assigned Members</Form.Label>  
+                <Form.Select aria-label="Default select example">
+                  <option>Open this select menu</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Task deadline</Form.Label>
+                <Form.Control type="date" />
+              </Form.Group>
+              
+
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlTextarea1"
               >
-                <Form.Label>Example textarea</Form.Label>
+                <Form.Label>Task description</Form.Label>
                 <Form.Control as="textarea" rows={3} />
               </Form.Group>
+
             </Form>
           </Modal.Body>
           <Modal.Footer>
@@ -206,6 +229,164 @@ function GroupList() {
             </Button>
           </Modal.Footer>
         </Modal>
+
+        <Modal show={showGroupInfo} onHide={handleCloseGroupInfo}>
+          <Modal.Header closeButton>
+            <Modal.Title>Group Information</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Group Leader</Form.Label>  
+                <ListGroup>
+                  <ListGroup.Item>
+                    Shilan He
+                  </ListGroup.Item>
+                </ListGroup>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Group Collaborator(s)</Form.Label>  
+                <ListGroup>
+                  <ListGroup.Item>
+                    Zilinghan Li
+                  </ListGroup.Item>
+                </ListGroup>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Group Members</Form.Label>
+                <ListGroup>
+                  <ListGroup.Item action>
+                    Member 1
+                  </ListGroup.Item>
+                  <ListGroup.Item action>
+                    Member 2
+                  </ListGroup.Item>
+                  <ListGroup.Item action>
+                    Member 3
+                  </ListGroup.Item>
+                </ListGroup>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Group Tasks</Form.Label>  
+                <ListGroup>
+                  <ListGroup.Item action>
+                    Task 1
+                  </ListGroup.Item>
+                  <ListGroup.Item action>
+                    Task 2
+                  </ListGroup.Item>
+                  <ListGroup.Item action>
+                    Task 3
+                  </ListGroup.Item>
+                </ListGroup>
+              </Form.Group>
+              
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <Modal show={showInviteGroupMember} onHide={handleCloseInviteGroupMember}>
+          <Modal.Header closeButton>
+            <Modal.Title>Invite Group Member</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="example@email"
+                  autoFocus
+                />
+                <Button variant="primary">
+                  Send invitation
+                </Button>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label className="mb-3">Group Members</Form.Label>
+                <ListGroup>
+                  <ListGroup.Item action>
+                    Member 1
+                  </ListGroup.Item>
+                  <ListGroup.Item action>
+                    Member 2
+                  </ListGroup.Item>
+                  <ListGroup.Item action>
+                    Member 3
+                  </ListGroup.Item>
+                </ListGroup>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <Modal show={showInviteGroupCollaborator} onHide={handleCloseInviteGroupCollaborator}>
+          <Modal.Header closeButton>
+            <Modal.Title>Invite Group Collaborator</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="example@email"
+                  autoFocus
+                />
+                <Button variant="primary">
+                  Send invitation
+                </Button>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label className="mb-3">Group Collaborators</Form.Label>
+                <ListGroup>
+                  <ListGroup.Item action>
+                    Member 1
+                  </ListGroup.Item>
+                </ListGroup>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <Modal show={showLeaveGroup} onHide={handleCloseLeaveGroup}>
+          <Modal.Header closeButton>
+            <Modal.Title>Leave Group</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Are you sure to leave this group?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseLeaveGroup}>
+              Cancel
+            </Button>
+            <Button variant="primary">
+              Confirm
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal show={showDeleteGroup} onHide={handleCloseDeleteGroup}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete Group</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Are you sure to delete this group?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseDeleteGroup}>
+              Cancel
+            </Button>
+            <Button variant="primary">
+              Confirm
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
       </div>
     </>
   )
