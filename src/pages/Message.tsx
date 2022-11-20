@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {Navigate} from "react-router-dom";
 
 import ListGroup from 'react-bootstrap/ListGroup';
 import Modal from 'react-bootstrap/Modal';
@@ -7,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 let messages = ["message1", "message2", "message3"];
 
 function Message() {
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
@@ -17,6 +19,11 @@ function Message() {
   }, [])  // TODO: add dependency?
 
   const [messageIdx, setMessageIdx] = useState(0);
+
+  const email = localStorage.getItem("email");
+  if (email == null || email == ""){
+      return <Navigate replace to="/login" />
+  }
 
   function __updateComponent() {
     let newComponentList: any = [];
@@ -35,6 +42,7 @@ function Message() {
     setComponentList(newComponentList);
   }
 
+  
   return (
     <>
       <h1>Incoming Messages</h1>

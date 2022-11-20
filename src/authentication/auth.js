@@ -7,6 +7,7 @@ import axios from "axios";
 
 // Your web app's Firebase configuration
 import {firebaseConfig} from "./secret";
+import alert from "bootstrap/js/src/alert";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -22,42 +23,79 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-export function signUp() {
+export async function signUp() {
     var name = document.getElementById('name');
     var email = document.getElementById('email');
     var password = document.getElementById('password');
-    createUserWithEmailAndPassword(auth, email.value, password.value)
-        .then(r => {
-        axios({
-            method: "post",
-            url: `${homeurl}/users`,
-            data: {
-                'name': name.value,
-                'email': email.value
+    if (name.value === "") {
+        return {
+            status: "error",
+            message: "User name cannot be empty!"
+        }
+    }
+    else {
+        try {
+            await createUserWithEmailAndPassword(auth, email.value, password.value);
+        }
+        catch (e) {
+            return {
+                status: "error",
+                message: e.message
             }
-        })
-            .then((response) => {
-                console.log(response);
-                alert("Signed Up Successfully!")
-            })
-            .catch((error)=>console.log(error));
-    })
-        .catch(e => alert(e.message))
+        }
+        try {
+            const response = await axios({
+                method: "post",
+                url: `${homeurl}/users`,
+                data: {
+                    'name': name.value,
+                    'email': email.value
+                }
+            });
+            return {
+                status: "success",
+                message: null
+            };
+        }
+        catch (e) {
+            return {
+                status: "error",
+                message: e.message
+            }
+        }
+    }
 }
 
-export function signIn() {
+export async function signIn() {
     var email = document.getElementById('email');
     var password = document.getElementById('password');
-    signInWithEmailAndPassword(auth, email.value, password.value).then(r => {
-        alert("Logged In Successfully!");
+    try {
+        const r = await signInWithEmailAndPassword(auth, email.value, password.value);
+        console.log("Logged In Successfully!");
         console.log(r.user.email);
-    }).catch(e => alert(e.message))
+        return {
+            status: "success",
+            message: r.user.email
+        }
+    }
+    catch (e) {
+        console.log(e.message);
+        console.log(e.code);
+        return {
+            status: "error",
+            message: e.message
+        }
+    }
 }
 
-export function signOutUser() {
-    signOut(auth).then(() => {
-        alert("Logged In Successfully!");
-    }).catch((error) => {
-        alert(error.message)
-    });
+export async function signOutUser() {
+    try {
+        await signOut(auth);
+        console.log("Logged Out Successfully!");
+        return true;
+    }
+    catch (e) {
+        console.log(e.message);
+        return false;
+    }
 }
