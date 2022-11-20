@@ -8,6 +8,7 @@ import logo from "../imgs/group-todo-logo.png";
 import React from "react";
 import './Navigator.css';
 
+import Badge from 'react-bootstrap/Badge';
 
 
 
@@ -30,7 +31,7 @@ function Navigator() {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="message">Message</Nav.Link>
+                <Nav.Link href="message">Message <Badge bg="secondary">New</Badge></Nav.Link>
                 <Nav.Link href="profile">Profile</Nav.Link>
                 {/*<Nav.Link href="auth">SignIn</Nav.Link>*/}
               </Nav>

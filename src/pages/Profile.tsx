@@ -1,14 +1,17 @@
 import {Navigate} from "react-router-dom";
 import React from "react";
 
-const Profile = () => {
-    const email = localStorage.getItem("email");
-    if (email == null || email == ""){
-        return <Navigate replace to="/login" />
-    }
-    else {
-        return <h1>Profile</h1>;
-    }
-  };
+function Profile() {
+  const email = localStorage.getItem("email");
+  if (email == null || email == ""){
+      return <Navigate replace to="/login" />
+  }
+  return (
+    <>
+      <h1>User Profile</h1>
+      <span>Email: </span><span>{email}</span>
+    </>
+  );
+};
   
-  export default Profile;
+export default Profile;
