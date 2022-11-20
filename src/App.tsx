@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import Daily from './pages/home/Daily';
 import Monthly from './pages/home/Monthly';
 import Auth from './pages/Auth';
+import {AuthContext} from './context/authContext';
 
 /* 
 3 main pages:
@@ -23,22 +24,25 @@ import Auth from './pages/Auth';
   3) profile: display user's account
 */
 function App() {
+  const [email, setEmail] = useState("");
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<Navigator />}>
-            <Route path='/' element={<Home />}>
-              <Route path='monthly' element={<Monthly />}/>
-              <Route path='daily' element={<Daily />}/>
+    <AuthContext.Provider value={{email: email, setEmail: setEmail}}>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Navigator />}>
+              <Route path='/' element={<Home />}>
+                <Route path='monthly' element={<Monthly />}/>
+                <Route path='daily' element={<Daily />}/>
+              </Route>
+              <Route path='message' element={<Message />}/>
+              <Route path='profile' element={<Profile />}/>
+              <Route path='auth' element={<Auth />}/>
             </Route>
-            <Route path='message' element={<Message />}/>
-            <Route path='profile' element={<Profile />}/>
-            <Route path='auth' element={<Auth />}/>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </AuthContext.Provider>
   );
 }
 

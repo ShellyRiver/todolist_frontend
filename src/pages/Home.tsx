@@ -10,6 +10,9 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import './Home.css'
 import { Alert } from "react-bootstrap";
+import {useAuthContext} from "../context/authContext";
+import Auth from './Auth';
+import {Navigate} from "react-router-dom";
 
 // 3 roles in a group
 const GROUPMEMBER: number = 1;
@@ -19,26 +22,32 @@ const GROUPCOLLABORATOR: number = 3;
 const groupNames: string[] = ["Personal tasks", "CS 409 Final Project"];
 
 function Home() {
-    return (
-      <>
-        <h1>Home</h1>
-        <div className="home">
-          <div className="viewChoose">
-            <Navigator />
-          </div>
-          <div className="content">
-            <div className="groupList">
-              <GroupList />
+    const email = localStorage.getItem("email");
+    if (email == null || email == ""){
+        return <Navigate replace to="/auth" />
+    }
+    else{
+        return (
+          <>
+            <h1>Home</h1>
+            <div className="home">
+              <div className="viewChoose">
+                <Navigator />
+              </div>
+              <div className="content">
+                <div className="groupList">
+                  <GroupList />
+                </div>
+                <div className="taskBoard">
+                  <Outlet />
+                </div>
+              </div>
+
             </div>
-            <div className="taskBoard">
-              <Outlet />
-            </div>
-          </div>
-          
-        </div>
-        
-      </>
-    );
+
+          </>
+        );
+    }
   };
   
 // the group list on the left
