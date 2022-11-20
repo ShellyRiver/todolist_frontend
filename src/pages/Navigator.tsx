@@ -37,6 +37,9 @@ function Navigator() {
             </Navbar.Collapse>
           }
         </Container>
+        {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
+          <p>Welcome {localStorage.getItem("email")}! </p>
+        }
         { localStorage.getItem("email") && localStorage.getItem("email") != "" &&
           <Button variant="outline-primary" onClick={clickSignOut}>Sign Out</Button>
         }

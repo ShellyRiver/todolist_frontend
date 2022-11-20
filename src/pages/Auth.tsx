@@ -54,7 +54,7 @@ export default function Auth() {
             const response = await signUp();
             if (response.status === "success") {
                 // @ts-ignore
-                setErrorMsg(false);
+                setShowErrorMsg(false);
                 setShowSuccessMsg(true);
                 setShowUserName(false);
             }
