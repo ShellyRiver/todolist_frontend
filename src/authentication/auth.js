@@ -69,18 +69,37 @@ export async function signUp() {
 export async function signIn() {
     var email = document.getElementById('email');
     var password = document.getElementById('password');
+    var r;
     try {
-        const r = await signInWithEmailAndPassword(auth, email.value, password.value);
+        r = await signInWithEmailAndPassword(auth, email.value, password.value);
         console.log("Logged In Successfully!");
         console.log(r.user.email);
-        return {
-            status: "success",
-            message: r.user.email
-        }
+        // return {
+        //     status: "success",
+        //     message: r.user.email
+        // }
     }
     catch (e) {
         console.log(e.message);
         console.log(e.code);
+        return {
+            status: "error",
+            message: e.message
+        }
+    }
+    try {
+        const user = await axios({
+            method: "get",
+            url: `${homeurl}/users?where={"email":"${email.value}"}`,
+        });
+        console.log(user.data.data[0]);
+        return {
+            status: "success",
+            message: r.user.email,
+            info: user.data.data[0]
+        }
+    }
+    catch (e) {
         return {
             status: "error",
             message: e.message

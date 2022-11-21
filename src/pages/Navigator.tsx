@@ -21,6 +21,7 @@ function Navigator() {
       navigate('/login')
     }
   }
+  const userName = localStorage.getItem("user") || "";
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -39,7 +40,7 @@ function Navigator() {
           }
         </Container>
         {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
-          <p>Welcome {localStorage.getItem("email")}! </p>
+          <p>Welcome {JSON.parse(userName).name}! </p>
         }
         { localStorage.getItem("email") && localStorage.getItem("email") != "" &&
           <Button variant="outline-primary" onClick={clickSignOut}>Sign Out</Button>

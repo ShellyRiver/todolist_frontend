@@ -31,6 +31,8 @@ export default function Auth() {
             if (response.status === "success") {
                 // @ts-ignore
                 localStorage.setItem('email', response.message);
+                localStorage.setItem('user', JSON.stringify(response.info));
+                console.log(localStorage.getItem('user'));
                 console.log(`Logged in email is: ${response.message}`);
                 navigate('/');
                 setShowErrorMsg(false);
