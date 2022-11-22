@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 const homeurl = 'http://localhost:4000/api'
 
-export default function ChangeProfileModal(props: any) {
+export default function ChangeImageModal(props: any) {
     const data = props.data;
     async function changeProfile() {
 
@@ -60,29 +60,19 @@ export default function ChangeProfileModal(props: any) {
         <>
             <Modal show={props.show} onHide={props.handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Profile</Modal.Title>
+                    <Modal.Title>Change Profile Image</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Label>User Name</Form.Label>
-                            <Form.Control
-                                placeholder="User Name"
-                                autoFocus
-                                defaultValue= {props.data.name || ""}
-                                id = "new-profile-name"
-                            />
-                        </Form.Group>
                         <Form.Group
                             className="mb-3"
                         >
-                            <Form.Label>Personal Description</Form.Label>
+                            <Form.Label>Profile Image</Form.Label>
                             <Form.Control
-                                as="textarea"
-                                rows={5}
-                                placeholder="Personal Description"
-                                defaultValue={props.data.description || ""}
+                                type="file"
                                 id = "new-profile-description"
+                                accept="image/*"
+                                name="images[]"
                             />
                         </Form.Group>
                     </Form>
@@ -91,7 +81,7 @@ export default function ChangeProfileModal(props: any) {
                     <Button variant="secondary" onClick={props.handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={changeProfile}>
+                    <Button variant="primary">
                         Save Changes
                     </Button>
                 </Modal.Footer>

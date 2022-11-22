@@ -16,6 +16,9 @@ import { Alert } from "react-bootstrap";
 import {useAuthContext} from "../context/authContext";
 import Auth from './Auth';
 import {Navigate} from "react-router-dom";
+import AddTaskModal from "../components/AddTaskModal";
+import axios from "axios";
+import AddTaskModalGroup from "../components/AddTaskModalGroup";
 
 // different methods to manipulate a group based on the role
 // 4 roles in a group:
@@ -28,6 +31,7 @@ const GROUPMEMBER: number = 1;
 const GROUPLEADER: number = 2;
 const GROUPCOLLABORATOR: number = 3;
 
+const homeurl = 'http://localhost:4000/api'
 const groupNames: string[] = ["Personal tasks", "CS 409 Final Project"];
 
 function Home() {
@@ -45,15 +49,13 @@ function Home() {
               </div>
               <div className="content">
                 <div className="groupList">
-                  <GroupList />
+                  <GroupList/>
                 </div>
                 <div className="taskBoard">
                   <Outlet />
                 </div>
               </div>
-
             </div>
-
           </>
         );
     }
@@ -62,10 +64,24 @@ function Home() {
   
 // the group list on the left
 function GroupList() {
+    const [group, setGroup]: [any, any] = useState([]);
+    const userString = localStorage.getItem("user");
+    const userJSON = JSON.parse(userString || "");
+    useEffect(()=>{
+      axios({
+        method: "get",
+        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`
+      }).then(r => {
+        setGroup(r.data.data);
+      });
+    },[])
   const [componentList, setComponentList] = useState([]);
 
   const [showAddTask, setShowAddTask] = useState(false);
   const handleCloseAddTask = () => setShowAddTask(false);
+
+  const [showAddTaskGroup, setShowAddTaskGroup] = useState(false);
+  const handleCloseAddTaskGroup = () => setShowAddTaskGroup(false);
 
   const [showGroupInfo, setShowGroupInfo] = useState(false);
   const handleCloseGroupInfo = () => setShowGroupInfo(false);
@@ -82,18 +98,31 @@ function GroupList() {
   const [showDeleteGroup, setShowDeleteGroup] = useState(false);
   const handleCloseDeleteGroup = () => setShowDeleteGroup(false);
 
+  const [groupId, setGroupId] = useState(""); /* 0: individual, 1: leader, 2: member */
+
   useEffect(() => {
     __updateComponent();
-  }, [])  // TODO: add dependency?
+  }, [group])  // TODO: add dependency?
 
 
   function __updateComponent() {
     let newComponentList: any = [];
-    for (let i in groupNames) {
+    newComponentList.push(
+        <div className="groupItem" key={"individual"}>
+          <Accordion.Item eventKey={"individual"}>
+            <Accordion.Header>Individual Tasks</Accordion.Header>
+            <Accordion.Body>
+              {Buttons(INDIVIDUAL)}
+            </Accordion.Body>
+          </Accordion.Item>
+        </div>
+    );
+
+    for (let i in group) {
       newComponentList.push(
         <div className="groupItem" key={i+"groupItem"}>
-          <Accordion.Item eventKey={groupNames[i]}>
-            <Accordion.Header>{groupNames[i]}</Accordion.Header>
+          <Accordion.Item eventKey={group[i]._id}>
+            <Accordion.Header>{group[i].name}</Accordion.Header>
             <Accordion.Body>
               {Buttons(2)}
             </Accordion.Body>
@@ -105,7 +134,6 @@ function GroupList() {
   }
 
   function Buttons(role: number) {
-  
     if (role === INDIVIDUAL) {
       return (
         <>
@@ -113,12 +141,7 @@ function GroupList() {
             <ListGroup.Item action onClick={() => setShowAddTask(true)}>
               Add a task
             </ListGroup.Item>
-            
-            <ListGroup.Item action onClick={() => setShowGroupInfo(true)}>
-              Group information
-            </ListGroup.Item>
           </ListGroup>
-          
         </>
       );
     }
@@ -137,7 +160,10 @@ function GroupList() {
     else if (role === GROUPLEADER) {
       return (
         <ListGroup>
-          <ListGroup.Item action onClick={() => setShowAddTask(true)}>
+          <ListGroup.Item action onClick={() => {
+            setShowAddTaskGroup(true)
+
+          }}>
             Add a task
           </ListGroup.Item>
           <ListGroup.Item action onClick={() => setShowInviteGroupMember(true)}>
@@ -183,62 +209,12 @@ function GroupList() {
 
   return (
     <>
-      <Accordion>
+      <Accordion onSelect={(eventKey:any)=>setGroupId(eventKey)}>
         {componentList}
       </Accordion>
       <div className="modal">
-        <Modal show={showAddTask} onHide={handleCloseAddTask}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add a task</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-
-              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                <Form.Label>Task name</Form.Label>
-                <Form.Control
-                  type="input"
-                  placeholder="Play with cats"
-                  autoFocus
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Assigned Members</Form.Label>  
-                <Form.Select aria-label="Default select example">
-                  <option>Open this select menu</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-                </Form.Select>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Task deadline</Form.Label>
-                <Form.Control type="date" />
-              </Form.Group>
-              
-
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Task description</Form.Label>
-                <Form.Control as="textarea" rows={3} />
-              </Form.Group>
-
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseAddTask}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleCloseAddTask}>
-              Save Changes
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
+        <AddTaskModal show={showAddTask} handleClose={handleCloseAddTask}/>
+        <AddTaskModalGroup show={showAddTaskGroup} handleClose={handleCloseAddTaskGroup} groupId={groupId}/>
         <Modal show={showGroupInfo} onHide={handleCloseGroupInfo}>
           <Modal.Header closeButton>
             <Modal.Title>Group Information</Modal.Title>
@@ -297,7 +273,6 @@ function GroupList() {
             </Form>
           </Modal.Body>
         </Modal>
-
         <Modal show={showInviteGroupMember} onHide={handleCloseInviteGroupMember}>
           <Modal.Header closeButton>
             <Modal.Title>Invite Group Member</Modal.Title>

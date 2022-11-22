@@ -5,10 +5,6 @@ import React from "react";
 
 export default function GroupInfoModal(props: any) {
     const data = props.data;
-    console.log(data);
-    if (data.members) {
-        console.log(data.members[0])
-    }
     return (<>
             <Modal show={props.show} onHide={props.handleCloseGroupInfo}>
         <Modal.Header closeButton>

@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from "firebase/auth";
 import axios from "axios";
 
 // Your web app's Firebase configuration
@@ -15,13 +15,6 @@ const auth = getAuth(app);
 
 const homeurl = 'http://localhost:4000/api'
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log(`User State Change: ${user}`)
-    } else {
-        console.log(`log out`)
-    }
-});
 
 export async function signUp() {
     var name = document.getElementById('name');
@@ -72,16 +65,16 @@ export async function signIn() {
     var r;
     try {
         r = await signInWithEmailAndPassword(auth, email.value, password.value);
-        console.log("Logged In Successfully!");
-        console.log(r.user.email);
+        // console.log("Logged In Successfully!");
+        // console.log(r.user.email);
         // return {
         //     status: "success",
         //     message: r.user.email
         // }
     }
     catch (e) {
-        console.log(e.message);
-        console.log(e.code);
+        // console.log(e.message);
+        // console.log(e.code);
         return {
             status: "error",
             message: e.message
@@ -92,7 +85,7 @@ export async function signIn() {
             method: "get",
             url: `${homeurl}/users?where={"email":"${email.value}"}`,
         });
-        console.log(user.data.data[0]);
+        // console.log(user.data.data[0]);
         return {
             status: "success",
             message: r.user.email,
@@ -110,11 +103,11 @@ export async function signIn() {
 export async function signOutUser() {
     try {
         await signOut(auth);
-        console.log("Logged Out Successfully!");
+        // console.log("Logged Out Successfully!");
         return true;
     }
     catch (e) {
-        console.log(e.message);
+        // console.log(e.message);
         return false;
     }
 }

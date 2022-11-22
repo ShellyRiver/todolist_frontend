@@ -27,13 +27,13 @@ export default function Auth() {
         }
         else {
             const response = await signIn();
-            console.log(response);
+            // console.log(response);
             if (response.status === "success") {
                 // @ts-ignore
                 localStorage.setItem('email', response.message);
                 localStorage.setItem('user', JSON.stringify(response.info));
-                console.log(localStorage.getItem('user'));
-                console.log(`Logged in email is: ${response.message}`);
+                // console.log(localStorage.getItem('user'));
+                // console.log(`Logged in email is: ${response.message}`);
                 navigate('/');
                 setShowErrorMsg(false);
             }
