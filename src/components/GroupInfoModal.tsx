@@ -5,6 +5,7 @@ import React from "react";
 
 export default function GroupInfoModal(props: any) {
     const data = props.data;
+    console.log(data);
     return (<>
             <Modal show={props.show} onHide={props.handleCloseGroupInfo}>
         <Modal.Header closeButton>
@@ -44,6 +45,24 @@ export default function GroupInfoModal(props: any) {
                         <Form.Label>Group Member(s)</Form.Label>
                         <ListGroup>
                             {data.members.map((member:any, index:number) => <ListGroup.Item key={index}>{member}</ListGroup.Item>)}
+                        </ListGroup>
+                    </Form.Group>
+                }
+
+                {data.pendingLeaders && data.pendingLeaders.length > 0 &&
+                    <Form.Group className="mb-3">
+                        <Form.Label>Group Pending Leader(s)</Form.Label>
+                        <ListGroup>
+                            {data.pendingLeaders.map((leader:any, index:number) => <ListGroup.Item key={index}>{leader}</ListGroup.Item>)}
+                        </ListGroup>
+                    </Form.Group>
+                }
+
+                {data.pendingMembers && data.pendingMembers.length > 0 &&
+                    <Form.Group className="mb-3">
+                        <Form.Label>Group Pending Member(s)</Form.Label>
+                        <ListGroup>
+                            {data.pendingMembers.map((member:any, index:number) => <ListGroup.Item key={index}>{member}</ListGroup.Item>)}
                         </ListGroup>
                     </Form.Group>
                 }

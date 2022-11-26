@@ -19,6 +19,7 @@ import {Navigate} from "react-router-dom";
 import AddTaskModal from "../components/AddTaskModal";
 import axios from "axios";
 import AddTaskModalGroup from "../components/AddTaskModalGroup";
+import GroupInfoModal from "../components/GroupInfoModal";
 
 // different methods to manipulate a group based on the role
 // 4 roles in a group:
@@ -65,6 +66,7 @@ function Home() {
 // the group list on the left
 function GroupList() {
     const [group, setGroup]: [any, any] = useState([]);
+    const [clickedGroup, setClickedGroup] = useState({});
     const userString = localStorage.getItem("user");
     const userJSON = JSON.parse(userString || "");
     useEffect(()=>{
@@ -121,7 +123,7 @@ function GroupList() {
     for (let i in group) {
       newComponentList.push(
         <div className="groupItem" key={i+"groupItem"}>
-          <Accordion.Item eventKey={group[i]._id}>
+          <Accordion.Item eventKey={i}>
             <Accordion.Header>{group[i].name}</Accordion.Header>
             <Accordion.Body>
               {Buttons(2)}
@@ -209,70 +211,77 @@ function GroupList() {
 
   return (
     <>
-      <Accordion onSelect={(eventKey:any)=>setGroupId(eventKey)}>
+      <Accordion onSelect={(eventKey:any)=>
+      {try {
+          setGroupId(group[eventKey]._id);
+          setClickedGroup(group[eventKey]);
+      }
+      catch (e) {}
+      }}>
         {componentList}
       </Accordion>
       <div className="modal">
         <AddTaskModal show={showAddTask} handleClose={handleCloseAddTask}/>
         <AddTaskModalGroup show={showAddTaskGroup} handleClose={handleCloseAddTaskGroup} groupId={groupId}/>
-        <Modal show={showGroupInfo} onHide={handleCloseGroupInfo}>
-          <Modal.Header closeButton>
-            <Modal.Title>Group Information</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
+        <GroupInfoModal show={showGroupInfo} handleCloseGroupInfo={handleCloseGroupInfo} data={clickedGroup}/>
+        {/*<Modal show={showGroupInfo} onHide={handleCloseGroupInfo}>*/}
+        {/*  <Modal.Header closeButton>*/}
+        {/*    <Modal.Title>Group Information</Modal.Title>*/}
+        {/*  </Modal.Header>*/}
+        {/*  <Modal.Body>*/}
+        {/*    <Form>*/}
 
-              <Form.Group className="mb-3">
-                <Form.Label>Group Leader</Form.Label>  
-                <ListGroup>
-                  <ListGroup.Item>
-                    Shilan He
-                  </ListGroup.Item>
-                </ListGroup>
-              </Form.Group>
+        {/*      <Form.Group className="mb-3">*/}
+        {/*        <Form.Label>Group Leader</Form.Label>  */}
+        {/*        <ListGroup>*/}
+        {/*          <ListGroup.Item>*/}
+        {/*            Shilan He*/}
+        {/*          </ListGroup.Item>*/}
+        {/*        </ListGroup>*/}
+        {/*      </Form.Group>*/}
 
-              <Form.Group className="mb-3">
-                <Form.Label>Group Collaborator(s)</Form.Label>  
-                <ListGroup>
-                  <ListGroup.Item>
-                    Zilinghan Li
-                  </ListGroup.Item>
-                </ListGroup>
-              </Form.Group>
+        {/*      <Form.Group className="mb-3">*/}
+        {/*        <Form.Label>Group Collaborator(s)</Form.Label>  */}
+        {/*        <ListGroup>*/}
+        {/*          <ListGroup.Item>*/}
+        {/*            Zilinghan Li*/}
+        {/*          </ListGroup.Item>*/}
+        {/*        </ListGroup>*/}
+        {/*      </Form.Group>*/}
 
-              <Form.Group className="mb-3">
-                <Form.Label>Group Members</Form.Label>
-                <ListGroup>
-                  <ListGroup.Item action>
-                    Member 1
-                  </ListGroup.Item>
-                  <ListGroup.Item action>
-                    Member 2
-                  </ListGroup.Item>
-                  <ListGroup.Item action>
-                    Member 3
-                  </ListGroup.Item>
-                </ListGroup>
-              </Form.Group>
+        {/*      <Form.Group className="mb-3">*/}
+        {/*        <Form.Label>Group Members</Form.Label>*/}
+        {/*        <ListGroup>*/}
+        {/*          <ListGroup.Item action>*/}
+        {/*            Member 1*/}
+        {/*          </ListGroup.Item>*/}
+        {/*          <ListGroup.Item action>*/}
+        {/*            Member 2*/}
+        {/*          </ListGroup.Item>*/}
+        {/*          <ListGroup.Item action>*/}
+        {/*            Member 3*/}
+        {/*          </ListGroup.Item>*/}
+        {/*        </ListGroup>*/}
+        {/*      </Form.Group>*/}
 
-              <Form.Group className="mb-3">
-                <Form.Label>Group Tasks</Form.Label>  
-                <ListGroup>
-                  <ListGroup.Item action>
-                    Task 1
-                  </ListGroup.Item>
-                  <ListGroup.Item action>
-                    Task 2
-                  </ListGroup.Item>
-                  <ListGroup.Item action>
-                    Task 3
-                  </ListGroup.Item>
-                </ListGroup>
-              </Form.Group>
-              
-            </Form>
-          </Modal.Body>
-        </Modal>
+        {/*      <Form.Group className="mb-3">*/}
+        {/*        <Form.Label>Group Tasks</Form.Label>  */}
+        {/*        <ListGroup>*/}
+        {/*          <ListGroup.Item action>*/}
+        {/*            Task 1*/}
+        {/*          </ListGroup.Item>*/}
+        {/*          <ListGroup.Item action>*/}
+        {/*            Task 2*/}
+        {/*          </ListGroup.Item>*/}
+        {/*          <ListGroup.Item action>*/}
+        {/*            Task 3*/}
+        {/*          </ListGroup.Item>*/}
+        {/*        </ListGroup>*/}
+        {/*      </Form.Group>*/}
+        {/*      */}
+        {/*    </Form>*/}
+        {/*  </Modal.Body>*/}
+        {/*</Modal>*/}
         <Modal show={showInviteGroupMember} onHide={handleCloseInviteGroupMember}>
           <Modal.Header closeButton>
             <Modal.Title>Invite Group Member</Modal.Title>
@@ -307,7 +316,6 @@ function GroupList() {
             </Form>
           </Modal.Body>
         </Modal>
-
         <Modal show={showInviteGroupCollaborator} onHide={handleCloseInviteGroupCollaborator}>
           <Modal.Header closeButton>
             <Modal.Title>Invite Group Collaborator</Modal.Title>
@@ -336,7 +344,6 @@ function GroupList() {
             </Form>
           </Modal.Body>
         </Modal>
-
         <Modal show={showLeaveGroup} onHide={handleCloseLeaveGroup}>
           <Modal.Header closeButton>
             <Modal.Title>Leave Group</Modal.Title>
@@ -353,7 +360,6 @@ function GroupList() {
             </Button>
           </Modal.Footer>
         </Modal>
-
         <Modal show={showDeleteGroup} onHide={handleCloseDeleteGroup}>
           <Modal.Header closeButton>
             <Modal.Title>Delete Group</Modal.Title>

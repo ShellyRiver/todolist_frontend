@@ -23,21 +23,21 @@ export default function AddTaskModalGroup(props: any) {
         var taskDescription = (document.getElementById("task-description-new-group") ? document.getElementById("task-description-new-group").value : "");
         // @ts-ignore
         var taskDeadline = (document.getElementById("task-deadline-new-group") ? document.getElementById("task-deadline-new-group").value : "");
+        // @ts-ignore
+        var taskMember = (document.getElementById("task-member-new-group") ? document.getElementById("task-member-new-group").value : "");
         if (taskName == "") {
             setErrorMsg("Task name cannot be empty!")
             setShowErrorMsg(true);
+            return;
         }
         else if (taskDeadline == "") {
             setErrorMsg("Task deadline cannot be empty!")
             setShowErrorMsg(true);
+            return;
         }
         else {
             setShowErrorMsg(false);
         }
-        // @ts-ignore
-        const user = localStorage.getItem("user") || "";
-
-        console.log('assignedUsers', JSON.parse(user)._id);
         var requestBody = {
             'name': taskName,
             'description': taskDescription,
@@ -47,7 +47,7 @@ export default function AddTaskModalGroup(props: any) {
             delete requestBody.description;
         }
         console.log(requestBody);
-        /* Post the user information to the backend database */
+        /* Post the task information to the backend database */
         var resp;
         try {
             resp = await axios({
@@ -57,12 +57,29 @@ export default function AddTaskModalGroup(props: any) {
             });
         }
         catch (e: any) {
-            // console.log(e);
-            // props.handleClose();
             // @ts-ignore
             setErrorMsg({e});
             setShowErrorMsg(true);
+            return;
         }
+        /* Add assigned group */
+        try {
+            await axios({
+                method: "put",
+                // @ts-ignore
+                url: `${homeurl}/tasks/${resp.data.data._id}`,
+                data: {
+                    'assignedGroup': props.groupId
+                }
+            })
+        }
+        catch (e) {
+            // @ts-ignore
+            setErrorMsg({e});
+            setShowErrorMsg(true);
+            return;
+        }
+        /* Add assigned user */
         try {
             console.log(resp)
             await axios({
@@ -70,15 +87,17 @@ export default function AddTaskModalGroup(props: any) {
                 // @ts-ignore
                 url: `${homeurl}/tasks/${resp.data.data._id}`,
                 data: {
-                    'assignedUsers': JSON.parse(user)._id,
+                    'assignedUsers': taskMember,
                     'operation': "add"
                 }
             })
             props.handleClose();
         }
         catch (e) {
-            console.log(e);
-            props.handleClose();
+            // @ts-ignore
+            setErrorMsg({e});
+            setShowErrorMsg(true);
+            return;
         }
     }
     useEffect(()=>{
@@ -126,7 +145,7 @@ export default function AddTaskModalGroup(props: any) {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Assigned Members</Form.Label>
-                            <Form.Select aria-label="Default select example" onChange={(event)=>console.log(event.target.value)}>
+                            <Form.Select aria-label="Default select example" id="task-member-new-group">
                                 {groupMemberInfo.map((member: any, index: any)=>{
                                     return <option key={member._id} value={member._id}>{member.name}</option>
                                 })}
@@ -146,7 +165,7 @@ export default function AddTaskModalGroup(props: any) {
                     <Button variant="secondary" onClick={props.handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary">
+                    <Button variant="primary" onClick={postTask}>
                         Save Changes
                     </Button>
                 </Modal.Footer>

@@ -20,10 +20,12 @@ export default function AddTaskModal(props: any) {
         if (taskName == "") {
             setErrorMsg("Task name cannot be empty!")
             setShowErrorMsg(true);
+            return;
         }
         else if (taskDeadline == "") {
             setErrorMsg("Task deadline cannot be empty!")
             setShowErrorMsg(true);
+            return
         }
         else {
             setShowErrorMsg(false);
