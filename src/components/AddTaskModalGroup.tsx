@@ -46,7 +46,6 @@ export default function AddTaskModalGroup(props: any) {
         if (taskDescription == "") {
             delete requestBody.description;
         }
-        console.log(requestBody);
         /* Post the task information to the backend database */
         var resp;
         try {
@@ -81,7 +80,6 @@ export default function AddTaskModalGroup(props: any) {
         }
         /* Add assigned user */
         try {
-            console.log(resp)
             await axios({
                 method: "patch",
                 // @ts-ignore
@@ -102,22 +100,18 @@ export default function AddTaskModalGroup(props: any) {
     }
     useEffect(()=>{
         if (props.show == true) {
-            console.log(props.groupId);
             axios({
                 method: "get",
                 url: `${homeurl}/groups/${props.groupId}`
             }).then(r => {
                 setGroupInfo(r.data.data[0]);
-                console.log(r.data.data[0]);
                 const members = r.data.data[0].members;
                 const leaders = r.data.data[0].leaders;
                 const allUsers = members.concat(leaders);
-                console.log(JSON.stringify(allUsers))
                 axios({
                     method: "get",
                     url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(allUsers)}}}`
                 }).then(response => {
-                    console.log(response);
                     setGroupMemberInfo(response.data.data);
                 }).catch(e => console.log(e))
             }).catch(e => {

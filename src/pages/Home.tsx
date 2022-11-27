@@ -99,13 +99,11 @@ function GroupList() {
   const [groupIndex, setGroupIndex] = useState(-1);
 
     useEffect(()=>{
-        console.log(reloadGroup)
         axios({
             method: "get",
             url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`
         }).then(r => {
             setGroup(r.data.data);
-            console.log("Refrech page:", r.data.data);
             if (groupIndex >= 0) {
                 setClickedGroup(r.data.data[groupIndex]);
             }
@@ -232,7 +230,7 @@ function GroupList() {
         <AddTaskModal show={showAddTask} handleClose={handleCloseAddTask}/>
         <AddTaskModalGroup show={showAddTaskGroup} handleClose={handleCloseAddTaskGroup} groupId={groupId}/>
         <GroupInfoModal show={showGroupInfo} handleClose={handleCloseGroupInfo} data={clickedGroup}/>
-        <InviteCollaboratorModal show={showInviteCollaborator} handleClose={handleCloseInviteCollaborator} data={clickedGroup} groupId={groupId} setReload={()=>setReloadGroup((counter)=>{console.log("Setreload"); return counter+1;})}/>
+        <InviteCollaboratorModal show={showInviteCollaborator} handleClose={handleCloseInviteCollaborator} data={clickedGroup} groupId={groupId} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
         <ConfirmationModal show={showDeleteGroup} title="Delete Group" body="Are you sure to delete this group?" handleClose={handleCloseDeleteGroup}/>
         <Modal show={showLeaveGroup} onHide={handleCloseLeaveGroup}>
           <Modal.Header closeButton>
