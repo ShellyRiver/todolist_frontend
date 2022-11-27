@@ -81,7 +81,7 @@ function Profile() {
             </div>
         </div>
         <div className="modal">
-            <GroupInfoModal show={showGroupInfo} handleCloseGroupInfo={handleCloseGroupInfo} data={clickedGroup}/>
+            <GroupInfoModal show={showGroupInfo} handleClose={handleCloseGroupInfo} data={clickedGroup}/>
             <ChangeProfileModal show={showChangeProfile} handleClose={()=>setShowChangeProfile(false)} data={userJSON}/>
             <ChangeImageModal show={showChangeImage} handleClose={()=>setShowChangeImage(false)} data={userJSON}/>
         </div>

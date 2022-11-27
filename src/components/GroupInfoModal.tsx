@@ -5,9 +5,8 @@ import React from "react";
 
 export default function GroupInfoModal(props: any) {
     const data = props.data;
-    console.log(data);
     return (<>
-            <Modal show={props.show} onHide={props.handleCloseGroupInfo}>
+            <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
             <Modal.Title>Group Information</Modal.Title>
         </Modal.Header>
