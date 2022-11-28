@@ -3,63 +3,61 @@ import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Button from "react-bootstrap/Button";
+import {updateUser} from "./updateUser";
 const homeurl = 'http://localhost:4000/api'
 
-export default function GroupInfoModal(props: any) {
-    const [leaderNames, setLeaderNames]: any = useState([]);
-    const [memberNames, setMemberNames] = useState([]);
-    const [pendingLeaderNames, setPendingLeaderNames] = useState([]);
-    const [pendingMemberNames, setPendingMemberNames] = useState([]);
+export default function TaskInfoModal(props: any) {
     const data = props.data;
+    const userName = localStorage.getItem("user") || "";
+    const userJSON = JSON.parse(userName);
+    const [groupInfo, setGroupInfo] = useState({
+        name: undefined
+    });
+
+    async function clickOK () {
+        /* Delete the task from the unread task */
+        try {
+            await axios({
+                method: "patch",
+                url: `${homeurl}/users/${userJSON._id}`,
+                data: {
+                    'unreadTasks': data._id,
+                    'operation': 'remove'
+                }
+            });
+            updateUser();
+            props.handleReload();
+            props.handleClose();
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
 
     useEffect(() => {
         /* Only run the function is props.show is true */
         if (props.show === true) {
-            var peopleIds: any = [];
-            if (data.leaders && data.leaders.length > 0) {
+            if (data.assignedGroup) {
                 axios({
                     method: "get",
-                    url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(data.leaders)}}}&select={"name": 1, "_id": 0}`
+                    url: `${homeurl}/groups/${data.assignedGroup}`
                 }).then((r) => {
-                    setLeaderNames(r.data.data);
-                })
-            }
-            if (data.members && data.members.length > 0) {
-                axios({
-                    method: "get",
-                    url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(data.members)}}}&select={"name": 1, "_id": 0}`
-                }).then((r) => {
-                    setMemberNames(r.data.data);
-                })
-            }
-            if (data.pendingLeaders && data.pendingLeaders.length > 0) {
-                axios({
-                    method: "get",
-                    url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(data.pendingLeaders)}}}&select={"name": 1, "_id": 0}`
-                }).then((r) => {
-                    setPendingLeaderNames(r.data.data);
-                })
-            }
-            if (data.pendingMembers && data.pendingMembers.length > 0) {
-                axios({
-                    method: "get",
-                    url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(data.pendingMembers)}}}&select={"name": 1, "_id": 0}`
-                }).then((r) => {
-                    setPendingMemberNames(r.data.data);
+                    setGroupInfo(r.data.data[0]);
                 })
             }
         }
     }, [props.show])
 
-    return (<>
-            <Modal show={props.show} onHide={props.handleClose}>
+    return (<>{data.name &&
+    <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
-            <Modal.Title>Group Information</Modal.Title>
+            <Modal.Title>Task Information</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form>
                 <Form.Group className="mb-3">
-                    <Form.Label>Group Name</Form.Label>
+                    <Form.Label>Task Name</Form.Label>
                     <ListGroup>
                         <ListGroup.Item>
                             {data.name}
@@ -68,7 +66,7 @@ export default function GroupInfoModal(props: any) {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                    <Form.Label>Group Description</Form.Label>
+                    <Form.Label>Task Description</Form.Label>
                     <ListGroup>
                         <ListGroup.Item>
                             {data.description}
@@ -76,44 +74,46 @@ export default function GroupInfoModal(props: any) {
                     </ListGroup>
                 </Form.Group>
 
-                {data.leaders && data.leaders.length > 0 &&
+                {data.startTime &&
                     <Form.Group className="mb-3">
-                        <Form.Label>Group Leader(s)</Form.Label>
+                        <Form.Label>Task Start Time</Form.Label>
                         <ListGroup>
-                            {leaderNames.map((leader:any, index:number) => <ListGroup.Item key={index}>{leader.name}</ListGroup.Item>)}
+                            <ListGroup.Item>
+                                {data.startTime.slice(0, 10)}
+                                {/*{data.endTime}*/}
+                            </ListGroup.Item>
                         </ListGroup>
                     </Form.Group>
                 }
 
-                {data.members && data.members.length > 0 &&
-                    <Form.Group className="mb-3">
-                        <Form.Label>Group Member(s)</Form.Label>
-                        <ListGroup>
-                            {memberNames.map((member:any, index:number) => <ListGroup.Item key={index}>{member.name}</ListGroup.Item>)}
-                        </ListGroup>
-                    </Form.Group>
-                }
+                <Form.Group className="mb-3">
+                    <Form.Label>Task Deadline</Form.Label>
+                    <ListGroup>
+                        <ListGroup.Item>
+                            {data.endTime.slice(0, 10)}
+                            {/*{data.endTime}*/}
+                        </ListGroup.Item>
+                    </ListGroup>
+                </Form.Group>
 
-                {data.pendingLeaders && data.pendingLeaders.length > 0 &&
+                {groupInfo.name &&
                     <Form.Group className="mb-3">
-                        <Form.Label>Group Pending Leader(s)</Form.Label>
+                        <Form.Label>Task Group</Form.Label>
                         <ListGroup>
-                            {pendingLeaderNames.map((leader:any, index:number) => <ListGroup.Item key={index}>{leader.name}</ListGroup.Item>)}
-                        </ListGroup>
-                    </Form.Group>
-                }
-
-                {data.pendingMembers && data.pendingMembers.length > 0 &&
-                    <Form.Group className="mb-3">
-                        <Form.Label>Group Pending Member(s)</Form.Label>
-                        <ListGroup>
-                            {pendingMemberNames.map((member:any, index:number) => <ListGroup.Item key={index}>{member.name}</ListGroup.Item>)}
+                            <ListGroup.Item>
+                                {groupInfo.name}
+                            </ListGroup.Item>
                         </ListGroup>
                     </Form.Group>
                 }
             </Form>
         </Modal.Body>
-    </Modal>
-        </>
+        <Modal.Footer>
+            <Button variant="primary" onClick={clickOK}>
+                OK
+            </Button>
+        </Modal.Footer>
+    </Modal>}
+    </>
     )
 }

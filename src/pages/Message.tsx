@@ -5,23 +5,23 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import GroupInvitationModal from "../components/GroupInvitationModal";
+import TaskInfoModal from "../components/TaskInfoModal";
 const homeurl = 'http://localhost:4000/api'
 
 let messages = ["message1", "message2", "message3"];
 
 function Message() {
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const [componentList, setComponentList] = useState([]);
-  const [messageIdx, setMessageIdx] = useState(0);
   const email = localStorage.getItem("email");
   const [invitingGroupInfo, setInvitingGroupInfo] = useState([]);
   const [invitingLeadingGroupInfo, setInvitingLeadingGroupInfo] = useState([]);
   const [unreadTaskInfo, setUnreadTaskInfo] = useState([]);
   const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const [showTaskInfo, setShowTaskInfo] = useState(false);
   const handleCloseGroupInfo = () => setShowGroupInfo(false);
+  const handleCloseTaskInfo = () => setShowTaskInfo(false);
   const [clickedGroup, setClickedGroup] = useState({});
+  const [clickedTask, setClickedTask] = useState({});
   const [groupRole, setGroupRole] = useState('member');
   const [reloadUser, setReloadUser] = useState(0);
 
@@ -94,29 +94,13 @@ function Message() {
       {unreadTaskInfo.length > 0 &&
           <ListGroup>
             {unreadTaskInfo.map((t:any, index) => <ListGroup.Item action key={index} onClick={() => {
-              // setShowGroupInfo(true);
-              // setClickedGroup(group[index]);
-              // console.log(group[index]);
+              setShowTaskInfo(true);
+              setClickedTask(unreadTaskInfo[index]);
             }}><strong>New group task:</strong> {t.name}</ListGroup.Item>)}
           </ListGroup>
       }
       <GroupInvitationModal show={showGroupInfo} handleClose={handleCloseGroupInfo} data={clickedGroup} role={groupRole} handleReload={()=>setReloadUser((user)=>{return user+1;})}/>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Message</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {messages[messageIdx]}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Decline
-          </Button>
-          <Button variant="primary">
-            Accept
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <TaskInfoModal show={showTaskInfo} handleClose={handleCloseTaskInfo} data={clickedTask} handleReload={()=>setReloadUser((user)=>{return user+1;})}/>
     </>
   );
 };
