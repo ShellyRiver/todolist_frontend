@@ -21,7 +21,10 @@ function Navigator() {
       navigate('/login')
     }
   }
+
   const userName = localStorage.getItem("user") || "";
+  const userJSON = JSON.parse(userName);
+
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -32,7 +35,7 @@ function Navigator() {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="message">Message <Badge bg="secondary">New</Badge></Nav.Link>
+                <Nav.Link href="message">Message {(userJSON.invitingGroups.length > 0 || userJSON.unreadTasks.length > 0) && <Badge bg="secondary">New</Badge>}</Nav.Link>
                 <Nav.Link href="profile">Profile</Nav.Link>
                 {/*<Nav.Link href="auth">SignIn</Nav.Link>*/}
               </Nav>

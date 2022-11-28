@@ -24,6 +24,7 @@ function Profile() {
   const handleCloseGroupInfo = () => setShowGroupInfo(false);
 
   useEffect(()=>{
+      if (userJSON.belongingGroups && userJSON.belongingGroups.length > 0)
       axios({
           method: "get",
           url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`

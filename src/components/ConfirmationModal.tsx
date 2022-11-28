@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 export default function ConfirmationModal(props: any) {
     return (
         <>
-            <Modal show={props.show} onHide={props.handleClose}>
+            <Modal show={props.show} onHide={props.handleClose} size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>{props.title}</Modal.Title>
                 </Modal.Header>

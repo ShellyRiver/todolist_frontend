@@ -99,15 +99,17 @@ function GroupList() {
   const [groupIndex, setGroupIndex] = useState(-1);
 
     useEffect(()=>{
-        axios({
-            method: "get",
-            url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`
-        }).then(r => {
-            setGroup(r.data.data);
-            if (groupIndex >= 0) {
-                setClickedGroup(r.data.data[groupIndex]);
-            }
-        });
+        if (userJSON.belongingGroups && userJSON.belongingGroups.length > 0) {
+            axios({
+                method: "get",
+                url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`
+            }).then(r => {
+                setGroup(r.data.data);
+                if (groupIndex >= 0) {
+                    setClickedGroup(r.data.data[groupIndex]);
+                }
+            });
+        }
     },[reloadGroup])
 
   useEffect(() => {
