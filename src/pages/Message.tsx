@@ -27,10 +27,11 @@ function Message() {
 
 
   useEffect(() => {
-    console.log("Inside use Effect");
-    console.log(reloadUser);
+    // console.log("Inside use Effect");
+    // console.log(reloadUser);
     const userName = localStorage.getItem("user") || "";
     const userJSON = JSON.parse(userName);
+    // console.log(userName);
     if (userJSON.invitingGroups.length > 0) {
       axios({
         method: "get",
@@ -38,6 +39,9 @@ function Message() {
       }).then((response) => {
         setInvitingGroupInfo(response.data.data);
       })
+    }
+    else {
+      setInvitingGroupInfo([]);
     }
     if (userJSON.invitingLeadingGroups && userJSON.invitingLeadingGroups.length > 0) {
       axios({
@@ -47,6 +51,9 @@ function Message() {
         setInvitingLeadingGroupInfo(response.data.data);
       })
     }
+    else {
+      setInvitingLeadingGroupInfo([]);
+    }
     if (userJSON.unreadTasks.length > 0) {
       axios({
         method: "get",
@@ -54,6 +61,9 @@ function Message() {
       }).then((response) => {
         setUnreadTaskInfo(response.data.data);
       })
+    }
+    else {
+      setUnreadTaskInfo([]);
     }
   }, [reloadUser])  // TODO: add dependency?
 
@@ -64,7 +74,9 @@ function Message() {
 
   return (
     <>
-      <h1>Incoming Messages</h1>
+      <h1>Incoming Messages </h1>
+      {/*{JSON.stringify(unreadTaskInfo)}*/}
+      {/*{JSON.stringify(invitingGroupInfo)}*/}
       {invitingGroupInfo.length > 0 &&
           <ListGroup>
             {invitingGroupInfo.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {

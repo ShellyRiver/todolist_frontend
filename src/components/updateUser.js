@@ -1,7 +1,7 @@
 import axios from "axios";
 const homeurl = 'http://localhost:4000/api'
 
-export async function updateUser() {
+export async function updateUser(reloadCallback) {
     const userString = localStorage.getItem("user");
     const userJSON = JSON.parse(userString || "");
     try {
@@ -10,6 +10,9 @@ export async function updateUser() {
             url: `${homeurl}/users/${userJSON._id}`,
         });
         localStorage.setItem('user', JSON.stringify(user.data.data[0]));
+        console.log(JSON.stringify(user.data.data[0]));
+        console.log(localStorage.getItem('user'));
+        reloadCallback();
     }
     catch (e) {
         console.log(e);

@@ -26,8 +26,8 @@ export default function TaskInfoModal(props: any) {
                     'operation': 'remove'
                 }
             });
-            updateUser();
-            props.handleReload();
+            await updateUser(props.handleReload);
+            // props.handleReload();
             props.handleClose();
         }
         catch (e) {

@@ -42,8 +42,8 @@ export default function GroupInvitationModal(props: any) {
                 url: `${homeurl}/users/${userJSON._id}`,
                 data: requestBody
             })
+            await updateUser(props.handleReload);
             closeDeclineConfirm();
-            props.handleReload();
             props.handleClose();
         }
         catch (e) {
@@ -86,9 +86,8 @@ export default function GroupInvitationModal(props: any) {
                     'role': props.role
                 }
             })
-            updateUser();
+            await updateUser(props.handleReload);
             closeAcceptConfirm();
-            props.handleReload();
             props.handleClose();
         }
         catch (e) {
