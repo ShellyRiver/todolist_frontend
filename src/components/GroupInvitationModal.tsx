@@ -77,14 +77,23 @@ export default function GroupInvitationModal(props: any) {
             console.log(e);
         }
         try {
+            var requestBody;
+            if (props.role === 'member') {
+                requestBody = {
+                    'belongingGroups': data._id,
+                    'operation': 'add',
+                }
+            }
+            else {
+                requestBody = {
+                    'leadingGroups': data._id,
+                    'operation': 'add',
+                }
+            }
             await axios({
                 method: "patch",
                 url: `${homeurl}/users/${userJSON._id}`,
-                data: {
-                    'belongingGroups': data._id,
-                    'operation': 'add',
-                    'role': props.role
-                }
+                data: requestBody
             })
             await updateUser(props.handleReload);
             closeAcceptConfirm();
@@ -116,6 +125,7 @@ export default function GroupInvitationModal(props: any) {
             }
         }
     }, [props.show])
+
 
     return (<>
     <Modal show={props.show} onHide={props.handleClose}>
