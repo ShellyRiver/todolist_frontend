@@ -3,8 +3,16 @@ import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
 import React from "react";
 import Button from "react-bootstrap/Button";
+import {updateUser} from "./updateUser";
 
 export default function ConfirmationModal(props: any) {
+    async function clickConfirm() {
+        await props.handleConfirm();
+        if (props.setReload) {
+            await updateUser(props.setReload);
+        }
+        props.handleClose();
+    }
     return (
         <>
             <Modal show={props.show} onHide={props.handleClose} size="lg">
@@ -18,7 +26,7 @@ export default function ConfirmationModal(props: any) {
                     <Button variant="secondary" onClick={props.handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={props.handleConfirm}>
+                    <Button variant="primary" onClick={clickConfirm}>
                         Confirm
                     </Button>
                 </Modal.Footer>

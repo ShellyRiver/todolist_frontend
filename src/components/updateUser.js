@@ -10,8 +10,8 @@ export async function updateUser(reloadCallback) {
             url: `${homeurl}/users/${userJSON._id}`,
         });
         localStorage.setItem('user', JSON.stringify(user.data.data[0]));
-        console.log(JSON.stringify(user.data.data[0]));
-        console.log(localStorage.getItem('user'));
+        // console.log(JSON.stringify(user.data.data[0]));
+        // console.log(localStorage.getItem('user'));
         reloadCallback();
     }
     catch (e) {

@@ -26,6 +26,7 @@ import InviteCollaboratorModal from "../components/InviteCollaboratorModal";
 import ConfirmationModal from "../components/ConfirmationModal";
 import AddGroupModal from "../components/AddGroupModal";
 import ChangeGroupModal from "../components/ChangeGroupModal";
+import HandleDeleteGroup from "../components/HandleDeleteGroup";
 
 // different methods to manipulate a group based on the role
 // 4 roles in a group:
@@ -116,6 +117,7 @@ function GroupList() {
     useEffect(()=>{
         console.log(`Inside useEffect: ${reloadGroup}`)
         const userString = localStorage.getItem("user");
+        // console.log(userString);
         const userJSON = JSON.parse(userString || "");
         if (userJSON.belongingGroups && userJSON.belongingGroups.length > 0) {
             axios({
@@ -125,8 +127,13 @@ function GroupList() {
                 setGroup(r.data.data);
                 if (groupIndex >= 0) {
                     setClickedGroup(r.data.data[groupIndex]);
+                    setGroupId(r.data.data[groupIndex]._id);
                 }
             });
+        }
+        else {
+            setGroup([]);
+            setClickedGroup({});
         }
         if (userJSON.leadingGroups && userJSON.leadingGroups.length > 0) {
             axios({
@@ -135,17 +142,33 @@ function GroupList() {
             }).then(r => {
                 console.log(r);
                 setLeadingGroup(r.data.data);
-                if (leadingGroupIndex >= 0) {
-                    setClickedLeadingGroup(r.data.data[leadingGroupIndex]);
+                if (leadingGroupIndex >= 0 && leadingGroupIndex < r.data.data.length) {
+                    console.log(leadingGroupIndex);
+                    if (leadingGroupIndex === r.data.data.length) {
+                        // setGroupIndex(0);
+                        // setClickedGroup(group[0]);
+                        setLeadingGroupIndex(-1);
+                        setClickedLeadingGroup({});
+                    }
+                    else {
+                        setClickedLeadingGroup(r.data.data[leadingGroupIndex]);
+                    }
+                }
+                else {
+                    setClickedLeadingGroup({});
+                    setLeadingGroupIndex(-1);
                 }
             });
+        }
+        else {
+            setLeadingGroup([]);
+            setClickedLeadingGroup({});
         }
     },[reloadGroup])
 
     useEffect(() => {
         __updateComponent();
     }, [group, leadingGroup])  // TODO: add dependency?
-
 
     function __updateComponent() {
         let newComponentList: any = [];
@@ -190,61 +213,58 @@ function GroupList() {
         setComponentList(newComponentList);
   }
 
-  function Buttons(role: number) {
-      if (role === INDIVIDUAL) {
-          return (
-              <>
-                  <ListGroup>
-                      <ListGroup.Item action onClick={() => setShowAddTask(true)}>
-                          Add a task
-                      </ListGroup.Item>
-                  </ListGroup>
-              </>
-          );
-      }
-      else if (role === GROUPMEMBER) {
-          return (
-              <ListGroup>
-                  <ListGroup.Item action>
-                      Leave group
-                  </ListGroup.Item>
-                  <ListGroup.Item action onClick={() => setShowGroupInfo(true)}>
-                      Group information
-                  </ListGroup.Item>
-              </ListGroup>
-          );
-      }
-      else if (role === GROUPLEADER) {
-          return (
-              <ListGroup>
-                  <ListGroup.Item action onClick={() => {setShowAddTaskGroup(true)}}>
-                      Add a task
-                  </ListGroup.Item>
-                  <ListGroup.Item action onClick={() => setShowInviteCollaborator(true)}>
-                      Invite collaborator
-                  </ListGroup.Item>
-                  <ListGroup.Item action onClick={()=>console.log('button clicked')}>
-                      Delete member
-                  </ListGroup.Item>
-                  <ListGroup.Item action onClick={() => setShowLeaveGroup(true)}>
-                      Leave group
-                  </ListGroup.Item>
-                  <ListGroup.Item action onClick={() => setShowDeleteGroup(true)}>
-                      Delete group
-                  </ListGroup.Item>
-                  <ListGroup.Item action onClick={() => setShowLeadingGroupInfo(true)}>
-                      Group information
-                  </ListGroup.Item>
-                  <ListGroup.Item action onClick={() => setShowEditGroupInfo(true)}>
-                      Edit group
-                  </ListGroup.Item>
-              </ListGroup>
-          );
-      }
-  }
-
-  // TODO: load group tasks, load group members
-  // TODO: leave a group, delete a group
+    function Buttons(role: number) {
+        if (role === INDIVIDUAL) {
+            return (
+                <>
+                    <ListGroup>
+                        <ListGroup.Item action onClick={() => setShowAddTask(true)}>
+                            Add a task
+                        </ListGroup.Item>
+                    </ListGroup>
+                </>
+            );
+        }
+        else if (role === GROUPMEMBER) {
+            return (
+                <ListGroup>
+                    <ListGroup.Item action>
+                        Leave group
+                    </ListGroup.Item>
+                    <ListGroup.Item action onClick={() => setShowGroupInfo(true)}>
+                        Group information
+                    </ListGroup.Item>
+                </ListGroup>
+            );
+        }
+        else if (role === GROUPLEADER) {
+            return (
+                <ListGroup>
+                    <ListGroup.Item action onClick={() => {setShowAddTaskGroup(true)}}>
+                        Add a task
+                    </ListGroup.Item>
+                    <ListGroup.Item action onClick={() => setShowInviteCollaborator(true)}>
+                        Invite collaborator
+                    </ListGroup.Item>
+                    <ListGroup.Item action onClick={()=>console.log('button clicked')}>
+                        Delete member
+                    </ListGroup.Item>
+                    <ListGroup.Item action onClick={() => setShowLeaveGroup(true)}>
+                        Leave group
+                    </ListGroup.Item>
+                    <ListGroup.Item action onClick={() => setShowDeleteGroup(true)}>
+                        Delete group
+                    </ListGroup.Item>
+                    <ListGroup.Item action onClick={() => setShowLeadingGroupInfo(true)}>
+                        Group information
+                    </ListGroup.Item>
+                    <ListGroup.Item action onClick={() => setShowEditGroupInfo(true)}>
+                        Edit group
+                    </ListGroup.Item>
+                </ListGroup>
+            );
+        }
+    }
 
     return (
         <>
@@ -281,28 +301,26 @@ function GroupList() {
                 <GroupInfoModal show={showLeadingGroupInfo} handleClose={handleCloseLeadingGroupInfo} data={clickedLeadingGroup}/>
                 <InviteCollaboratorModal show={showInviteCollaborator} handleClose={handleCloseInviteCollaborator} data={clickedLeadingGroup} groupId={leadingGroupId} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
                 <ChangeGroupModal show={showEditGroupInfo} handleClose={handleCloseEditGroupInfo} data={clickedLeadingGroup} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
-                <ConfirmationModal show={showDeleteGroup} title="Delete Group" body="Are you sure to delete this group?" handleClose={handleCloseDeleteGroup}/>
+                <ConfirmationModal show={showDeleteGroup} title="Delete Group" body="Are you sure to delete this group?" handleClose={handleCloseDeleteGroup} handleConfirm={()=>HandleDeleteGroup(leadingGroupId)} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
             </div>
         </>
     )
 }
 
-
 // navigate to monthly view or daily view
 function Navigator() {
-  return (
-    <>
-      <Navbar bg="light" variant="light">
-        <Container className="navContainer">
-          <Nav className="me-auto">
-            <Nav.Link href="/monthly">Monthly</Nav.Link>
-            <Nav.Link href="/daily">Daily</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
-    </>
-  )
+    return (
+        <>
+            <Navbar bg="light" variant="light">
+                <Container className="navContainer">
+                    <Nav className="me-auto">
+                        <Nav.Link href="/monthly">Monthly</Nav.Link>
+                        <Nav.Link href="/daily">Daily</Nav.Link>
+                    </Nav>
+                </Container>
+            </Navbar>
+        </>
+    )
 }
-
 
 export default Home;
