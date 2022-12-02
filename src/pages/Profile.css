@@ -1,0 +1,45 @@
+.profile-container {
+    margin-left: 10%;
+    margin-right: 10%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.figure-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin-right: 5%;
+}
+
+.figure-container div {
+    margin-top: 5px;
+}
+
+.figure-container img {
+    border-radius: 50%;
+    width: 300px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.profile-email {
+    color: grey;
+    font-size: 20px;
+    font-style: italic;
+}
+
+.info-container {
+    flex-grow: 20;
+    display: flex;
+    flex-direction: column;
+    margin: 1%;
+}
+
+.info-container div {
+    margin-top: 10px;
+}
+
+.info-container h3 {
+    margin-top: 20px;
+}

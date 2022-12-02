@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import './Auth.css';
 import logo from '../imgs/group-todo-logo.png';
 import {useAuthContext} from "../context/authContext";
-import {useNavigate} from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import Alert from 'react-bootstrap/Alert';
 
 
@@ -14,6 +14,7 @@ export default function Auth() {
     const [showErrorMsg, setShowErrorMsg] = useState(false);
     const [showSuccessMsg, setShowSuccessMsg] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+
 
 
     const navigate = useNavigate();
@@ -27,11 +28,13 @@ export default function Auth() {
         }
         else {
             const response = await signIn();
-            console.log(response);
+            // console.log(response);
             if (response.status === "success") {
                 // @ts-ignore
                 localStorage.setItem('email', response.message);
-                console.log(`Logged in email is: ${response.message}`);
+                localStorage.setItem('user', JSON.stringify(response.info));
+                // console.log(localStorage.getItem('user'));
+                // console.log(`Logged in email is: ${response.message}`);
                 navigate('/');
                 setShowErrorMsg(false);
             }
@@ -54,7 +57,7 @@ export default function Auth() {
             const response = await signUp();
             if (response.status === "success") {
                 // @ts-ignore
-                setErrorMsg(false);
+                setShowErrorMsg(false);
                 setShowSuccessMsg(true);
                 setShowUserName(false);
             }
@@ -64,6 +67,11 @@ export default function Auth() {
             }
         }
     }
+    const email = localStorage.getItem("email");
+    if (email !== null && email !== ""){
+        return <Navigate replace to="/" />
+    }
+
     return (
       <>
           {showErrorMsg && <Alert variant="danger" onClose={() => setShowErrorMsg(false)} dismissible>
