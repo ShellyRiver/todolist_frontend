@@ -26,7 +26,9 @@ import InviteCollaboratorModal from "../components/InviteCollaboratorModal";
 import ConfirmationModal from "../components/ConfirmationModal";
 import AddGroupModal from "../components/AddGroupModal";
 import ChangeGroupModal from "../components/ChangeGroupModal";
-import HandleDeleteGroup from "../components/HandleDeleteGroup";
+import HandleDeleteGroup from "../methods/HandleDeleteGroup";
+import HandleMemberLeaveGroup from "../methods/HandleMemberLeaveGroup";
+import HandleLeaderLeaveGroup from "../methods/HandleLeaderLeaveGroup";
 
 // different methods to manipulate a group based on the role
 // 4 roles in a group:
@@ -101,6 +103,9 @@ function GroupList() {
     const [showLeaveGroup, setShowLeaveGroup] = useState(false);
     const handleCloseLeaveGroup = () => setShowLeaveGroup(false);
 
+    const [showLeaderLeaveGroup, setShowLeaderLeaveGroup] = useState(false);
+    const handleCloseLeaderLeaveGroup = () => setShowLeaderLeaveGroup(false);
+
     const [showDeleteGroup, setShowDeleteGroup] = useState(false);
     const handleCloseDeleteGroup = () => setShowDeleteGroup(false);
 
@@ -140,23 +145,28 @@ function GroupList() {
                 method: "get",
                 url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.leadingGroups)}}}`
             }).then(r => {
-                console.log(r);
+                // console.log(r);
                 setLeadingGroup(r.data.data);
                 if (leadingGroupIndex >= 0 && leadingGroupIndex < r.data.data.length) {
                     console.log(leadingGroupIndex);
                     if (leadingGroupIndex === r.data.data.length) {
-                        // setGroupIndex(0);
-                        // setClickedGroup(group[0]);
+                        setGroupIndex(0);
+                        setClickedGroup(group[0]);
+                        setGroupId(group[0]._id);
                         setLeadingGroupIndex(-1);
                         setClickedLeadingGroup({});
+                        setLeadingGroupId("");
                     }
                     else {
                         setClickedLeadingGroup(r.data.data[leadingGroupIndex]);
+                        setLeadingGroupIndex(-1);
+                        setLeadingGroupId("");
                     }
                 }
                 else {
                     setClickedLeadingGroup({});
                     setLeadingGroupIndex(-1);
+                    setLeadingGroupId("");
                 }
             });
         }
@@ -228,7 +238,7 @@ function GroupList() {
         else if (role === GROUPMEMBER) {
             return (
                 <ListGroup>
-                    <ListGroup.Item action>
+                    <ListGroup.Item action onClick={() => setShowLeaveGroup(true)}>
                         Leave group
                     </ListGroup.Item>
                     <ListGroup.Item action onClick={() => setShowGroupInfo(true)}>
@@ -249,7 +259,7 @@ function GroupList() {
                     <ListGroup.Item action onClick={()=>console.log('button clicked')}>
                         Delete member
                     </ListGroup.Item>
-                    <ListGroup.Item action onClick={() => setShowLeaveGroup(true)}>
+                    <ListGroup.Item action onClick={() => setShowLeaderLeaveGroup(true)}>
                         Leave group
                     </ListGroup.Item>
                     <ListGroup.Item action onClick={() => setShowDeleteGroup(true)}>
@@ -302,6 +312,8 @@ function GroupList() {
                 <InviteCollaboratorModal show={showInviteCollaborator} handleClose={handleCloseInviteCollaborator} data={clickedLeadingGroup} groupId={leadingGroupId} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
                 <ChangeGroupModal show={showEditGroupInfo} handleClose={handleCloseEditGroupInfo} data={clickedLeadingGroup} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
                 <ConfirmationModal show={showDeleteGroup} title="Delete Group" body="Are you sure to delete this group?" handleClose={handleCloseDeleteGroup} handleConfirm={()=>HandleDeleteGroup(leadingGroupId)} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
+                <ConfirmationModal show={showLeaveGroup} title="Leave Group (Member)" body="Are you sure to leave this group?" handleClose={handleCloseLeaveGroup} handleConfirm={()=>HandleMemberLeaveGroup(groupId)} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
+                <ConfirmationModal show={showLeaderLeaveGroup} title="Leave Group (Leader)" body={"Are you sure to leave this group? If you are the only leader of the group, the whole group will be delete!"} handleClose={handleCloseLeaderLeaveGroup} handleConfirm={()=>HandleLeaderLeaveGroup(leadingGroupId, clickedLeadingGroup)} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
             </div>
         </>
     )
