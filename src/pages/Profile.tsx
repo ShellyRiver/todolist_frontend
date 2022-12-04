@@ -17,11 +17,15 @@ function Profile() {
   const userString = localStorage.getItem("user");
   const userJSON = JSON.parse(userString || "");
   const [group, setGroup] = useState([]);
+  const [leadingGroup, setLeadingGroup] = useState([]);
   const [clickedGroup, setClickedGroup] = useState({});
+  const [clickedLeadingGroup, setClickedLeadingGroup] = useState({});
   const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const [showLeadingGroupInfo, setShowLeadingGroupInfo] = useState(false);
   const [showChangeProfile, setShowChangeProfile] = useState(false);
   const [showChangeImage, setShowChangeImage] = useState(false);
   const handleCloseGroupInfo = () => setShowGroupInfo(false);
+  const handleCloseLeadingGroupInfo = () => setShowLeadingGroupInfo(false);
 
   useEffect(()=>{
       if (userJSON.belongingGroups && userJSON.belongingGroups.length > 0)
@@ -31,6 +35,13 @@ function Profile() {
       }).then(r => {
           setGroup(r.data.data);
       });
+      if (userJSON.leadingGroups && userJSON.leadingGroups.length > 0)
+          axios({
+              method: "get",
+              url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.leadingGroups)}}}`
+          }).then(r => {
+              setLeadingGroup(r.data.data);
+          });
   },[])
 
   if (email == null || email == ""){
@@ -48,15 +59,27 @@ function Profile() {
                 </Button>
             </div>
             <div className="info-container">
-                <div><h3>Your Groups</h3></div>
+                {leadingGroup.length > 0 &&
+                    <>
+                        <div><h3>Your Leading Groups</h3></div>
+                        <ListGroup>
+                            {leadingGroup.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
+                                setShowLeadingGroupInfo(true);
+                                setClickedLeadingGroup(leadingGroup[index]);
+                            }}>{g.name}</ListGroup.Item>)}
+                        </ListGroup>
+                    </>
+                }
                 {group.length > 0 &&
+                    <>
+                    <div><h3>Your Belonging Groups</h3></div>
                     <ListGroup>
                         {group.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
                             setShowGroupInfo(true);
                             setClickedGroup(group[index]);
-                            // console.log(group[index]);
                         }}>{g.name}</ListGroup.Item>)}
                     </ListGroup>
+                    </>
                 }
                 <div><h3>Personal Description</h3></div>
                 {!userJSON.description &&
@@ -66,7 +89,6 @@ function Profile() {
                 }
                 {userJSON.description &&
                     <div>{userJSON.description}</div>
-
                 }
                 {/*<Form.Group*/}
                 {/*    className="mb-3"*/}
@@ -83,6 +105,7 @@ function Profile() {
         </div>
         <div className="modal">
             <GroupInfoModal show={showGroupInfo} handleClose={handleCloseGroupInfo} data={clickedGroup}/>
+            <GroupInfoModal show={showLeadingGroupInfo} handleClose={handleCloseLeadingGroupInfo} data={clickedLeadingGroup} />
             <ChangeProfileModal show={showChangeProfile} handleClose={()=>setShowChangeProfile(false)} data={userJSON}/>
             <ChangeImageModal show={showChangeImage} handleClose={()=>setShowChangeImage(false)} data={userJSON}/>
         </div>
