@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import axios from "axios";
 import React, {useState} from "react";
 import Button from 'react-bootstrap/Button';
-import '../pages/Profile.css';
+import './ChangeImageModal.css';
 import {updateUser} from "./updateUser";
 
 
@@ -47,7 +47,9 @@ export default function ChangeImageModal(props: any) {
             // console.log(e);
             props.handleClose();
         }
-        updateUser(props.setReload)
+        updateUser(props.setReload);
+        setShowPreview(false);
+        props.handleClose();
     }
     // @ts-ignore
     return (
@@ -74,7 +76,7 @@ export default function ChangeImageModal(props: any) {
                             </Form.Group>
                         }
                     </Form>
-                    <div><img id='preview' src=""/></div>
+                    <div className="image-container"><img id='preview' src="" hidden={!showPreview}/></div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={()=>{setShowPreview(false); props.handleClose()}}>

@@ -6,7 +6,10 @@ import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import GroupInvitationModal from "../components/GroupInvitationModal";
 import TaskInfoModal from "../components/TaskInfoModal";
+import Badge from "react-bootstrap/Badge";
+import './Message.css';
 const homeurl = 'http://localhost:4000/api'
+
 
 let messages = ["message1", "message2", "message3"];
 
@@ -77,40 +80,51 @@ function Message() {
       <h1>Incoming Messages </h1>
       {/*{JSON.stringify(unreadTaskInfo)}*/}
       {/*{JSON.stringify(invitingGroupInfo)}*/}
-      {invitingGroupInfo.length > 0 &&
-          <ListGroup>
-            {invitingGroupInfo.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
-              setShowGroupInfo(true);
-              setClickedGroup(invitingGroupInfo[index]);
-              setGroupRole('member');
-            }}><strong>New group invitation (Member):</strong> {g.name}</ListGroup.Item>)}
-          </ListGroup>
-      }
-      {invitingLeadingGroupInfo.length > 0 &&
-          <ListGroup>
-            {invitingLeadingGroupInfo.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
-              setShowGroupInfo(true);
-              setClickedGroup(invitingLeadingGroupInfo[index]);
-              setGroupRole('leader');
-            }}><strong>New group invitation (Leader):</strong> {g.name}</ListGroup.Item>)}
-          </ListGroup>
-      }
-      {invitingLeadingGroupInfo.length > 0 &&
-          <ListGroup>
-            {invitingGroupInfo.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
-              setShowGroupInfo(true);
-              setClickedGroup(invitingGroupInfo[index]);
-            }}><strong>New group invitation:</strong> {g.name}</ListGroup.Item>)}
-          </ListGroup>
-      }
-      {unreadTaskInfo.length > 0 &&
-          <ListGroup>
-            {unreadTaskInfo.map((t:any, index) => <ListGroup.Item action key={index} onClick={() => {
-              setShowTaskInfo(true);
-              setClickedTask(unreadTaskInfo[index]);
-            }}><strong>New group task:</strong> {t.name}</ListGroup.Item>)}
-          </ListGroup>
-      }
+      <div className='message-box'>
+        {unreadTaskInfo.length > 0 &&
+            <ListGroup>
+              {unreadTaskInfo.map((t:any, index) => <ListGroup.Item className="d-flex justify-content-between align-items-start" action key={index} onClick={() => {
+                setShowTaskInfo(true);
+                setClickedTask(unreadTaskInfo[index]);
+              }}>
+                <div className="ms-2 me-auto messages">
+                  <div className="fw-bold">New Group Task</div>
+                  {t.name}: {t.description}
+                </div>
+              </ListGroup.Item>)}
+            </ListGroup>
+        }
+        {invitingGroupInfo.length > 0 &&
+            <ListGroup>
+              {invitingGroupInfo.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
+                setShowGroupInfo(true);
+                setClickedGroup(invitingGroupInfo[index]);
+                setGroupRole('member');
+              }}>
+                {/*<strong>New group invitation (Member):</strong> {g.name}*/}
+                <div className="ms-2 me-auto messages">
+                  <div className="fw-bold">New group invitation (Member)</div>
+                  {g.name}: {g.description}
+                </div>
+              </ListGroup.Item>)}
+            </ListGroup>
+        }
+        {invitingLeadingGroupInfo.length > 0 &&
+            <ListGroup>
+              {invitingLeadingGroupInfo.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
+                setShowGroupInfo(true);
+                setClickedGroup(invitingLeadingGroupInfo[index]);
+                setGroupRole('leader');
+              }}>
+                {/*<strong>New group invitation (Leader):</strong> {g.name}*/}
+                <div className="ms-2 me-auto messages">
+                  <div className="fw-bold">New group invitation (Leader)</div>
+                  {g.name}: {g.description}
+                </div>
+              </ListGroup.Item>)}
+            </ListGroup>
+        }
+      </div>
       <GroupInvitationModal show={showGroupInfo} handleClose={handleCloseGroupInfo} data={clickedGroup} role={groupRole} handleReload={()=>setReloadUser((user)=>{return user+1;})}/>
       <TaskInfoModal show={showTaskInfo} handleClose={handleCloseTaskInfo} data={clickedTask} handleReload={()=>setReloadUser((user)=>{return user+1;})}/>
     </>

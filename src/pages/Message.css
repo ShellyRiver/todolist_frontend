@@ -1,0 +1,11 @@
+.message-box {
+    width: 50%;
+    margin: 0 auto;
+}
+.messages {
+    color: dimgray;
+}
+
+.messages:hover {
+    color: black;
+}
