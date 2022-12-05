@@ -52,17 +52,25 @@ function Monthly() {
   const [belongingTaskInfo, setBelongingTaskInfo] = useState([]);
   const [leadingTaskInfo, setLeadingTaskInfo] = useState([]);
 
+  const [calendarResources, setCalendarResources] = useState<any>([]);
+  const [calendarEvents, setCalendarEvents] = useState<any>([]);
+
 
   useEffect(() => {
     __updateTaskIDs();
+    console.log("useeffect-update task ids")
     // __updateTaskInfo();
   }, [])  // TODO: add dependency?
 
-  // useEffect(() => {
-  //   __updateTaskInfo();
-  // }, [individualTaskIDs, belongingTaskIDs, leadingTaskIDs])  // TODO: add dependency?
+
+  useEffect(() => {
+    __updateTaskInfo();
+  }, [individualTaskIDs, belongingTaskIDs, leadingTaskIDs])  // TODO: add dependency?
 
   useEffect(()=>{
+    
+    console.log("resources, events", calendarResources, calendarEvents)
+
     var calendarEl = document.getElementById('calendar')!;
 
     // @ts-ignore
@@ -78,86 +86,86 @@ function Monthly() {
       navLinks: true, // can click day/week names to navigate views
       editable: true,
       dayMaxEvents: true, // allow "more" link when too many events
-      resources: [
-        {
-          id: 'completed',
-          eventColor: COLORCOMPLETED
-        },
-        {
-          id: 'a',
-          title: 'Room A',
-          eventColor: 'rgb(255,0,0)'
-        },
-        {
-          id: 'b',
-          title: 'Room B'
-        }
-      ],
-      events: [
-        {
-          id: 't1',
-          title: 'All Day Event',
-          resourceIds: ['a'],
-          start: '2022-12-07',
-        },
-        {
-          title: 'Long Event',
-          start: '2022-12-08',
-          end: '2022-12-08'
-        },
-        {
-          title: 'Repeating Event',
-          start: '2022-12-08T16:00:00'
-        },
-        {
-          title: 'Repeating Event',
-          start: '2022-12-08T16:00:00'
-        },
-        {
-          title: 'Conference',
-          start: '2022-12-08',
-          end: '2022-12-08'
-        },
-        {
-          title: 'Meeting',
-          start: '2022-12-08T10:30:00',
-          end: '2022-12-08T12:30:00'
-        },
-        {
-          title: 'Lunch',
-          start: '2022-12-08T12:00:00'
-        },
-        {
-          title: 'Meeting',
-          start: '2022-12-08T14:30:00'
-        },
-        {
-          title: 'Happy Hour',
-          start: '2022-12-08T17:30:00'
-        },
-        {
-          title: 'Dinner',
-          start: '2022-12-08T20:00:00'
-        },
-        {
-          title: 'Birthday Party',
-          start: '2022-12-08T07:00:00'
-        },
-        {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2022-12-08'
-        }
-      ]
+      resources: calendarResources,
+      events: calendarEvents
+      // resources: [
+      //   {
+      //     id: 'completed',
+      //     eventColor: COLORCOMPLETED
+      //   },
+      //   {
+      //     id: 'a',
+      //     title: 'Room A',
+      //     eventColor: 'rgb(255,0,0)'
+      //   },
+      //   {
+      //     id: 'b',
+      //     title: 'Room B'
+      //   }
+      // ],
+      // events: [
+      //   {
+      //     id: 't1',
+      //     title: 'All Day Event',
+      //     resourceIds: ['a'],
+      //     start: '2022-12-07',
+      //   },
+      //   {
+      //     title: 'Long Event',
+      //     start: '2022-12-08',
+      //     end: '2022-12-08'
+      //   },
+      //   {
+      //     title: 'Repeating Event',
+      //     start: '2022-12-08T16:00:00'
+      //   },
+      //   {
+      //     title: 'Repeating Event',
+      //     start: '2022-12-08T16:00:00'
+      //   },
+      //   {
+      //     title: 'Conference',
+      //     start: '2022-12-08',
+      //     end: '2022-12-08'
+      //   },
+      //   {
+      //     title: 'Meeting',
+      //     start: '2022-12-08T10:30:00',
+      //     end: '2022-12-08T12:30:00'
+      //   },
+      //   {
+      //     title: 'Lunch',
+      //     resourceIds: ['a'],
+      //     start: '2022-12-08T12:00:00'
+      //   },
+      //   {
+      //     title: 'Meeting',
+      //     start: '2022-12-08T14:30:00'
+      //   },
+      //   {
+      //     title: 'Happy Hour',
+      //     start: '2022-12-08T17:30:00'
+      //   },
+      //   {
+      //     title: 'Dinner',
+      //     start: '2022-12-08T20:00:00'
+      //   },
+      //   {
+      //     title: 'Birthday Party',
+      //     start: '2022-12-08T07:00:00'
+      //   },
+        
+      // ]
     });
 
     // __updateTaskIDs();
-    __updateTaskInfo(calendar);
+    
     // __updateEvents(calendar);
 
     calendar.render();
     
-  }, [individualTaskIDs, belongingTaskIDs, leadingTaskIDs]);
+    
+  }, [calendarEvents]);
 
   useEffect(() => {
     __updateComponent();
@@ -271,7 +279,8 @@ function Monthly() {
     taskIdsUpdated ++;
   }
 
-  async function __updateTaskInfo(calendar: any) {
+  async function __updateTaskInfo() {
+    console.log("call __updateTaskInfo")
     let newIndividualTaskInfo: any = [];
     let newBelongingTaskInfo: any = [];
     let newLeadingTaskInfo: any = [];
@@ -326,7 +335,7 @@ function Monthly() {
           url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(individualTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
         });
         newIndividualTaskInfo = newIndividualTaskInfo.concat(response.data.data);
-        __updateIndividualEvents(newIndividualTaskInfo, calendar);
+        __updateIndividualEvents(newIndividualTaskInfo);
       }
       belongingTaskIDs.forEach(async (group:any) => {
         if (group.length > 0) {
@@ -335,7 +344,7 @@ function Monthly() {
             url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
           })
           newBelongingTaskInfo.push(response.data.data);
-          __updateGroupEvents(response.data.data, calendar, COLORSBELONGING, belongingGroupCount);
+          __updateGroupEvents(response.data.data, COLORSBELONGING, belongingGroupCount);
         }
         
       })
@@ -347,7 +356,7 @@ function Monthly() {
             url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
           })
           newLeadingTaskInfo.push(response.data.data);
-          __updateGroupEvents(response.data.data, calendar, COLORSLEADING, leadingGroupCount);
+          __updateGroupEvents(response.data.data, COLORSLEADING, leadingGroupCount);
         }
       })
     }
@@ -374,9 +383,9 @@ function Monthly() {
     // }
 
 
-    console.log("newIndividualTaskInfo", newIndividualTaskInfo);
-    console.log("newBelongingTaskInfo", newBelongingTaskInfo);
-    console.log("newLeadingTaskInfo", newLeadingTaskInfo);
+    // console.log("newIndividualTaskInfo", newIndividualTaskInfo);
+    // console.log("newBelongingTaskInfo", newBelongingTaskInfo);
+    // console.log("newLeadingTaskInfo", newLeadingTaskInfo);
 
     setIndividualTaskInfo(newIndividualTaskInfo);
     setBelongingTaskInfo(newBelongingTaskInfo);
@@ -385,42 +394,50 @@ function Monthly() {
     taskInfoUpdated ++;
   }
 
-  function __updateIndividualEvents(taskInfo: any, calendar: any) {
+  function __updateIndividualEvents(taskInfo: any) {
+    let events: any = [];
 
     taskInfo.forEach((element:any) => {
       // console.log("element", element.name, element.endTime)
-      calendar.addEvent({
+      events.push({
         title: element.name,
         start: element.endTime.slice(0, 10)
       })
     })
+
+    console.log("events", events);
+    setCalendarEvents([...calendarEvents, ...events]);
   }
 
   let belongingGroupCount = 0;
   let leadingGroupCount = 0;
 
-  function __updateGroupEvents(taskInfo: any, calendar: any, colors: any, count: number) {
-    console.log("taskinfo", taskInfo.length)
-    console.log([count.toString()])
+  function __updateGroupEvents(taskInfo: any, colors: any, count: number) {
+    let resources: any = [];
+    let events: any = [];
 
-      calendar.addResource({
-        id: count.toString(),
-        title: count.toString(),
-        eventColor: colors[count]
+    // console.log("taskinfo", taskInfo.length)
+    // console.log([count.toString()])
+
+    resources.push({
+      id: (count).toString(),
+      title: (count).toString(),
+      eventColor: colors[(count)]
+    })
+    
+    taskInfo.forEach((element:any) => {
+      console.log("taskinfo element", element)
+      events.push({
+        id: element.name,
+        title: element.name,
+        resourceIds: [count.toString()],
+        start: element.endTime.slice(0, 10),
       })
       
-      console.log(calendar.getResources())
-
-      taskInfo.forEach((element:any) => {
-        console.log("taskinfo element", element)
-        calendar.addEvent({
-          title: element.name,
-          start: element.endTime.slice(0, 10),
-          resourceIds: [count.toString()]
-        })
-      });
-      count ++;
-      console.log(calendar.getEvents())
+    });
+    count ++;
+    setCalendarResources([...calendarResources, ...resources])
+    setCalendarEvents([...calendarEvents, ...events]);
   }
   
 
