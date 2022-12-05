@@ -55,11 +55,18 @@ function Monthly() {
   const [calendarResources, setCalendarResources] = useState<any>([]);
   const [calendarEvents, setCalendarEvents] = useState<any>([]);
 
+  const [belongingResources, setBelongingResources] = useState<any>([]);
+  const [leadingResources, setLeadingResources] = useState<any>([]);
+  const [individualEvents, setIndividualEvents] = useState<any>([]);
+  const [belongingEvents, setBelongingEvents] = useState<any>([]);
+  const [leadingEvents, setLeadingEvents] = useState<any>([]);
+
+  const [belongingGroupCount, setBelongingGroupCount] = useState(0);
+  const [leadingGroupCount, setLeadingGroupCount] = useState(0);
 
   useEffect(() => {
     __updateTaskIDs();
     console.log("useeffect-update task ids")
-    // __updateTaskInfo();
   }, [])  // TODO: add dependency?
 
 
@@ -69,7 +76,7 @@ function Monthly() {
 
   useEffect(()=>{
     
-    console.log("resources, events", calendarResources, calendarEvents)
+    console.log("resources, events", [...belongingResources, ...leadingResources], [...individualEvents, ...belongingEvents, ...leadingEvents])
 
     var calendarEl = document.getElementById('calendar')!;
 
@@ -86,8 +93,8 @@ function Monthly() {
       navLinks: true, // can click day/week names to navigate views
       editable: true,
       dayMaxEvents: true, // allow "more" link when too many events
-      resources: calendarResources,
-      events: calendarEvents
+      resources: [...belongingResources, ...leadingResources],
+      events: [...individualEvents, ...belongingEvents, ...leadingEvents]
       // resources: [
       //   {
       //     id: 'completed',
@@ -163,19 +170,14 @@ function Monthly() {
     // __updateEvents(calendar);
 
     calendar.render();
+    console.log("leadingGroupCount", leadingGroupCount)
     
-    
-  }, [calendarEvents]);
-
-  useEffect(() => {
-    __updateComponent();
-  }, [])  // TODO: add dependency?
+  }, [individualEvents, belongingEvents, leadingEvents]);
 
   // useEffect(() => {
-  //   __updateTaskIDs();
-  //   __updateTaskInfo();
-  //   __updateEvents();
+  //   __updateComponent();
   // }, [])  // TODO: add dependency?
+
 
   async function __updateTaskIDs() {
     let newIndividualTaskIDs: any = [];
@@ -285,6 +287,11 @@ function Monthly() {
     let newBelongingTaskInfo: any = [];
     let newLeadingTaskInfo: any = [];
 
+    // setting to empty list each update, seems not solving the problem
+    setIndividualEvents([])
+    setBelongingEvents([])
+    setLeadingEvents([])
+
     // console.log("IndividualTaskIDs", individualTaskIDs);
     // console.log("BelongingTaskIDs", belongingTaskIDs);
     // console.log("LeadingTaskIDs", leadingTaskIDs);
@@ -344,7 +351,7 @@ function Monthly() {
             url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
           })
           newBelongingTaskInfo.push(response.data.data);
-          __updateGroupEvents(response.data.data, COLORSBELONGING, belongingGroupCount);
+          __updateGroupEvents(response.data.data, COLORSBELONGING, belongingGroupCount, setBelongingGroupCount, "belonging");
         }
         
       })
@@ -356,7 +363,7 @@ function Monthly() {
             url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
           })
           newLeadingTaskInfo.push(response.data.data);
-          __updateGroupEvents(response.data.data, COLORSLEADING, leadingGroupCount);
+          __updateGroupEvents(newLeadingTaskInfo[leadingGroupCount], COLORSLEADING, leadingGroupCount, setLeadingGroupCount, "leading");
         }
       })
     }
@@ -385,7 +392,7 @@ function Monthly() {
 
     // console.log("newIndividualTaskInfo", newIndividualTaskInfo);
     // console.log("newBelongingTaskInfo", newBelongingTaskInfo);
-    // console.log("newLeadingTaskInfo", newLeadingTaskInfo);
+    console.log("newLeadingTaskInfo", newLeadingTaskInfo);
 
     setIndividualTaskInfo(newIndividualTaskInfo);
     setBelongingTaskInfo(newBelongingTaskInfo);
@@ -405,14 +412,11 @@ function Monthly() {
       })
     })
 
-    console.log("events", events);
-    setCalendarEvents([...calendarEvents, ...events]);
+    console.log("individual events", events);
+    setIndividualEvents(events);
   }
 
-  let belongingGroupCount = 0;
-  let leadingGroupCount = 0;
-
-  function __updateGroupEvents(taskInfo: any, colors: any, count: number) {
+  function __updateGroupEvents(taskInfo: any, colors: any, count: number, setCount: any, type: string) {
     let resources: any = [];
     let events: any = [];
 
@@ -420,7 +424,7 @@ function Monthly() {
     // console.log([count.toString()])
 
     resources.push({
-      id: (count).toString(),
+      id: type + (count).toString(),
       title: (count).toString(),
       eventColor: colors[(count)]
     })
@@ -430,14 +434,22 @@ function Monthly() {
       events.push({
         id: element.name,
         title: element.name,
-        resourceIds: [count.toString()],
+        resourceIds: [type + count.toString()],
         start: element.endTime.slice(0, 10),
       })
       
     });
-    count ++;
-    setCalendarResources([...calendarResources, ...resources])
-    setCalendarEvents([...calendarEvents, ...events]);
+    setCount(count ++);
+    if (type === "belonging") {
+      setBelongingResources([...belongingResources, ...resources])
+      setBelongingEvents([...belongingEvents, ...events])
+    }
+    else {
+      setLeadingResources([...leadingResources, ...resources])
+      setLeadingEvents([...leadingEvents, ...events])
+    }
+    // setCalendarResources([...calendarResources, ...resources])
+    // setCalendarEvents([...calendarEvents, ...events]);
   }
   
 
