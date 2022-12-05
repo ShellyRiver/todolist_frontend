@@ -43,3 +43,9 @@
 .info-container h3 {
     margin-top: 20px;
 }
+
+img {
+    border-radius: 50%;
+    width: 300px;
+    margin-bottom: 20px;
+}
