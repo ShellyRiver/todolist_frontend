@@ -5,12 +5,23 @@ import { useState } from 'react';
 
 import './Monthly.css'
 // import '../../components/canlendar';
-import {Calendar} from "@fullcalendar/core";
+import {Calendar, constrainPoint} from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import adaptivePlugin from '@fullcalendar/adaptive';
 
+import axios from "axios";
+
+
+const COLORSLEADING = ['rgb(7,140,190)', 'rgb(255,179,255)', 'rgb(77,77,255)', 'rgb(255,77,106)', 'rgb(255,166,77)', 'rgb(196,255,77)', 'rgb(0,128,153)', 'rgb(0,153,51)', 'rgb(255,230,102)']
+const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(210,181,207)', 'rgb(235,165,176)', 'rgb(230,168,138)', 'rgb(230,204,165)', 'rgb(151,227,136)', 'rgb(138,230,184)']
+const COLORCOMPLETED = 'rgb(163,163,163)'
+
+let taskIdsUpdated = 0;
+let taskInfoUpdated = 0;
 
 // date list: should change based today's date and week
 // represent by date difference
@@ -24,88 +35,394 @@ let dates: any = [[-19,-18,-17,-16,-15,-14,-13],
 // display tasks for the month of "today"
 let today: any = Date.now();
 
+const homeurl = 'http://localhost:4000/api'
+
 function Monthly() {
+  let belongingGroupNames = [];
+  let leadingGroupNames = [];
+
+  const email = localStorage.getItem("email");
   
   const [componentList, setComponentList] = useState([]);
 
+  const [individualTaskIDs, setIndividualTaskIDs] = useState([]);
+  const [belongingTaskIDs, setBelongingTaskIDs] = useState([]);
+  const [leadingTaskIDs, setLeadingTaskIDs] = useState([]);
+  const [individualTaskInfo, setIndividualTaskInfo] = useState([]);
+  const [belongingTaskInfo, setBelongingTaskInfo] = useState([]);
+  const [leadingTaskInfo, setLeadingTaskInfo] = useState([]);
+
+
+  useEffect(() => {
+    __updateTaskIDs();
+    // __updateTaskInfo();
+  }, [])  // TODO: add dependency?
+
+  // useEffect(() => {
+  //   __updateTaskInfo();
+  // }, [individualTaskIDs, belongingTaskIDs, leadingTaskIDs])  // TODO: add dependency?
+
   useEffect(()=>{
-    var calendarEl = document.getElementById('calendar');
+    var calendarEl = document.getElementById('calendar')!;
 
     // @ts-ignore
     var calendar = new Calendar(calendarEl, {
-      plugins: [ interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin ],
+      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+      plugins: [ interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimelinePlugin ],
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        right: 'resourceTimelineDay, dayGridMonth,listWeek'  // timeGridWeek,timeGridDay,
       },
-      initialDate: '2018-01-12',
+      initialDate: '2022-12-08',
       navLinks: true, // can click day/week names to navigate views
       editable: true,
       dayMaxEvents: true, // allow "more" link when too many events
+      resources: [
+        {
+          id: 'completed',
+          eventColor: COLORCOMPLETED
+        },
+        {
+          id: 'a',
+          title: 'Room A',
+          eventColor: 'rgb(255,0,0)'
+        },
+        {
+          id: 'b',
+          title: 'Room B'
+        }
+      ],
       events: [
         {
+          id: 't1',
           title: 'All Day Event',
-          start: '2018-01-01',
+          resourceIds: ['a'],
+          start: '2022-12-07',
         },
         {
           title: 'Long Event',
-          start: '2018-01-07',
-          end: '2018-01-10'
+          start: '2022-12-08',
+          end: '2022-12-08'
         },
         {
-          groupId: 999,
           title: 'Repeating Event',
-          start: '2018-01-09T16:00:00'
+          start: '2022-12-08T16:00:00'
         },
         {
-          groupId: 999,
           title: 'Repeating Event',
-          start: '2018-01-16T16:00:00'
+          start: '2022-12-08T16:00:00'
         },
         {
           title: 'Conference',
-          start: '2018-01-11',
-          end: '2018-01-13'
+          start: '2022-12-08',
+          end: '2022-12-08'
         },
         {
           title: 'Meeting',
-          start: '2018-01-12T10:30:00',
-          end: '2018-01-12T12:30:00'
+          start: '2022-12-08T10:30:00',
+          end: '2022-12-08T12:30:00'
         },
         {
           title: 'Lunch',
-          start: '2018-01-12T12:00:00'
+          start: '2022-12-08T12:00:00'
         },
         {
           title: 'Meeting',
-          start: '2018-01-12T14:30:00'
+          start: '2022-12-08T14:30:00'
         },
         {
           title: 'Happy Hour',
-          start: '2018-01-12T17:30:00'
+          start: '2022-12-08T17:30:00'
         },
         {
           title: 'Dinner',
-          start: '2018-01-12T20:00:00'
+          start: '2022-12-08T20:00:00'
         },
         {
           title: 'Birthday Party',
-          start: '2018-01-13T07:00:00'
+          start: '2022-12-08T07:00:00'
         },
         {
           title: 'Click for Google',
           url: 'http://google.com/',
-          start: '2018-01-28'
+          start: '2022-12-08'
         }
       ]
     });
+
+    // __updateTaskIDs();
+    __updateTaskInfo(calendar);
+    // __updateEvents(calendar);
+
     calendar.render();
-  }, []);
+    
+  }, [individualTaskIDs, belongingTaskIDs, leadingTaskIDs]);
 
   useEffect(() => {
     __updateComponent();
   }, [])  // TODO: add dependency?
+
+  // useEffect(() => {
+  //   __updateTaskIDs();
+  //   __updateTaskInfo();
+  //   __updateEvents();
+  // }, [])  // TODO: add dependency?
+
+  async function __updateTaskIDs() {
+    let newIndividualTaskIDs: any = [];
+    let newBelongingTaskIDs: any = [];
+    let newLeadingTaskIDs: any = [];
+    
+    var resp;
+    try {
+        resp = await axios({
+            method: "get",
+            url: `${homeurl}/users?where={"email":"${email}"}`,
+        });
+    }
+    catch (e: any) {
+        // @ts-ignore
+    }
+
+    let belongingGroups: any;
+    let leadingGroups: any;
+
+    if (resp !== undefined) {
+      let data = resp.data.data[0];
+
+      // add individual tasks to the list
+      data.individualTasks.forEach((element:any) => {
+        newIndividualTaskIDs.push(element);
+      });
+
+      // console.log("newIndividualTaskIDs", newIndividualTaskIDs);
+
+      belongingGroups = data.belongingGroups;
+      leadingGroups = data.leadingGroups;
+    }
+
+    // console.log("log Groups", belongingGroups, leadingGroups)
+
+    // // add belonging and leading group task ids
+    // if (belongingGroups && belongingGroups.length > 0) {
+    //   axios({
+    //     method: "get",
+    //     url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(belongingGroups)}}}&select={"name": 1, "groupTasks": 1, "_id": 0}`
+    //   }).then((r) => {
+    //     // console.log("log res", r.data.data)
+    //     r.data.data.forEach((element:any) => {
+    //       belongingGroupNames.push(element.groupName);
+    //       newBelongingTaskIDs.push(element.groupTasks);
+    //     });
+    //   })
+    // }
+
+    var resp1;
+    var resp2;
+    try {
+      resp1 = await axios({
+        method: "get",
+        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(belongingGroups)}}}&select={"name": 1, "groupTasks": 1, "_id": 0}`
+      });
+      resp2 = await axios({
+        method: "get",
+        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(leadingGroups)}}}&select={"name": 1, "groupTasks": 1, "_id": 0}`
+      });
+    }
+    catch (e: any) {
+        // @ts-ignore
+    }
+
+    if (resp1 !== undefined) { 
+      resp1.data.data.forEach((element:any) => {
+        belongingGroupNames.push(element.groupName);
+        newBelongingTaskIDs.push(element.groupTasks);
+      });
+    }
+    if (resp2 !== undefined) { 
+      resp2.data.data.forEach((element:any) => {
+        leadingGroupNames.push(element.groupName);
+        newLeadingTaskIDs.push(element.groupTasks);
+      });
+    }
+
+    // if (leadingGroups && leadingGroups.length > 0) {
+    //   axios({
+    //     method: "get",
+    //     url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(leadingGroups)}}}&select={"name": 1, "groupTasks": 1, "_id": 0}`
+    //   }).then((r) => {
+    //     // console.log("log res", r.data.data)
+    //     r.data.data.forEach((element:any) => {
+    //       leadingGroupNames.push(element.groupName);
+    //       newLeadingTaskIDs.push(element.groupTasks);
+    //     });
+    //   })
+    // }
+
+    // console.log("newIndividualTaskIDs", newIndividualTaskIDs);
+    // console.log("newBelongingTaskIDs", newBelongingTaskIDs);
+    // console.log("newLeadingTaskIDs", newLeadingTaskIDs);
+
+    setIndividualTaskIDs(newIndividualTaskIDs);
+    setBelongingTaskIDs(newBelongingTaskIDs);
+    setLeadingTaskIDs(newLeadingTaskIDs);
+
+    taskIdsUpdated ++;
+  }
+
+  async function __updateTaskInfo(calendar: any) {
+    let newIndividualTaskInfo: any = [];
+    let newBelongingTaskInfo: any = [];
+    let newLeadingTaskInfo: any = [];
+
+    // console.log("IndividualTaskIDs", individualTaskIDs);
+    // console.log("BelongingTaskIDs", belongingTaskIDs);
+    // console.log("LeadingTaskIDs", leadingTaskIDs);
+
+    // if (individualTaskIDs && individualTaskIDs.length > 0) {
+    //   axios({
+    //     method: "get",
+    //     url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(individualTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+    //   }).then((r) => {
+    //     console.log("individual log res", r.data.data)
+    //     newIndividualTaskInfo = newIndividualTaskInfo.concat(r.data.data);
+    //     console.log("aaaaaaaaanewIndividualTaskInfo", newIndividualTaskInfo);
+    //   })
+    // }
+    // if (belongingTaskIDs && belongingTaskIDs.length > 0) {
+    //   belongingTaskIDs.forEach((group) => {
+    //     axios({
+    //       method: "get",
+    //       url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+    //     }).then((r) => {
+    //       console.log("belonging log res", r.data.data)
+    //       newBelongingTaskInfo.push(r.data.data);
+    //     })
+    //   });
+    // }
+    // console.log("??????????????LeadingTaskIDs", leadingTaskIDs);
+    // console.log("??????????????LeadingTaskIDs", leadingTaskIDs.length);
+    // if (leadingTaskIDs && leadingTaskIDs.length > 0) {
+    //   leadingTaskIDs.forEach((group) => {
+    //     console.log("leading group", group)
+    //     axios({
+    //       method: "get",
+    //       url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+    //     }).then((r) => {
+    //       console.log("leading log res", r.data.data)
+    //       newLeadingTaskInfo.push(r.data.data);
+    //     })
+    //   });
+    // }
+  
+    // var resp1;
+    // var resp2: any = [];
+    // var resp3: any = [];
+    try {
+      if (individualTaskIDs.length > 0) {
+        const response = await axios({
+          method: "get",
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(individualTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+        });
+        newIndividualTaskInfo = newIndividualTaskInfo.concat(response.data.data);
+        __updateIndividualEvents(newIndividualTaskInfo, calendar);
+      }
+      belongingTaskIDs.forEach(async (group:any) => {
+        if (group.length > 0) {
+          const response = await axios({
+            method: "get",
+            url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+          })
+          newBelongingTaskInfo.push(response.data.data);
+          __updateGroupEvents(response.data.data, calendar, COLORSBELONGING, belongingGroupCount);
+        }
+        
+      })
+      leadingTaskIDs.forEach(async (group:any) => {
+        // console.log("leading group", group)
+        if (group.length > 0) {
+          const response = await axios({
+            method: "get",
+            url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+          })
+          newLeadingTaskInfo.push(response.data.data);
+          __updateGroupEvents(response.data.data, calendar, COLORSLEADING, leadingGroupCount);
+        }
+      })
+    }
+    catch (e: any) {
+        // @ts-ignore
+    }
+
+
+    // if (resp1 !== undefined) { 
+    //   // console.log("individual log res", resp1.data.data)
+    //   newIndividualTaskInfo = newIndividualTaskInfo.concat(resp1.data.data);
+    // }
+    // if (resp2 && resp2.length > 0) { 
+    //   resp2.forEach((element:any) => {
+    //     console.log("belonging log res", element.data.data)
+    //     newBelongingTaskInfo.push(element.data.data);
+    //   });
+    // }
+    // if (resp3 && resp3.length > 0) { 
+    //   resp3.forEach((element:any) => {
+    //     console.log("leading log res", element.data.data)
+    //     newLeadingTaskInfo.push(element.data.data);
+    //   });
+    // }
+
+
+    console.log("newIndividualTaskInfo", newIndividualTaskInfo);
+    console.log("newBelongingTaskInfo", newBelongingTaskInfo);
+    console.log("newLeadingTaskInfo", newLeadingTaskInfo);
+
+    setIndividualTaskInfo(newIndividualTaskInfo);
+    setBelongingTaskInfo(newBelongingTaskInfo);
+    setLeadingTaskInfo(newLeadingTaskInfo);
+
+    taskInfoUpdated ++;
+  }
+
+  function __updateIndividualEvents(taskInfo: any, calendar: any) {
+
+    taskInfo.forEach((element:any) => {
+      // console.log("element", element.name, element.endTime)
+      calendar.addEvent({
+        title: element.name,
+        start: element.endTime.slice(0, 10)
+      })
+    })
+  }
+
+  let belongingGroupCount = 0;
+  let leadingGroupCount = 0;
+
+  function __updateGroupEvents(taskInfo: any, calendar: any, colors: any, count: number) {
+    console.log("taskinfo", taskInfo.length)
+    console.log([count.toString()])
+
+      calendar.addResource({
+        id: count.toString(),
+        title: count.toString(),
+        eventColor: colors[count]
+      })
+      
+      console.log(calendar.getResources())
+
+      taskInfo.forEach((element:any) => {
+        console.log("taskinfo element", element)
+        calendar.addEvent({
+          title: element.name,
+          start: element.endTime.slice(0, 10),
+          resourceIds: [count.toString()]
+        })
+      });
+      count ++;
+      console.log(calendar.getEvents())
+  }
+  
 
   // update all date boxes
   function __updateComponent() {

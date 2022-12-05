@@ -23,10 +23,18 @@ function Navigator() {
       navigate('/login')
     }
   }
-
-  const userName = localStorage.getItem("user") || "";
-  const userJSON = JSON.parse(userName);
-  console.log(userJSON);
+  var userName, userJSON;
+  if (localStorage.getItem("user")) {
+    userName = localStorage.getItem("user") || "";
+    console.log(userName);
+    userJSON = JSON.parse(userName);
+    console.log(userJSON);
+  }
+  else {
+    userName = "";
+    userJSON = {};
+  }
+  
 
   return (
     <>
