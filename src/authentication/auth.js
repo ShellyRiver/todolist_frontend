@@ -15,15 +15,26 @@ const auth = getAuth(app);
 
 const homeurl = 'http://localhost:4000/api'
 
+export function changeToRegister() {
+    const signUpTab = document.getElementById('login-tab-tab-register');
+    signUpTab.click();
+}
 
 export async function signUp() {
-    var name = document.getElementById('name');
-    var email = document.getElementById('email');
-    var password = document.getElementById('password');
+    var name = document.getElementById('name-sign-up');
+    var email = document.getElementById('email-sign-up');
+    var password = document.getElementById('password-sign-up');
+    var repeatPassword = document.getElementById('repeat-password-sign-up');
     if (name.value === "") {
         return {
             status: "error",
             message: "User name cannot be empty!"
+        }
+    }
+    else if (password.value !== repeatPassword.value) {
+        return {
+            status: "error",
+            message: "Password do not match!"
         }
     }
     else {
@@ -45,6 +56,10 @@ export async function signUp() {
                     'email': email.value
                 }
             });
+            document.getElementById('name-sign-up').value = "";
+            document.getElementById('email-sign-up').value = "";
+            document.getElementById('password-sign-up').value = "";
+            document.getElementById('repeat-password-sign-up').value = "";
             return {
                 status: "success",
                 message: null
@@ -60,21 +75,13 @@ export async function signUp() {
 }
 
 export async function signIn() {
-    var email = document.getElementById('email');
-    var password = document.getElementById('password');
+    var email = document.getElementById('email-sign-in');
+    var password = document.getElementById('password-sign-in');
     var r;
     try {
         r = await signInWithEmailAndPassword(auth, email.value, password.value);
-        // console.log("Logged In Successfully!");
-        // console.log(r.user.email);
-        // return {
-        //     status: "success",
-        //     message: r.user.email
-        // }
     }
     catch (e) {
-        // console.log(e.message);
-        // console.log(e.code);
         return {
             status: "error",
             message: e.message
@@ -85,7 +92,6 @@ export async function signIn() {
             method: "get",
             url: `${homeurl}/users?where={"email":"${email.value}"}`,
         });
-        // console.log(user.data.data[0]);
         return {
             status: "success",
             message: r.user.email,
@@ -103,11 +109,9 @@ export async function signIn() {
 export async function signOutUser() {
     try {
         await signOut(auth);
-        // console.log("Logged Out Successfully!");
         return true;
     }
     catch (e) {
-        // console.log(e.message);
         return false;
     }
 }

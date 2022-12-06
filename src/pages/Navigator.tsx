@@ -5,15 +5,38 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import {signOutUser} from '../authentication/auth'
 import logo from "../imgs/group-todo-logo.png";
-import React from "react";
+import React, {useEffect} from "react";
 import './Navigator.css';
-
 import Badge from 'react-bootstrap/Badge';
-
+import Unknown from "../imgs/unknown.png";
 
 
 function Navigator() {
   const navigate = useNavigate();
+  // var userName = localStorage.getItem("user");
+  // var userJSON = JSON.parse(userName || "");
+  const userName = localStorage.getItem("user") || "";
+  const userJSON = JSON.parse(userName);
+  console.log(userJSON);
+  var imageURL;
+  useEffect(()=>{
+    // userName = localStorage.getItem("user");
+    // userJSON = JSON.parse(userName || "");
+    if (localStorage.getItem("email") && localStorage.getItem("email") !== "") {
+      console.log(userJSON)
+      if (userJSON.image) {
+        imageURL = `data:image/jpeg;base64,${userJSON.image}`
+        const img = document.getElementById('nav-profile-image');
+        // @ts-ignore
+        img.setAttribute('src', imageURL);
+      } else {
+        const img = document.getElementById('nav-profile-image');
+        // @ts-ignore
+        img.setAttribute('src', Unknown)
+      }
+    }
+  },[localStorage.getItem("email")])
+
   async function clickSignOut(){
     const response = await signOutUser();
     if (response === true) {
@@ -24,36 +47,41 @@ function Navigator() {
     }
   }
 
-  const userName = localStorage.getItem("user") || "";
-  const userJSON = JSON.parse(userName);
-  console.log(userJSON);
-
   return (
     <>
       <Navbar bg="light" expand="lg">
-        <Container>
+        <div className='nav-outer-container'>
+          <div className='nav-left-container'>
           <Navbar.Brand href="/" className="navigator-logo"><img src={logo} /></Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          {/*<Navbar.Toggle aria-controls="basic-navbar-nav" />*/}
           { localStorage.getItem("email") && localStorage.getItem("email") != "" &&
-            <Navbar.Collapse id="basic-navbar-nav">
+            // <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link href="/">Home</Nav.Link>
+                {/*<Nav.Link href="/">Home</Nav.Link>*/}
                 <Nav.Link href="message">Message
                   {(userJSON.invitingGroups.length > 0 || userJSON.unreadTasks.length > 0 || userJSON.invitingLeadingGroups.length > 0) && <Badge bg="secondary">New</Badge>}
                   {/*{(JSON.parse(localStorage.getItem('user')||'').invitingGroups.length > 0 || JSON.parse(localStorage.getItem('user')||'').unreadTasks.length > 0 || JSON.parse(localStorage.getItem('user')||'').invitingLeadingGroups.length > 0) && <Badge bg="secondary">New</Badge>}*/}
                 </Nav.Link>
-                <Nav.Link href="profile">Profile</Nav.Link>
-                {/*<Nav.Link href="auth">SignIn</Nav.Link>*/}
               </Nav>
-            </Navbar.Collapse>
+            // </Navbar.Collapse>
           }
-        </Container>
+        </div>
+          <div className="nav-right-container">
         {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
-          <p>Welcome {JSON.parse(userName).name}! </p>
+          <div>Welcome {userJSON.name}! </div>
+        }
+        {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
+            <Nav>
+              <Nav.Link href="profile">
+              <div className='nav-image-container'><img src="" id='nav-profile-image'/></div>
+              </Nav.Link>
+            </Nav>
         }
         { localStorage.getItem("email") && localStorage.getItem("email") != "" &&
           <Button variant="outline-primary" onClick={clickSignOut}>Sign Out</Button>
         }
+        </div>
+        </div>
       </Navbar>
       <Outlet />
     </>

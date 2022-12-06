@@ -27,3 +27,23 @@
     margin-top: 10px;
     font-size: large;
 }
+
+.sign-in-button {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.register-prompt {
+    display: flex;
+    justify-content: center;
+}
+
+.register-link {
+    cursor: pointer;
+    color: rgb(13, 110, 253);
+}
+
+.register-link:hover {
+    color: rgb(11, 94, 215);
+}

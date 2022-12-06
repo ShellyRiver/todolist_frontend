@@ -47,7 +47,7 @@ function Home() {
     else{
         return (
             <>
-                <h1>Home</h1>
+                {/*<h1>Home</h1>*/}
                 <div className="home">
                       <div className="viewChoose">
                             <Navigator />

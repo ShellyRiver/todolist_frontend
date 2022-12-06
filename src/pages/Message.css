@@ -9,3 +9,15 @@
 .messages:hover {
     color: black;
 }
+
+.page-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.page-title img {
+    margin: 0 10px;
+}
