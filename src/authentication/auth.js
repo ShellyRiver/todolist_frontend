@@ -13,7 +13,7 @@ import alert from "bootstrap/js/src/alert";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export function changeToRegister() {
     const signUpTab = document.getElementById('login-tab-tab-register');

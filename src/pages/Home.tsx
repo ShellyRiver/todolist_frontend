@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Accordion from 'react-bootstrap/Accordion';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
-
+import Form from 'react-bootstrap/Form';
 
 import React, { useEffect } from 'react';
 import { useState, createContext, useContext } from 'react';
@@ -37,7 +37,7 @@ const INDIVIDUAL: number = 0;
 const GROUPMEMBER: number = 1;
 const GROUPLEADER: number = 2;
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 function Home() {
     const email = localStorage.getItem("email");
@@ -218,6 +218,20 @@ function GroupList() {
                 </div>
             );
         }
+        // /* Test check box */
+        // newComponentList.push(
+        //     <div className="groupItem">
+        //     <div className="groupItemTest">
+        //         <Form.Check type="checkbox" label="Check me out" />
+        //         <Accordion.Item eventKey={String(Number(100)+Number(leadingGroup.length))}>
+        //             <Accordion.Header>ddd</Accordion.Header>
+        //             <Accordion.Body>
+        //                 fff
+        //             </Accordion.Body>
+        //         </Accordion.Item>
+        //     </div>
+        //     </div>
+        // )
 
         setComponentList(newComponentList);
   }

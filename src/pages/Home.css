@@ -19,3 +19,8 @@
 .taskBoard {
     width: 100%;
 }
+
+.groupItemTest {
+    display:flex;
+    width: 100%;
+}

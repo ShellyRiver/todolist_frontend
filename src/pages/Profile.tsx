@@ -10,7 +10,7 @@ import ChangeProfileModal from "../components/ChangeProfileModal";
 import ChangeImageModal from "../components/ChangeImageModal";
 import Form from "react-bootstrap/Form";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 function Profile() {
   const email = localStorage.getItem("email");

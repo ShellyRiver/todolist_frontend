@@ -6,7 +6,7 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 import ConfirmationModal from "./ConfirmationModal";
 import {updateUser} from "./updateUser";
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function GroupInvitationModal(props: any) {
     const [leaderNames, setLeaderNames]: any = useState([]);

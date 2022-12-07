@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import home from "../pages/Home";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function DeleteGroupMemberModal(props: any) {
     const [errorMsg, setErrorMsg] = useState("");

@@ -6,7 +6,7 @@ import GroupInvitationModal from "../components/GroupInvitationModal";
 import TaskInfoModal from "../components/TaskInfoModal";
 import './Message.css';
 import MessageBox from '../imgs/inbox.png';
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 function Message() {
 

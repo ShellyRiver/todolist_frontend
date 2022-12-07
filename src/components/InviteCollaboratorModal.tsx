@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import axios from "axios";
 import Alert from "react-bootstrap/Alert";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function InviteCollaboratorModal(props: any) {
     const data = props.data;

@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function AddTaskModal(props: any) {
     const [errorMsg, setErrorMsg] = useState("");

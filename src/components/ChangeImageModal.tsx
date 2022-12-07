@@ -7,7 +7,7 @@ import './ChangeImageModal.css';
 import {updateUser} from "./updateUser";
 
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function ChangeImageModal(props: any) {
     const data = props.data;

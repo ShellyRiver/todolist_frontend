@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function GroupInfoModal(props: any) {
     const [leaderNames, setLeaderNames]: any = useState([]);
