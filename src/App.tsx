@@ -30,14 +30,14 @@ function App() {
       <div className="App">
         <HashRouter>
           <Routes>
-            <Route path='/' element={<Navigator />}>
-              <Route path='/' element={<Home />}>
-                <Route path='monthly' element={<Monthly />}/>
-                <Route path='daily' element={<Daily />}/>
+            <Route path='/grouptodo' element={<Navigator />}>
+              <Route path='/grouptodo' element={<Home />}>
+                <Route path='/grouptodo/monthly' element={<Monthly />}/>
+                <Route path='/grouptodo/daily' element={<Daily />}/>
               </Route>
-              <Route path='message' element={<Message />}/>
-              <Route path='profile' element={<Profile />}/>
-              <Route path='login' element={<Auth />}/>
+              <Route path='/grouptodo/message' element={<Message />}/>
+              <Route path='/grouptodo/profile' element={<Profile />}/>
+              <Route path='/grouptodo/login' element={<Auth />}/>
             </Route>
           </Routes>
         </HashRouter>
