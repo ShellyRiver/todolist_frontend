@@ -15,15 +15,26 @@ function Navigator() {
   const navigate = useNavigate();
   // var userName = localStorage.getItem("user");
   // var userJSON = JSON.parse(userName || "");
-  const userName = localStorage.getItem("user") || "";
-  const userJSON = JSON.parse(userName);
-  console.log(userJSON);
+  // const userName = localStorage.getItem("user") || "";
+  // const userJSON = JSON.parse(userName);
+  // console.log(userJSON);
+  var userName;
+  var userJSON: any;
   var imageURL;
+  if (localStorage.getItem('user')) {
+    userName = localStorage.getItem("user") || "";
+    userJSON = JSON.parse(userName);
+  }
+  else {
+    userName = "";
+    userJSON = {};
+  }
+
   useEffect(()=>{
     // userName = localStorage.getItem("user");
     // userJSON = JSON.parse(userName || "");
     if (localStorage.getItem("email") && localStorage.getItem("email") !== "") {
-      console.log(userJSON)
+      // console.log(userJSON)
       if (userJSON.image) {
         imageURL = `data:image/jpeg;base64,${userJSON.image}`
         const img = document.getElementById('nav-profile-image');
