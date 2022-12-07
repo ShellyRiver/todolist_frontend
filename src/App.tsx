@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BrowserRouter, Routes, Route, Link, Outlet, Navigate, useNavigate, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Outlet, Navigate, useNavigate, useParams, HashRouter} from "react-router-dom";
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import './App.css';
@@ -28,7 +28,7 @@ function App() {
   return (
     <AuthContext.Provider value={{email: email, setEmail: setEmail}}>
       <div className="App">
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path='/' element={<Navigator />}>
               <Route path='/' element={<Home />}>
@@ -40,7 +40,7 @@ function App() {
               <Route path='login' element={<Auth />}/>
             </Route>
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </div>
     </AuthContext.Provider>
   );
