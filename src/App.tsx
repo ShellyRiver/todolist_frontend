@@ -32,11 +32,11 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path='/grouptodo' element={<Navigator />}>
-              <Route path='/grouptodo' element={<Home />}>
-                <Route path='/grouptodo/monthly' element={<Monthly />}/>
-                <Route path='/grouptodo/daily' element={<Daily />}/>
-              </Route>
-              {/*<Route path='/grouptodo' element={<Home />}/>*/}
+              {/*<Route path='/grouptodo' element={<Home />}>*/}
+              {/*  <Route path='/grouptodo/monthly' element={<Monthly />}/>*/}
+              {/*  <Route path='/grouptodo/daily' element={<Daily />}/>*/}
+              {/*</Route>*/}
+              <Route index element={<Home />}/>
               <Route path='/grouptodo/message' element={<Message />}/>
               <Route path='/grouptodo/profile' element={<Profile />}/>
               <Route path='/grouptodo/login' element={<Auth />}/>
