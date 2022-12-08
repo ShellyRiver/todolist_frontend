@@ -29,7 +29,7 @@ function App() {
   return (
     <AuthContext.Provider value={{email: email, setEmail: setEmail}}>
       <div className="App">
-        <HashRouter>
+        <BrowserRouter>
           <Routes>
             <Route path='/grouptodo' element={<Navigator />}>
               <Route path='/grouptodo' element={<Home />}>
@@ -43,7 +43,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
-        </HashRouter>
+        </BrowserRouter>
       </div>
     </AuthContext.Provider>
   );
