@@ -16,7 +16,7 @@ export default function Auth() {
     const navigate = useNavigate();
     const email = localStorage.getItem("email");
     if (email !== null && email !== ""){
-        return <Navigate replace to="/" />
+        return <Navigate replace to="/grouptodo" />
     }
 
     async function clickSignIn() {
@@ -25,7 +25,7 @@ export default function Auth() {
             // @ts-ignore
             localStorage.setItem('email', response.message);
             localStorage.setItem('user', JSON.stringify(response.info));
-            navigate('/');
+            navigate('/grouptodo');
             setShowErrorMsg(false);
         }
         else {

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, {useState} from "react";
 import home from "../pages/Home";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default async function HandleLeaderLeaveGroup(groupId: any, groupInfo: any) {
     const user = localStorage.getItem("user") || "";

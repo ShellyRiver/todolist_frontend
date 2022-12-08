@@ -13,6 +13,7 @@ import Daily from './pages/home/Daily';
 import Monthly from './pages/home/Monthly';
 import Auth from './pages/Auth';
 import {AuthContext} from './context/authContext';
+import NotFound from "./pages/NotFound";
 
 /* 
 3 main pages:
@@ -35,9 +36,11 @@ function App() {
                 <Route path='/grouptodo/monthly' element={<Monthly />}/>
                 <Route path='/grouptodo/daily' element={<Daily />}/>
               </Route>
+              {/*<Route path='/grouptodo' element={<Home />}/>*/}
               <Route path='/grouptodo/message' element={<Message />}/>
               <Route path='/grouptodo/profile' element={<Profile />}/>
               <Route path='/grouptodo/login' element={<Auth />}/>
+              <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
         </HashRouter>

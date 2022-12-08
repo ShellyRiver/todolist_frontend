@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, {useState} from "react";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default async function HandleDeleteGroup(groupId: any) {
     try {

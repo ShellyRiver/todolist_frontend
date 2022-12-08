@@ -32,35 +32,36 @@ function Profile() {
   useEffect(()=>{
       userString = localStorage.getItem("user");
       userJSON = JSON.parse(userString || "");
-      if (userJSON.image) {
-          imageURL = `data:image/jpeg;base64,${userJSON.image}`
-          const img = document.getElementById('profile-image');
-          // @ts-ignore
-          img.setAttribute('src', imageURL);
+      if (userJSON) {
+          if (userJSON.image) {
+              imageURL = `data:image/jpeg;base64,${userJSON.image}`
+              const img = document.getElementById('profile-image');
+              // @ts-ignore
+              img.setAttribute('src', imageURL);
+          } else {
+              const img = document.getElementById('profile-image');
+              // @ts-ignore
+              img.setAttribute('src', Unknown)
+          }
+          if (userJSON.belongingGroups && userJSON.belongingGroups.length > 0)
+              axios({
+                  method: "get",
+                  url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`
+              }).then(r => {
+                  setGroup(r.data.data);
+              });
+          if (userJSON.leadingGroups && userJSON.leadingGroups.length > 0)
+              axios({
+                  method: "get",
+                  url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.leadingGroups)}}}`
+              }).then(r => {
+                  setLeadingGroup(r.data.data);
+              });
       }
-      else {
-          const img = document.getElementById('profile-image');
-          // @ts-ignore
-          img.setAttribute('src', Unknown)
-      }
-      if (userJSON.belongingGroups && userJSON.belongingGroups.length > 0)
-      axios({
-          method: "get",
-          url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`
-      }).then(r => {
-          setGroup(r.data.data);
-      });
-      if (userJSON.leadingGroups && userJSON.leadingGroups.length > 0)
-          axios({
-              method: "get",
-              url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.leadingGroups)}}}`
-          }).then(r => {
-              setLeadingGroup(r.data.data);
-          });
   },[reloadUser])
 
   if (email == null || email == ""){
-      return <Navigate replace to="/login" />
+      return <Navigate replace to="/grouptodo/login" />
   }
   // @ts-ignore
     return (

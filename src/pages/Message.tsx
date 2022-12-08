@@ -27,44 +27,43 @@ function Message() {
   useEffect(() => {
     const userName = localStorage.getItem("user") || "";
     const userJSON = JSON.parse(userName);
-    if (userJSON.invitingGroups.length > 0) {
-      axios({
-        method: "get",
-        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.invitingGroups)}}}`
-      }).then((response) => {
-        setInvitingGroupInfo(response.data.data);
-      })
-    }
-    else {
-      setInvitingGroupInfo([]);
-    }
-    if (userJSON.invitingLeadingGroups && userJSON.invitingLeadingGroups.length > 0) {
-      axios({
-        method: "get",
-        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.invitingLeadingGroups)}}}`
-      }).then((response) => {
-        setInvitingLeadingGroupInfo(response.data.data);
-      })
-    }
-    else {
-      setInvitingLeadingGroupInfo([]);
-    }
-    if (userJSON.unreadTasks.length > 0) {
-      axios({
-        method: "get",
-        url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(userJSON.unreadTasks)}}}`
-      }).then((response) => {
-        setUnreadTaskInfo(response.data.data);
-      })
-    }
-    else {
-      setUnreadTaskInfo([]);
+    if (userJSON) {
+      if (userJSON.invitingGroups.length > 0) {
+        axios({
+          method: "get",
+          url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.invitingGroups)}}}`
+        }).then((response) => {
+          setInvitingGroupInfo(response.data.data);
+        })
+      } else {
+        setInvitingGroupInfo([]);
+      }
+      if (userJSON.invitingLeadingGroups && userJSON.invitingLeadingGroups.length > 0) {
+        axios({
+          method: "get",
+          url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.invitingLeadingGroups)}}}`
+        }).then((response) => {
+          setInvitingLeadingGroupInfo(response.data.data);
+        })
+      } else {
+        setInvitingLeadingGroupInfo([]);
+      }
+      if (userJSON.unreadTasks.length > 0) {
+        axios({
+          method: "get",
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(userJSON.unreadTasks)}}}`
+        }).then((response) => {
+          setUnreadTaskInfo(response.data.data);
+        })
+      } else {
+        setUnreadTaskInfo([]);
+      }
     }
   }, [reloadUser])  // TODO: add dependency?
 
 
   if (email == null || email == ""){
-      return <Navigate replace to="/login" />
+      return <Navigate replace to="/grouptodo/login" />
   }
 
   return (
