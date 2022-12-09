@@ -63,7 +63,7 @@ function Message() {
 
 
   if (email == null || email == ""){
-      return <Navigate replace to="/grouptodo/login" />
+      return <Navigate replace to="/login" />
   }
 
   return (

@@ -54,7 +54,7 @@ function Navigator() {
       localStorage.setItem('email', "");
       // @ts-ignore
       localStorage.setItem('user', null);
-      navigate('/grouptodo/login')
+      navigate('/login')
     }
   }
 

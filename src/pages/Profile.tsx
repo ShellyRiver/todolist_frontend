@@ -61,7 +61,7 @@ function Profile() {
   },[reloadUser])
 
   if (email == null || email == ""){
-      return <Navigate replace to="/grouptodo/login" />
+      return <Navigate replace to="/login" />
   }
   // @ts-ignore
     return (

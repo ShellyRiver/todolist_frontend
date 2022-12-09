@@ -42,7 +42,7 @@ const homeurl = 'https://grouptodos.herokuapp.com/api'
 function Home() {
     const email = localStorage.getItem("email");
     if (email == null || email == ""){
-        return <Navigate replace to="/grouptodo/login" />
+        return <Navigate replace to="/login" />
     }
     else{
         return (
@@ -340,8 +340,8 @@ function Navigator() {
             <Navbar bg="light" variant="light">
                 <Container className="navContainer">
                     <Nav className="me-auto">
-                        <Nav.Link href="/grouptodo/monthly">Monthly</Nav.Link>
-                        <Nav.Link href="/grouptodo/daily">Daily</Nav.Link>
+                        <Nav.Link href="/monthly">Monthly</Nav.Link>
+                        <Nav.Link href="/daily">Daily</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
