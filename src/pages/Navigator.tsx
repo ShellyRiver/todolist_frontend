@@ -82,17 +82,17 @@ function Navigator() {
           }
         </div>
           <div className="nav-right-container">
-        {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
+        {localStorage.getItem("email") && localStorage.getItem("email") != "" && userJSON &&
           <div id='nav-greeting'>Welcome {userJSON.name}! </div>
         }
-        {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
+        {localStorage.getItem("email") && localStorage.getItem("email") != "" && userJSON &&
             <Nav>
               <Nav.Link onClick={()=>navigate('profile')}>
               <div className='nav-image-container'><img src="" id='nav-profile-image'/></div>
               </Nav.Link>
             </Nav>
         }
-        { localStorage.getItem("email") && localStorage.getItem("email") != "" &&
+        { localStorage.getItem("email") && localStorage.getItem("email") != "" && userJSON && 
           <Button variant="outline-primary" onClick={clickSignOut}>Sign Out</Button>
         }
         </div>
