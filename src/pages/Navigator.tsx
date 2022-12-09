@@ -49,7 +49,7 @@ function Navigator() {
         }
       }
     }
-  },[localStorage.getItem("email")])
+  },[localStorage.getItem("email"), localStorage.getItem('refreshImg')])
 
   async function clickSignOut(){
     const response = await signOutUser();

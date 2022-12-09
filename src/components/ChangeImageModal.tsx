@@ -61,6 +61,18 @@ export default function ChangeImageModal(props: any) {
             // console.log(e);
             props.handleClose();
         }
+        // Refresh the navigator small profile image
+        if (localStorage.getItem('refreshImg')) {
+            if (localStorage.getItem('refreshImg') === 'true') {
+                localStorage.setItem('refreshImg', 'false');
+            }
+            else {
+                localStorage.setItem('refreshImg', 'true');
+            }
+        }
+        else {
+            localStorage.setItem('refreshImg', 'true');
+        }
         updateUser(props.setReload);
         setShowPreview(false);
         props.handleClose();
