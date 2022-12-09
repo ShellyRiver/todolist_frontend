@@ -2,6 +2,10 @@
 
 }
 
+.show-my-group-container {
+    display: none;
+}
+
 .content {
     display: flex;
     flex-direction: row;
@@ -12,8 +16,10 @@
 }
 
 .navContainer {
-    padding-left: 70%;
-    width: 10%;
+    /*padding-left: 10%;*/
+    /*width: 10%;*/
+    /*border-style: dashed;*/
+    /*border-width: thick;*/
 }
 
 .taskBoard {
@@ -23,4 +29,19 @@
 .groupItemTest {
     display:flex;
     width: 100%;
+}
+
+@media screen and (max-width: 1000px) {
+    .groupList {
+        width: 35%;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .groupList {
+        display: none;
+    }
+    .show-my-group-container {
+        display: block;
+    }
 }

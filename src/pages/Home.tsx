@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import React, { useEffect } from 'react';
 import { useState, createContext, useContext } from 'react';
 import './Home.css'
-import { Alert } from "react-bootstrap";
+import {Alert, Offcanvas} from "react-bootstrap";
 import {useAuthContext} from "../context/authContext";
 import Auth from './Auth';
 import {Navigate} from "react-router-dom";
@@ -41,6 +41,7 @@ const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 function Home() {
     const email = localStorage.getItem("email");
+    const [showCanvas, setShowCanvas] = useState(false);
     if (email == null || email == ""){
         return <Navigate replace to="/login" />
     }
@@ -49,8 +50,15 @@ function Home() {
             <>
                 {/*<h1>Home</h1>*/}
                 <div className="home">
-                      <div className="viewChoose">
-                            <Navigator />
+                      <div className="show-my-group-container">
+                            {/*<Navigator />*/}
+                          <Navbar bg="light" variant="light">
+                              <Container className="navContainer">
+                                  <Nav className="me-auto">
+                                      <Nav.Link onClick={()=>setShowCanvas(true)}> My Groups</Nav.Link>
+                                  </Nav>
+                              </Container>
+                          </Navbar>
                       </div>
                       <div className="content">
                             <div className="groupList">
@@ -61,6 +69,14 @@ function Home() {
                             </div>
                       </div>
                 </div>
+                <Offcanvas show={showCanvas} onHide={()=>setShowCanvas(false)}>
+                    <Offcanvas.Header closeButton>
+                        <Offcanvas.Title>My Groups</Offcanvas.Title>
+                    </Offcanvas.Header>
+                    <Offcanvas.Body>
+                        <GroupList/>
+                    </Offcanvas.Body>
+                </Offcanvas>
             </>
         );
     }
@@ -341,7 +357,6 @@ function Navigator() {
                 <Container className="navContainer">
                     <Nav className="me-auto">
                         <Nav.Link href="/monthly">Monthly</Nav.Link>
-                        <Nav.Link href="/daily">Daily</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>

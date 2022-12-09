@@ -5,6 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import {signOutUser} from '../authentication/auth'
 import logo from "../imgs/group-todo-logo.png";
+import home from "../imgs/home.png";
 import React, {useEffect} from "react";
 import './Navigator.css';
 import Badge from 'react-bootstrap/Badge';
@@ -64,8 +65,9 @@ function Navigator() {
         <div className='nav-outer-container'>
           <div className='nav-left-container'>
           <Navbar.Brand onClick={()=>navigate('/')} className="navigator-logo"><img src={logo} /></Navbar.Brand>
+          <Navbar.Brand onClick={()=>navigate('/')} className="navigator-home"><img src={home} /></Navbar.Brand>
           {/*<Navbar.Toggle aria-controls="basic-navbar-nav" />*/}
-          { localStorage.getItem("email") && localStorage.getItem("email") != "" &&
+          { localStorage.getItem("email") && localStorage.getItem("email") != "" && (userJSON.invitingGroups.length > 0 || userJSON.unreadTasks.length > 0 || userJSON.invitingLeadingGroups.length > 0) &&
             // <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 {/*<Nav.Link href="/">Home</Nav.Link>*/}
@@ -79,7 +81,7 @@ function Navigator() {
         </div>
           <div className="nav-right-container">
         {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
-          <div>Welcome {userJSON.name}! </div>
+          <div id='nav-greeting'>Welcome {userJSON.name}! </div>
         }
         {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
             <Nav>

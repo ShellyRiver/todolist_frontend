@@ -70,11 +70,13 @@ function Profile() {
             <div className="figure-container">
                 {/*<div><img src={Unknown} onClick={()=>setShowChangeImage(true)}/></div>*/}
                 <div><img src="" onClick={()=>setShowChangeImage(true)} id="profile-image"/></div>
-                <div><h2>{userJSON.name}</h2></div>
-                <div className="profile-email">{userJSON.email}</div>
-                <Button variant="secondary" size="lg" onClick={() => setShowChangeProfile(true)}>
-                    edit profile
-                </Button>
+                <div>
+                    <div><h2>{userJSON.name}</h2></div>
+                    <div className="profile-email">{userJSON.email}</div>
+                    <Button variant="secondary" size="lg" onClick={() => setShowChangeProfile(true)}>
+                        edit profile
+                    </Button>
+                </div>
             </div>
             <div className="info-container">
                 {leadingGroup.length > 0 &&

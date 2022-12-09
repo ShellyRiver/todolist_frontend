@@ -21,3 +21,10 @@
 .page-title img {
     margin: 0 10px;
 }
+
+@media screen and (max-width: 900px) {
+    .message-box {
+        width: 70%;
+        margin: 0 auto;
+    }
+}

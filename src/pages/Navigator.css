@@ -2,6 +2,11 @@
     height: 45px;
     margin: 0 10px;
     border-radius: 0%;
+    cursor: pointer;
+}
+
+.navigator-home img {
+    display: none;
 }
 
 .nav-outer-container {
@@ -16,6 +21,7 @@
     height: 45px;
     cursor: pointer;
     object-fit: cover;
+    margin: 0px 7px;
 }
 
 .nav-left-container {
@@ -31,5 +37,24 @@
     align-items: center;
     float: right;
     font-family: "Georgia"
+}
+
+@media screen and (max-width: 900px) {
+    #nav-greeting {
+        display: none;
+    }
+
+    .navigator-logo img {
+        display: none;
+    }
+
+    .navigator-home img {
+        height: 45px;
+        display: block;
+    }
+
+    .nav-image-container img {
+        margin-right: 10px;
+    }
 }
 

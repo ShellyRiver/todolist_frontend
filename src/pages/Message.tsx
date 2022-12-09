@@ -77,8 +77,8 @@ function Message() {
                 setClickedTask(unreadTaskInfo[index]);
               }}>
                 <div className="ms-2 me-auto messages">
-                  <div className="fw-bold">New Group Task</div>
-                  {t.name}: {t.description}
+                  <div className="fw-bold">New Group Task - {t.name}</div>
+                  {t.description}
                 </div>
               </ListGroup.Item>)}
             </ListGroup>
@@ -91,8 +91,8 @@ function Message() {
                 setGroupRole('member');
               }}>
                 <div className="ms-2 me-auto messages">
-                  <div className="fw-bold">New group invitation (Member)</div>
-                  {g.name}: {g.description}
+                  <div className="fw-bold">New group invitation (Member) - {g.name}</div>
+                  {g.description}
                 </div>
               </ListGroup.Item>)}
             </ListGroup>
@@ -105,8 +105,8 @@ function Message() {
                 setGroupRole('leader');
               }}>
                 <div className="ms-2 me-auto messages">
-                  <div className="fw-bold">New group invitation (Leader)</div>
-                  {g.name}: {g.description}
+                  <div className="fw-bold">New group invitation (Leader) - {g.name}</div>
+                  {g.description}
                 </div>
               </ListGroup.Item>)}
             </ListGroup>
