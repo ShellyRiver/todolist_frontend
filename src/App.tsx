@@ -38,10 +38,11 @@ function App() {
               {/*</Route>*/}
               <Route index element={<Home />}/>
               <Route path='/grouptodo/message' element={<Message />}/>
-              <Route path='/grouptodo/profile' element={<Profile />}/>
+              {/*<Route path='/grouptodo/profile' element={<Profile />}/>*/}
               <Route path='/grouptodo/login' element={<Auth />}/>
               <Route path="*" element={<NotFound />} />
             </Route>
+            <Route path='/grouptodo/profile' element={<Profile />}/>
           </Routes>
         </BrowserRouter>
       </div>
