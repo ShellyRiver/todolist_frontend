@@ -44,6 +44,7 @@
     display: flex;
     flex-direction: column;
     margin: 1%;
+    width: 65%;
 }
 
 .info-container div {
@@ -75,5 +76,13 @@
 
     .figure-container h2 {
         font-size: 1.7em;
+    }
+
+    .info-container {
+        /*flex-grow: 20;*/
+        display: flex;
+        flex-direction: column;
+        margin: 1%;
+        width: 95%;
     }
 }
