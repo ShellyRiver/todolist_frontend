@@ -25,7 +25,7 @@ export default function Auth() {
             // @ts-ignore
             localStorage.setItem('email', response.message);
             localStorage.setItem('user', JSON.stringify(response.info));
-            navigate('/grouptodo');
+            navigate('/');
             setShowErrorMsg(false);
         }
         else {

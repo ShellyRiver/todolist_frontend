@@ -63,13 +63,13 @@ function Navigator() {
       <Navbar bg="light" expand="lg">
         <div className='nav-outer-container'>
           <div className='nav-left-container'>
-          <Navbar.Brand href="/grouptodo" className="navigator-logo"><img src={logo} /></Navbar.Brand>
+          <Navbar.Brand onClick={()=>navigate('/')} className="navigator-logo"><img src={logo} /></Navbar.Brand>
           {/*<Navbar.Toggle aria-controls="basic-navbar-nav" />*/}
           { localStorage.getItem("email") && localStorage.getItem("email") != "" &&
             // <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 {/*<Nav.Link href="/">Home</Nav.Link>*/}
-                <Nav.Link href="/grouptodo/message">Message
+                <Nav.Link onClick={()=>navigate('/message')}>Message
                   {(userJSON.invitingGroups.length > 0 || userJSON.unreadTasks.length > 0 || userJSON.invitingLeadingGroups.length > 0) && <Badge bg="secondary">New</Badge>}
                   {/*{(JSON.parse(localStorage.getItem('user')||'').invitingGroups.length > 0 || JSON.parse(localStorage.getItem('user')||'').unreadTasks.length > 0 || JSON.parse(localStorage.getItem('user')||'').invitingLeadingGroups.length > 0) && <Badge bg="secondary">New</Badge>}*/}
                 </Nav.Link>
@@ -83,7 +83,7 @@ function Navigator() {
         }
         {localStorage.getItem("email") && localStorage.getItem("email") != "" &&
             <Nav>
-              <Nav.Link href="/grouptodo/profile">
+              <Nav.Link onClick={()=>navigate('profile')}>
               <div className='nav-image-container'><img src="" id='nav-profile-image'/></div>
               </Nav.Link>
             </Nav>
