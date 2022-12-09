@@ -5,12 +5,14 @@ import React, {useState} from "react";
 import Button from 'react-bootstrap/Button';
 import './ChangeImageModal.css';
 import {updateUser} from "./updateUser";
+import Alert from "react-bootstrap/Alert";
 
 
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function ChangeImageModal(props: any) {
-    const data = props.data;
+    const [errorMsg, setErrorMsg] = useState("");
+    const [showErrorMsg, setShowErrorMsg] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
     function changePreview() {
         // @ts-ignore
@@ -28,7 +30,19 @@ export default function ChangeImageModal(props: any) {
     async function changeImage() {
         // @ts-ignore
         const newImage = document.getElementById("new-profile-image").files;
-        console.log(newImage);
+        // Check whether there is any selected file
+        if (newImage.length === 0) {
+            setErrorMsg("Please select an image.");
+            setShowErrorMsg(true);
+            return;
+        }
+        // Check whether the uploaded image is beyond the storage limit
+        if ((newImage[0].size/1024)/1024 >= 1) {
+            setErrorMsg("The selected image is larger than 1MB.");
+            setShowErrorMsg(true);
+            return;
+        }
+        // Send the image data to be backend
         const requestBody = new FormData();
         requestBody.append('image', newImage[0]);
         console.log(requestBody);
@@ -55,13 +69,17 @@ export default function ChangeImageModal(props: any) {
     return (
         <>
             <Modal show={props.show} onHide={()=>{setShowPreview(false); props.handleClose()}}>
+                {showErrorMsg && <Alert variant="danger" onClose={() => setShowErrorMsg(false)} dismissible>
+                    <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                    <p>{errorMsg}</p>
+                </Alert>}
                 <Modal.Header closeButton>
                     <Modal.Title>Change Profile Image</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3">
-                            <Form.Label>Profile Image</Form.Label>
+                            <Form.Label>Profile Image (size limit: 1MB)</Form.Label>
                             <Form.Control
                                 type="file"
                                 id = "new-profile-image"
