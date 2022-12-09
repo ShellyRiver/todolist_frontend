@@ -34,17 +34,19 @@ function Navigator() {
   useEffect(()=>{
     // userName = localStorage.getItem("user");
     // userJSON = JSON.parse(userName || "");
-    if (localStorage.getItem("email") && localStorage.getItem("email") !== "") {
-      // console.log(userJSON)
-      if (userJSON.image) {
-        imageURL = `data:image/jpeg;base64,${userJSON.image}`
-        const img = document.getElementById('nav-profile-image');
-        // @ts-ignore
-        img.setAttribute('src', imageURL);
-      } else {
-        const img = document.getElementById('nav-profile-image');
-        // @ts-ignore
-        img.setAttribute('src', Unknown)
+    if (userJSON) {
+      if (localStorage.getItem("email") && localStorage.getItem("email") !== "") {
+        // console.log(userJSON)
+        if (userJSON.image) {
+          imageURL = `data:image/jpeg;base64,${userJSON.image}`
+          const img = document.getElementById('nav-profile-image');
+          // @ts-ignore
+          img.setAttribute('src', imageURL);
+        } else {
+          const img = document.getElementById('nav-profile-image');
+          // @ts-ignore
+          img.setAttribute('src', Unknown)
+        }
       }
     }
   },[localStorage.getItem("email")])
@@ -67,7 +69,7 @@ function Navigator() {
           <Navbar.Brand onClick={()=>navigate('/')} className="navigator-logo"><img src={logo} /></Navbar.Brand>
           <Navbar.Brand onClick={()=>navigate('/')} className="navigator-home"><img src={home} /></Navbar.Brand>
           {/*<Navbar.Toggle aria-controls="basic-navbar-nav" />*/}
-          { localStorage.getItem("email") && localStorage.getItem("email") != "" && (userJSON.invitingGroups.length > 0 || userJSON.unreadTasks.length > 0 || userJSON.invitingLeadingGroups.length > 0) &&
+          { localStorage.getItem("email") && localStorage.getItem("email") != "" && userJSON && (userJSON.invitingGroups.length > 0 || userJSON.unreadTasks.length > 0 || userJSON.invitingLeadingGroups.length > 0) &&
             // <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 {/*<Nav.Link href="/">Home</Nav.Link>*/}
