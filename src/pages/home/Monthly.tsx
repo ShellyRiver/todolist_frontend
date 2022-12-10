@@ -38,8 +38,6 @@ let today: any = Date.now();
 const homeurl = 'http://localhost:4000/api'
 
 function Monthly() {
-  let belongingGroupNames = [];
-  let leadingGroupNames = [];
 
   const email = localStorage.getItem("email");
   
@@ -52,21 +50,20 @@ function Monthly() {
   const [belongingTaskInfo, setBelongingTaskInfo] = useState([]);
   const [leadingTaskInfo, setLeadingTaskInfo] = useState([]);
 
-  const [calendarResources, setCalendarResources] = useState<any>([]);
-  const [calendarEvents, setCalendarEvents] = useState<any>([]);
-
   const [belongingResources, setBelongingResources] = useState<any>([]);
   const [leadingResources, setLeadingResources] = useState<any>([]);
   const [individualEvents, setIndividualEvents] = useState<any>([]);
   const [belongingEvents, setBelongingEvents] = useState<any>([]);
   const [leadingEvents, setLeadingEvents] = useState<any>([]);
 
-  const [belongingGroupCount, setBelongingGroupCount] = useState(0);
-  const [leadingGroupCount, setLeadingGroupCount] = useState(0);
+  const [belongingGroupNames, setBelongingGroupNames] = useState<any>([]);
+  const [leadingGroupNames, setLeadingGroupNames] = useState<any>([]);
+
+  const [belongingGroupTaskNums, setBelongingGroupTaskNums] = useState<any>([]);
+  const [leadingGroupTaskNums, setLeadingGroupTaskNums] = useState<any>([]);
 
   useEffect(() => {
-    __updateTaskIDs();
-    console.log("useeffect-update task ids")
+    __updateTaskIDs()
   }, [])  // TODO: add dependency?
 
 
@@ -76,8 +73,6 @@ function Monthly() {
 
   useEffect(()=>{
     
-    console.log("resources, events", [...belongingResources, ...leadingResources], [...individualEvents, ...belongingEvents, ...leadingEvents])
-
     var calendarEl = document.getElementById('calendar')!;
 
     // @ts-ignore
@@ -170,7 +165,7 @@ function Monthly() {
     // __updateEvents(calendar);
 
     calendar.render();
-    console.log("leadingGroupCount", leadingGroupCount)
+    // console.log("leadingGroupCount", leadingGroupCount)
     
   }, [individualEvents, belongingEvents, leadingEvents]);
 
@@ -183,6 +178,12 @@ function Monthly() {
     let newIndividualTaskIDs: any = [];
     let newBelongingTaskIDs: any = [];
     let newLeadingTaskIDs: any = [];
+
+    let newBelongingGroupNames: any = [];
+    let newLeadingGroupNames: any = [];
+
+    let newBelongingGroupTaskNums: any = [];
+    let newLeadingGroupTaskNums: any = [];
     
     var resp;
     try {
@@ -212,22 +213,6 @@ function Monthly() {
       leadingGroups = data.leadingGroups;
     }
 
-    // console.log("log Groups", belongingGroups, leadingGroups)
-
-    // // add belonging and leading group task ids
-    // if (belongingGroups && belongingGroups.length > 0) {
-    //   axios({
-    //     method: "get",
-    //     url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(belongingGroups)}}}&select={"name": 1, "groupTasks": 1, "_id": 0}`
-    //   }).then((r) => {
-    //     // console.log("log res", r.data.data)
-    //     r.data.data.forEach((element:any) => {
-    //       belongingGroupNames.push(element.groupName);
-    //       newBelongingTaskIDs.push(element.groupTasks);
-    //     });
-    //   })
-    // }
-
     var resp1;
     var resp2;
     try {
@@ -246,29 +231,20 @@ function Monthly() {
 
     if (resp1 !== undefined) { 
       resp1.data.data.forEach((element:any) => {
-        belongingGroupNames.push(element.groupName);
-        newBelongingTaskIDs.push(element.groupTasks);
+        newBelongingGroupNames.push(element.groupName);
+        newBelongingGroupTaskNums.push(element.groupTasks.length);
+        newBelongingTaskIDs = newBelongingTaskIDs.concat(element.groupTasks);
       });
     }
     if (resp2 !== undefined) { 
       resp2.data.data.forEach((element:any) => {
-        leadingGroupNames.push(element.groupName);
-        newLeadingTaskIDs.push(element.groupTasks);
+        newLeadingGroupNames.push(element.groupName);
+        newLeadingGroupTaskNums.push(element.groupTasks.length);
+        newLeadingTaskIDs = newLeadingTaskIDs.concat(element.groupTasks);
+        // console.log('leading task num', element.groupTasks.length)
+        // console.log('leading task num', newLeadingGroupTaskNums)
       });
     }
-
-    // if (leadingGroups && leadingGroups.length > 0) {
-    //   axios({
-    //     method: "get",
-    //     url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(leadingGroups)}}}&select={"name": 1, "groupTasks": 1, "_id": 0}`
-    //   }).then((r) => {
-    //     // console.log("log res", r.data.data)
-    //     r.data.data.forEach((element:any) => {
-    //       leadingGroupNames.push(element.groupName);
-    //       newLeadingTaskIDs.push(element.groupTasks);
-    //     });
-    //   })
-    // }
 
     // console.log("newIndividualTaskIDs", newIndividualTaskIDs);
     // console.log("newBelongingTaskIDs", newBelongingTaskIDs);
@@ -278,11 +254,16 @@ function Monthly() {
     setBelongingTaskIDs(newBelongingTaskIDs);
     setLeadingTaskIDs(newLeadingTaskIDs);
 
+    setBelongingGroupNames(newBelongingGroupNames);
+    setLeadingGroupNames(newLeadingGroupNames);
+
+    setBelongingGroupTaskNums(newBelongingGroupTaskNums);
+    setLeadingGroupTaskNums(newLeadingGroupTaskNums);
+
     taskIdsUpdated ++;
   }
 
   async function __updateTaskInfo() {
-    console.log("call __updateTaskInfo")
     let newIndividualTaskInfo: any = [];
     let newBelongingTaskInfo: any = [];
     let newLeadingTaskInfo: any = [];
@@ -296,45 +277,6 @@ function Monthly() {
     // console.log("BelongingTaskIDs", belongingTaskIDs);
     // console.log("LeadingTaskIDs", leadingTaskIDs);
 
-    // if (individualTaskIDs && individualTaskIDs.length > 0) {
-    //   axios({
-    //     method: "get",
-    //     url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(individualTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
-    //   }).then((r) => {
-    //     console.log("individual log res", r.data.data)
-    //     newIndividualTaskInfo = newIndividualTaskInfo.concat(r.data.data);
-    //     console.log("aaaaaaaaanewIndividualTaskInfo", newIndividualTaskInfo);
-    //   })
-    // }
-    // if (belongingTaskIDs && belongingTaskIDs.length > 0) {
-    //   belongingTaskIDs.forEach((group) => {
-    //     axios({
-    //       method: "get",
-    //       url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
-    //     }).then((r) => {
-    //       console.log("belonging log res", r.data.data)
-    //       newBelongingTaskInfo.push(r.data.data);
-    //     })
-    //   });
-    // }
-    // console.log("??????????????LeadingTaskIDs", leadingTaskIDs);
-    // console.log("??????????????LeadingTaskIDs", leadingTaskIDs.length);
-    // if (leadingTaskIDs && leadingTaskIDs.length > 0) {
-    //   leadingTaskIDs.forEach((group) => {
-    //     console.log("leading group", group)
-    //     axios({
-    //       method: "get",
-    //       url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
-    //     }).then((r) => {
-    //       console.log("leading log res", r.data.data)
-    //       newLeadingTaskInfo.push(r.data.data);
-    //     })
-    //   });
-    // }
-  
-    // var resp1;
-    // var resp2: any = [];
-    // var resp3: any = [];
     try {
       if (individualTaskIDs.length > 0) {
         const response = await axios({
@@ -344,61 +286,35 @@ function Monthly() {
         newIndividualTaskInfo = newIndividualTaskInfo.concat(response.data.data);
         __updateIndividualEvents(newIndividualTaskInfo);
       }
-      belongingTaskIDs.forEach(async (group:any) => {
-        if (group.length > 0) {
-          const response = await axios({
-            method: "get",
-            url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
-          })
-          newBelongingTaskInfo.push(response.data.data);
-          __updateGroupEvents(response.data.data, COLORSBELONGING, belongingGroupCount, setBelongingGroupCount, "belonging");
-        }
-        
-      })
-      leadingTaskIDs.forEach(async (group:any) => {
-        // console.log("leading group", group)
-        if (group.length > 0) {
-          const response = await axios({
-            method: "get",
-            url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(group)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
-          })
-          newLeadingTaskInfo.push(response.data.data);
-          __updateGroupEvents(newLeadingTaskInfo[leadingGroupCount], COLORSLEADING, leadingGroupCount, setLeadingGroupCount, "leading");
-        }
-      })
+      if (belongingTaskIDs.length > 0) {
+        const response = await axios({
+          method: "get",
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(belongingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+        });
+        newBelongingTaskInfo = newBelongingTaskInfo.concat(response.data.data);
+        __updateBelongingGroupEvents(newBelongingTaskInfo);
+      }
+      if (leadingTaskIDs.length > 0) {
+        const response = await axios({
+          method: "get",
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(leadingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+        });
+        newLeadingTaskInfo = newLeadingTaskInfo.concat(response.data.data);
+        __updateLeadingGroupEvents(newLeadingTaskInfo);
+      }
     }
     catch (e: any) {
         // @ts-ignore
     }
 
-
-    // if (resp1 !== undefined) { 
-    //   // console.log("individual log res", resp1.data.data)
-    //   newIndividualTaskInfo = newIndividualTaskInfo.concat(resp1.data.data);
-    // }
-    // if (resp2 && resp2.length > 0) { 
-    //   resp2.forEach((element:any) => {
-    //     console.log("belonging log res", element.data.data)
-    //     newBelongingTaskInfo.push(element.data.data);
-    //   });
-    // }
-    // if (resp3 && resp3.length > 0) { 
-    //   resp3.forEach((element:any) => {
-    //     console.log("leading log res", element.data.data)
-    //     newLeadingTaskInfo.push(element.data.data);
-    //   });
-    // }
-
-
     // console.log("newIndividualTaskInfo", newIndividualTaskInfo);
     // console.log("newBelongingTaskInfo", newBelongingTaskInfo);
-    console.log("newLeadingTaskInfo", newLeadingTaskInfo);
+    // console.log("newLeadingTaskInfo", newLeadingTaskInfo);
 
     setIndividualTaskInfo(newIndividualTaskInfo);
     setBelongingTaskInfo(newBelongingTaskInfo);
     setLeadingTaskInfo(newLeadingTaskInfo);
 
-    taskInfoUpdated ++;
   }
 
   function __updateIndividualEvents(taskInfo: any) {
@@ -412,46 +328,76 @@ function Monthly() {
       })
     })
 
-    console.log("individual events", events);
+    // console.log("individual events", events);
     setIndividualEvents(events);
   }
 
-  function __updateGroupEvents(taskInfo: any, colors: any, count: number, setCount: any, type: string) {
+  function __updateLeadingGroupEvents(taskInfo: any) {
     let resources: any = [];
     let events: any = [];
 
-    // console.log("taskinfo", taskInfo.length)
-    // console.log([count.toString()])
+    let baseNum = 0;
+    let count = 0;
 
-    resources.push({
-      id: type + (count).toString(),
-      title: (count).toString(),
-      eventColor: colors[(count)]
-    })
-    
-    taskInfo.forEach((element:any) => {
-      console.log("taskinfo element", element)
-      events.push({
-        id: element.name,
-        title: element.name,
-        resourceIds: [type + count.toString()],
-        start: element.endTime.slice(0, 10),
+    // console.log("taskinfo", taskInfo)
+    // console.log('leadingGroupTaskNums', leadingGroupTaskNums)
+    leadingGroupTaskNums.forEach((taskNum:any) => {
+      console.log('taskNum', taskNum)
+      resources.push({
+        id: "leading" + (count).toString(),
+        title: (count).toString(),
+        eventColor: COLORSLEADING[(count)]
       })
-      
+      taskInfo.slice(baseNum, baseNum + taskNum).forEach((element:any) => {
+        // console.log("leading element", element)
+        events.push({
+          id: element.name,
+          title: element.name,
+          resourceIds: ["leading" + count.toString()],
+          start: element.endTime.slice(0, 10)
+        })
+      });
+      baseNum += taskNum;
+      count ++;
     });
-    setCount(count ++);
-    if (type === "belonging") {
-      setBelongingResources([...belongingResources, ...resources])
-      setBelongingEvents([...belongingEvents, ...events])
-    }
-    else {
-      setLeadingResources([...leadingResources, ...resources])
-      setLeadingEvents([...leadingEvents, ...events])
-    }
-    // setCalendarResources([...calendarResources, ...resources])
-    // setCalendarEvents([...calendarEvents, ...events]);
+
+    setLeadingResources(resources)
+    setLeadingEvents(events)
+
   }
-  
+
+  function __updateBelongingGroupEvents(taskInfo: any) {
+    let resources: any = [];
+    let events: any = [];
+
+    let baseNum = 0;
+    let count = 0;
+
+    // console.log("taskinfo", taskInfo)
+    // console.log('leadingGroupTaskNums', leadingGroupTaskNums)
+    belongingGroupTaskNums.forEach((taskNum:any) => {
+      resources.push({
+        id: "belonging" + (count).toString(),
+        title: (count).toString(),
+        eventColor: COLORSBELONGING[(count)]
+      })
+      taskInfo.slice(baseNum, baseNum + taskNum).forEach((element:any) => {
+        // console.log("leading element", element)
+        events.push({
+          id: element.name,
+          title: element.name,
+          resourceIds: ["belonging" + count.toString()],
+          start: element.endTime.slice(0, 10)
+        })
+      });
+      baseNum += taskNum;
+      count ++;
+    });
+
+    setBelongingResources(resources)
+    setBelongingEvents(events)
+
+  }
 
   // update all date boxes
   function __updateComponent() {
