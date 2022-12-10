@@ -11,7 +11,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
-import adaptivePlugin from '@fullcalendar/adaptive';
 
 import axios from "axios";
 
@@ -19,9 +18,6 @@ import axios from "axios";
 const COLORSLEADING = ['rgb(7,140,190)', 'rgb(255,179,255)', 'rgb(77,77,255)', 'rgb(255,77,106)', 'rgb(255,166,77)', 'rgb(196,255,77)', 'rgb(0,128,153)', 'rgb(0,153,51)', 'rgb(255,230,102)']
 const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(210,181,207)', 'rgb(235,165,176)', 'rgb(230,168,138)', 'rgb(230,204,165)', 'rgb(151,227,136)', 'rgb(138,230,184)']
 const COLORCOMPLETED = 'rgb(163,163,163)'
-
-let taskIdsUpdated = 0;
-let taskInfoUpdated = 0;
 
 // date list: should change based today's date and week
 // represent by date difference
@@ -59,8 +55,8 @@ function Monthly() {
   const [belongingGroupNames, setBelongingGroupNames] = useState<any>([]);
   const [leadingGroupNames, setLeadingGroupNames] = useState<any>([]);
 
-  const [belongingGroupTaskNums, setBelongingGroupTaskNums] = useState<any>([]);
-  const [leadingGroupTaskNums, setLeadingGroupTaskNums] = useState<any>([]);
+  const [belongingGroupIDs, setBelongingGroupIDs] = useState<any>([]);
+  const [leadingGroupIDs, setLeadingGroupIDs] = useState<any>([]);
 
   useEffect(() => {
     __updateTaskIDs()
@@ -182,8 +178,8 @@ function Monthly() {
     let newBelongingGroupNames: any = [];
     let newLeadingGroupNames: any = [];
 
-    let newBelongingGroupTaskNums: any = [];
-    let newLeadingGroupTaskNums: any = [];
+    let newBelongingGroupIDs: any = [];
+    let newLeadingGroupIDs: any = [];
     
     var resp;
     try {
@@ -218,37 +214,42 @@ function Monthly() {
     try {
       resp1 = await axios({
         method: "get",
-        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(belongingGroups)}}}&select={"name": 1, "groupTasks": 1, "_id": 0}`
+        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(belongingGroups)}}}&select={"name": 1, "groupTasks": 1}`
       });
+      if (resp1 !== undefined) { 
+        resp1.data.data.forEach((element:any) => {
+          newBelongingGroupNames.push(element.name);
+          newBelongingGroupIDs.push(element._id);
+          newBelongingTaskIDs = newBelongingTaskIDs.concat(element.groupTasks);
+        });
+      }
       resp2 = await axios({
         method: "get",
-        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(leadingGroups)}}}&select={"name": 1, "groupTasks": 1, "_id": 0}`
+        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(leadingGroups)}}}&select={"name": 1, "groupTasks": 1}`
       });
+      if (resp2 !== undefined) { 
+        resp2.data.data.forEach((element:any) => {
+          console.log('element.groupName', element.name)
+          newLeadingGroupNames.push(element.name);
+          newLeadingGroupIDs.push(element._id);
+          newLeadingTaskIDs = newLeadingTaskIDs.concat(element.groupTasks);
+          console.log('leading task num', element.groupTasks.length)
+          console.log('element.groupTasks', element.groupTasks)
+          // console.log('leading task num', newLeadingGroupTaskNums)
+        });
+      }
     }
     catch (e: any) {
         // @ts-ignore
     }
 
-    if (resp1 !== undefined) { 
-      resp1.data.data.forEach((element:any) => {
-        newBelongingGroupNames.push(element.groupName);
-        newBelongingGroupTaskNums.push(element.groupTasks.length);
-        newBelongingTaskIDs = newBelongingTaskIDs.concat(element.groupTasks);
-      });
-    }
-    if (resp2 !== undefined) { 
-      resp2.data.data.forEach((element:any) => {
-        newLeadingGroupNames.push(element.groupName);
-        newLeadingGroupTaskNums.push(element.groupTasks.length);
-        newLeadingTaskIDs = newLeadingTaskIDs.concat(element.groupTasks);
-        // console.log('leading task num', element.groupTasks.length)
-        // console.log('leading task num', newLeadingGroupTaskNums)
-      });
-    }
+    
+    
 
     // console.log("newIndividualTaskIDs", newIndividualTaskIDs);
     // console.log("newBelongingTaskIDs", newBelongingTaskIDs);
-    // console.log("newLeadingTaskIDs", newLeadingTaskIDs);
+    console.log("newLeadingTaskIDs", newLeadingTaskIDs);
+    console.log("newLeadingGroupIDs", newLeadingGroupIDs);
 
     setIndividualTaskIDs(newIndividualTaskIDs);
     setBelongingTaskIDs(newBelongingTaskIDs);
@@ -257,10 +258,9 @@ function Monthly() {
     setBelongingGroupNames(newBelongingGroupNames);
     setLeadingGroupNames(newLeadingGroupNames);
 
-    setBelongingGroupTaskNums(newBelongingGroupTaskNums);
-    setLeadingGroupTaskNums(newLeadingGroupTaskNums);
+    setBelongingGroupIDs(newBelongingGroupIDs);
+    setLeadingGroupIDs(newLeadingGroupIDs);
 
-    taskIdsUpdated ++;
   }
 
   async function __updateTaskInfo() {
@@ -275,7 +275,7 @@ function Monthly() {
 
     // console.log("IndividualTaskIDs", individualTaskIDs);
     // console.log("BelongingTaskIDs", belongingTaskIDs);
-    // console.log("LeadingTaskIDs", leadingTaskIDs);
+    console.log("LeadingTaskIDs", leadingTaskIDs);
 
     try {
       if (individualTaskIDs.length > 0) {
@@ -289,7 +289,7 @@ function Monthly() {
       if (belongingTaskIDs.length > 0) {
         const response = await axios({
           method: "get",
-          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(belongingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(belongingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1, "_id": 0}`
         });
         newBelongingTaskInfo = newBelongingTaskInfo.concat(response.data.data);
         __updateBelongingGroupEvents(newBelongingTaskInfo);
@@ -297,8 +297,9 @@ function Monthly() {
       if (leadingTaskIDs.length > 0) {
         const response = await axios({
           method: "get",
-          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(leadingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(leadingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1, "_id": 0}`
         });
+        console.log('response.data.data', response.data.data)
         newLeadingTaskInfo = newLeadingTaskInfo.concat(response.data.data);
         __updateLeadingGroupEvents(newLeadingTaskInfo);
       }
@@ -336,29 +337,26 @@ function Monthly() {
     let resources: any = [];
     let events: any = [];
 
-    let baseNum = 0;
     let count = 0;
 
-    // console.log("taskinfo", taskInfo)
-    // console.log('leadingGroupTaskNums', leadingGroupTaskNums)
-    leadingGroupTaskNums.forEach((taskNum:any) => {
-      console.log('taskNum', taskNum)
+    console.log("taskinfo", taskInfo)
+    console.log('leadingGroupNames', leadingGroupNames)
+
+    leadingGroupIDs.forEach((element:any) => {
       resources.push({
-        id: "leading" + (count).toString(),
-        title: (count).toString(),
+        id: element,
         eventColor: COLORSLEADING[(count)]
       })
-      taskInfo.slice(baseNum, baseNum + taskNum).forEach((element:any) => {
-        // console.log("leading element", element)
-        events.push({
-          id: element.name,
-          title: element.name,
-          resourceIds: ["leading" + count.toString()],
-          start: element.endTime.slice(0, 10)
-        })
-      });
-      baseNum += taskNum;
       count ++;
+    });
+
+    taskInfo.forEach((element:any) => {
+      events.push({
+        id: element.name,
+        title: element.name,
+        resourceIds: [element.assignedGroup],
+        start: element.endTime.slice(0, 10)
+      })
     });
 
     setLeadingResources(resources)
@@ -370,28 +368,23 @@ function Monthly() {
     let resources: any = [];
     let events: any = [];
 
-    let baseNum = 0;
     let count = 0;
 
-    // console.log("taskinfo", taskInfo)
-    // console.log('leadingGroupTaskNums', leadingGroupTaskNums)
-    belongingGroupTaskNums.forEach((taskNum:any) => {
+    belongingGroupIDs.forEach((element:any) => {
       resources.push({
-        id: "belonging" + (count).toString(),
-        title: (count).toString(),
+        id: element,
         eventColor: COLORSBELONGING[(count)]
       })
-      taskInfo.slice(baseNum, baseNum + taskNum).forEach((element:any) => {
-        // console.log("leading element", element)
-        events.push({
-          id: element.name,
-          title: element.name,
-          resourceIds: ["belonging" + count.toString()],
-          start: element.endTime.slice(0, 10)
-        })
-      });
-      baseNum += taskNum;
       count ++;
+    });
+
+    taskInfo.forEach((element:any) => {
+      events.push({
+        id: element.name,
+        title: element.name,
+        resourceIds: [element.assignedGroup],
+        start: element.endTime.slice(0, 10)
+      })
     });
 
     setBelongingResources(resources)
