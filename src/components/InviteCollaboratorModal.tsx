@@ -6,6 +6,7 @@ import React, {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import Alert from "react-bootstrap/Alert";
+import {updateUser} from "./updateUser";
 
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
@@ -70,7 +71,7 @@ export default function InviteCollaboratorModal(props: any) {
                 data: requestBody
             });
             setShowErrorMsg(false);
-            props.setReload();
+            await updateUser(props.setReload);
             props.handleClose();
         }
         catch (e) {

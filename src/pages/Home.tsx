@@ -162,8 +162,9 @@ function GroupList() {
             }).then(r => {
                 // console.log(r);
                 setLeadingGroup(r.data.data);
+                // console.log(r.data.data);
                 if (leadingGroupIndex >= 0 && leadingGroupIndex < r.data.data.length) {
-                    console.log(leadingGroupIndex);
+                    // console.log(leadingGroupIndex);
                     if (leadingGroupIndex === r.data.data.length) {
                         setGroupIndex(0);
                         setClickedGroup(group[0]);
@@ -174,8 +175,7 @@ function GroupList() {
                     }
                     else {
                         setClickedLeadingGroup(r.data.data[leadingGroupIndex]);
-                        setLeadingGroupIndex(-1);
-                        setLeadingGroupId("");
+                        setLeadingGroupId(r.data.data[leadingGroupIndex]._id);
                     }
                 }
                 else {
@@ -188,6 +188,7 @@ function GroupList() {
         else {
             setLeadingGroup([]);
             setClickedLeadingGroup({});
+            setLeadingGroupId("");
         }
     },[reloadGroup])
 
