@@ -110,7 +110,7 @@ export default function AddTaskModalGroup(props: any) {
                 const allUsers = members.concat(leaders);
                 axios({
                     method: "get",
-                    url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(allUsers)}}}`
+                    url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(allUsers)}}}&select={"name": 1, "_id": 1}`
                 }).then(response => {
                     setGroupMemberInfo(response.data.data);
                 }).catch(e => console.log(e))

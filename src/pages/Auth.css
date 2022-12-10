@@ -61,3 +61,17 @@
         border-radius: 10px;
     }
 }
+
+@media screen and (max-width: 750px) {
+    .logo img {
+        width: 60%;
+    }
+    .login-form {
+        margin: 1% 15%;
+        border: grey;
+        border: groove;
+        border-width: 3px;
+        padding: 15px;
+        border-radius: 10px;
+    }
+}

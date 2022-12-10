@@ -106,7 +106,7 @@ export default function DeleteGroupMemberModal(props: any) {
             const allMembers = members.concat(pendingMembers);
             axios({
                 method: "get",
-                url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(allMembers)}}}`
+                url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(allMembers)}}}&select={"name": 1, "_id": 1}`
             }).then(response => {
                 setGroupMemberInfo(response.data.data);
             }).catch(e => console.log(e))

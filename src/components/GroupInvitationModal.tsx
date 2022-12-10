@@ -13,10 +13,11 @@ export default function GroupInvitationModal(props: any) {
     const [memberNames, setMemberNames] = useState([]);
     const [showDecline, setShowDecline] = useState(false);
     const [showAccept, setShowAccept] = useState(false);
-    const closeDeclineConfirm = () => {setShowDecline(false)};
-    const closeAcceptConfirm = () => {setShowAccept(false)};
-    const openDeclineConfirm = () => {setShowDecline(true);};
-    const openAcceptConfirm = () => {setShowAccept(true)};
+    const [showMySelf, setShowMySelf] = useState(props.show);
+    const closeDeclineConfirm = () => {setShowDecline(false); setShowMySelf(true)};
+    const closeAcceptConfirm = () => {setShowAccept(false); setShowMySelf(true)};
+    const openDeclineConfirm = () => {setShowDecline(true); setShowMySelf(false)};
+    const openAcceptConfirm = () => {setShowAccept(true); setShowMySelf(false)};
     const userString = localStorage.getItem("user");
     const userJSON = JSON.parse(userString || "");
     const data = props.data;
@@ -106,6 +107,7 @@ export default function GroupInvitationModal(props: any) {
 
     useEffect(() => {
         /* Only run the function is props.show is true */
+        setShowMySelf(props.show);
         if (props.show === true) {
             if (data.leaders && data.leaders.length > 0) {
                 axios({
@@ -128,7 +130,7 @@ export default function GroupInvitationModal(props: any) {
 
 
     return (<>
-    <Modal show={props.show} onHide={props.handleClose}>
+    <Modal show={showMySelf} onHide={props.handleClose}>
         <Modal.Header closeButton>
             <Modal.Title>Group Invitation</Modal.Title>
         </Modal.Header>

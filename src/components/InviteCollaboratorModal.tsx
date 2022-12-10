@@ -36,7 +36,7 @@ export default function InviteCollaboratorModal(props: any) {
         try {
             invitedUserInfo = await axios({
                 method: "get",
-                url: `${homeurl}/users?where={"email": ${JSON.stringify(invitedCollaborator)}}`
+                url: `${homeurl}/users?where={"email": ${JSON.stringify(invitedCollaborator)}}&select={"_id": 1}`
             })
             if (invitedUserInfo.data.data.length === 0) {
                 setShowErrorMsg(true);
