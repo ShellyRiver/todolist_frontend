@@ -17,3 +17,7 @@
 .dateBox {
     width: 100%;
 }
+
+.completed {
+    opacity: 0.4;
+}

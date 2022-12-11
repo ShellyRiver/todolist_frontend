@@ -67,7 +67,7 @@ function Monthly() {
 
   useEffect(() => {
     __updateTaskIDs()
-  }, [])  // TODO: add dependency?
+  }, [showTask])  // TODO: add dependency?
 
 
   useEffect(() => {
@@ -91,26 +91,25 @@ function Monthly() {
       navLinks: true, // can click day/week names to navigate views
       editable: true,
       dayMaxEvents: true, // allow "more" link when too many events
-      resources: [...belongingResources, ...leadingResources],
+      resources: [{
+        id: "resourceForCompleted",
+        eventBorderColor: COLORCOMPLETED
+      },
+      ...belongingResources, ...leadingResources],
       events: [...individualEvents, ...belongingEvents, ...leadingEvents],
 
       eventClick: function(info) {
-        // alert('Event: ' + info.event.title);
-        // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-        // alert('View: ' + info.view.type);
+        
         axios({
           method: "get",
           url: `${homeurl}/tasks/${info.event.id}`
         }).then((r) => {
-          console.log("endtime", r.data.data[0].endTime)
           setClickedTask(r.data.data[0])
-          
           setShowTask(true)
-          
         })
-        // change the border color just for fun
-        info.el.style.borderColor = 'red';
-      }
+        
+      },      
+
       // resources: [
       //   {
       //     id: 'completed',
@@ -186,7 +185,6 @@ function Monthly() {
     // __updateEvents(calendar);
 
     calendar.render();
-    // console.log("leadingGroupCount", leadingGroupCount)
     
   }, [individualEvents, belongingEvents, leadingEvents]);
 
@@ -378,12 +376,22 @@ function Monthly() {
 
     ////////////////////// TODO: set completed task style
     taskInfo.forEach((element:any) => {
-      events.push({
-        id: element._id,
-        title: element.name,
-        resourceIds: [element.assignedGroup],
-        start: element.endTime.slice(0, 10)
-      })
+      if (element.completed) {
+        events.push({
+          id: element._id,
+          title: element.name,
+          resourceIds: [element.assignedGroup],
+          start: element.endTime.slice(0, 10),
+          classNames: ['completed'],
+        })
+      } else {
+        events.push({
+          id: element._id,
+          title: element.name,
+          resourceIds: [element.assignedGroup],
+          start: element.endTime.slice(0, 10)
+        })
+      }
     });
 
     setLeadingResources(resources)
@@ -406,12 +414,22 @@ function Monthly() {
     });
 
     taskInfo.forEach((element:any) => {
-      events.push({
-        id: element.name,
-        title: element.name,
-        resourceIds: [element.assignedGroup],
-        start: element.endTime.slice(0, 10)
-      })
+      if (element.completed) {
+        events.push({
+          id: element._id,
+          title: element.name,
+          resourceIds: [element.assignedGroup],
+          start: element.endTime.slice(0, 10),
+          classNames: ['completed'],
+        })
+      } else {
+        events.push({
+          id: element._id,
+          title: element.name,
+          resourceIds: [element.assignedGroup],
+          start: element.endTime.slice(0, 10)
+        })
+      }
     });
 
     setBelongingResources(resources)

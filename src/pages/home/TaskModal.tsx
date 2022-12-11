@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function TaskInfoModal(props: any) {
     const data = props.data;
@@ -16,13 +16,23 @@ export default function TaskInfoModal(props: any) {
     async function clickComplete () {
         /* set completed to true */
         try {
-            await axios({
-                method: "put",
-                url: `${homeurl}/tasks/${data._id}`,
-                data: {
-                    'completed': true,
-                }
-            });
+            if (data.completed) {
+                await axios({
+                    method: "put",
+                    url: `${homeurl}/tasks/${data._id}`,
+                    data: {
+                        'completed': false,
+                    }
+                });
+            } else {
+                await axios({
+                    method: "put",
+                    url: `${homeurl}/tasks/${data._id}`,
+                    data: {
+                        'completed': true,
+                    }
+                });
+            }
             props.handleClose()
         }
         catch (e) {
@@ -105,7 +115,7 @@ export default function TaskInfoModal(props: any) {
         </Modal.Body>
         <Modal.Footer>
             <Button variant="primary" onClick={clickComplete}>
-                Complete
+                {data.completed ? "Not Completed" : "Completed"}
             </Button>
             <Button variant="secondary" onClick={props.handleClose}>
                 Close
