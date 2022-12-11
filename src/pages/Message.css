@@ -1,5 +1,5 @@
 .message-box {
-    width: 50%;
+    width: 60%;
     margin: 20px auto;
 
 }
@@ -21,7 +21,21 @@
     object-fit: cover;
 }
 
+.message-contents {
+    overflow:hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
 
+.message-title {
+    overflow:hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
 
 .messages:hover {
     color: black;
@@ -41,7 +55,7 @@
 
 @media screen and (max-width: 900px) {
     .message-box {
-        width: 70%;
+        width: 75%;
         margin: 20px auto;
     }
 }

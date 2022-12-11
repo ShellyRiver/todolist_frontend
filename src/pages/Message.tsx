@@ -126,8 +126,8 @@ function Message() {
                     <img src={chatbot}/>
                   </div>
                   <div>
-                    <div className="fw-bold">New Group Task - {t.name}</div>
-                    {t.description}
+                    <div className="fw-bold message-title">Group Task - {t.name}</div>
+                    <div className="message-contents">{t.description}</div>
                   </div>
                 </div>
               </ListGroup.Item>)}
@@ -145,8 +145,8 @@ function Message() {
                     <img src={chatbot} id={`invite-group-member-${index}`}/>
                   </div>
                   <div>
-                    <div className="fw-bold">New group invitation (Member) - {g.name}</div>
-                    {g.description}
+                    <div className="fw-bold message-title">Invitation (Member) - {g.name}</div>
+                    <div className="message-contents">{g.description}</div>
                   </div>
                 </div>
               </ListGroup.Item>)}
@@ -164,8 +164,8 @@ function Message() {
                     <img src={chatbot} id={`invite-group-leader-${index}`}/>
                   </div>
                   <div>
-                    <div className="fw-bold">New group invitation (Leader) - {g.name}</div>
-                    {g.description}
+                    <div className="fw-bold message-title">Invitation (Leader) - {g.name}</div>
+                    <div className="message-contents">{g.description}</div>
                   </div>
                 </div>
               </ListGroup.Item>)}
