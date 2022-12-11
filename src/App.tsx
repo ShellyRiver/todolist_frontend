@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BrowserRouter, Routes, Route, Link, Outlet, Navigate, useNavigate, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Outlet, Navigate, useNavigate, useParams, HashRouter} from "react-router-dom";
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import './App.css';
@@ -13,6 +13,7 @@ import Daily from './pages/home/Daily';
 import Monthly from './pages/home/Monthly';
 import Auth from './pages/Auth';
 import {AuthContext} from './context/authContext';
+import NotFound from "./pages/NotFound";
 
 /* 
 3 main pages:
@@ -28,17 +29,20 @@ function App() {
   return (
     <AuthContext.Provider value={{email: email, setEmail: setEmail}}>
       <div className="App">
-        <BrowserRouter>
+        <BrowserRouter basename='/grouptodo'>
           <Routes>
             <Route path='/' element={<Navigator />}>
               <Route path='/' element={<Home />}>
-                <Route path='monthly' element={<Monthly />}/>
-                <Route path='daily' element={<Daily />}/>
+                <Route path='/monthly' element={<Monthly />}/>
+                <Route path='/daily' element={<Daily />}/>
               </Route>
-              <Route path='message' element={<Message />}/>
-              <Route path='profile' element={<Profile />}/>
-              <Route path='login' element={<Auth />}/>
+              {/*<Route index element={<Home />}/>*/}
+              <Route path='/message' element={<Message />}/>
+              <Route path='/profile' element={<Profile />}/>
+              <Route path='/login' element={<Auth />}/>
+              <Route path="*" element={<NotFound />} />
             </Route>
+            {/*<Route path='/profile' element={<Profile />}/>*/}
           </Routes>
         </BrowserRouter>
       </div>

@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import home from "../pages/Home";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function AddTaskModalGroup(props: any) {
     const [errorMsg, setErrorMsg] = useState("");
@@ -110,7 +110,7 @@ export default function AddTaskModalGroup(props: any) {
                 const allUsers = members.concat(leaders);
                 axios({
                     method: "get",
-                    url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(allUsers)}}}`
+                    url: `${homeurl}/users?where={"_id": {"$in": ${JSON.stringify(allUsers)}}}&select={"name": 1, "_id": 1}`
                 }).then(response => {
                     setGroupMemberInfo(response.data.data);
                 }).catch(e => console.log(e))

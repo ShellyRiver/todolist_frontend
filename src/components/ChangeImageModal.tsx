@@ -1,36 +1,59 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import React from "react";
+import React, {useState} from "react";
 import Button from 'react-bootstrap/Button';
+import './ChangeImageModal.css';
+import {updateUser} from "./updateUser";
+import Alert from "react-bootstrap/Alert";
 
-const homeurl = 'http://localhost:4000/api'
+
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function ChangeImageModal(props: any) {
-    const data = props.data;
-    async function changeProfile() {
+    const [errorMsg, setErrorMsg] = useState("");
+    const [showErrorMsg, setShowErrorMsg] = useState(false);
+    const [showPreview, setShowPreview] = useState(false);
+    function changePreview() {
+        // @ts-ignore
+        const newImage = document.getElementById("new-profile-image").files[0];
+        const windowURL = window.URL || window.webkitURL;
+        const img = document.getElementById('preview');　　
+        if(newImage) {　　
+            const dataURl = windowURL.createObjectURL(newImage);
+            // @ts-ignore
+            img.setAttribute('src',dataURl);
+            setShowPreview(true);
+        }
+    }
 
+    async function changeImage() {
         // @ts-ignore
-        var newName = (document.getElementById("new-profile-name") ? document.getElementById("new-profile-name").value : null);
-        // @ts-ignore
-        var newDescription = (document.getElementById("new-profile-description") ? document.getElementById("new-profile-description").value : null);
-        var requestBody = {
-            'name': newName,
-            'description': newDescription
-        };
-        if (newName == props.data.name || newName == "") {
-            delete requestBody.name;
+        const newImage = document.getElementById("new-profile-image").files;
+        // Check whether there is any selected file
+        if (newImage.length === 0) {
+            setErrorMsg("Please select an image.");
+            setShowErrorMsg(true);
+            return;
         }
-        if (newDescription == props.data.description || newDescription == "") {
-            newDescription = null;
-            delete requestBody.description;
+        // Check whether the uploaded image is beyond the storage limit
+        if ((newImage[0].size/1024)/1024 >= 1) {
+            setErrorMsg("The selected image is larger than 1MB.");
+            setShowErrorMsg(true);
+            return;
         }
+        // Send the image data to be backend
+        const requestBody = new FormData();
+        requestBody.append('image', newImage[0]);
+        console.log(requestBody);
         /* Update the profile to the backend database */
         try {
-            // console.log(`${homeurl}/users/${props.data._id}`);
             await axios({
                 method: "put",
-                url: `${homeurl}/users/${props.data._id}`,
+                url: `${homeurl}/users/upload/${props.data._id}`,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
                 data: requestBody
             });
         }
@@ -38,50 +61,58 @@ export default function ChangeImageModal(props: any) {
             // console.log(e);
             props.handleClose();
         }
-        try {
-            const response = await axios({
-                method: "get",
-                url: `${homeurl}/users/${props.data._id}`
-            });
-            localStorage.setItem('user', JSON.stringify(response.data.data[0]));
-            // console.log(response.data.data[0]);
-            props.handleClose();
+        // Refresh the navigator small profile image
+        if (localStorage.getItem('refreshImg')) {
+            if (localStorage.getItem('refreshImg') === 'true') {
+                localStorage.setItem('refreshImg', 'false');
+            }
+            else {
+                localStorage.setItem('refreshImg', 'true');
+            }
         }
-        catch (e) {
-            // console.log(e);
-            props.handleClose();
+        else {
+            localStorage.setItem('refreshImg', 'true');
         }
-
-
+        updateUser(props.setReload);
+        setShowPreview(false);
+        props.handleClose();
     }
-    // console.log(data);
     // @ts-ignore
     return (
         <>
-            <Modal show={props.show} onHide={props.handleClose}>
+            <Modal show={props.show} onHide={()=>{setShowPreview(false); props.handleClose()}}>
+                {showErrorMsg && <Alert variant="danger" onClose={() => setShowErrorMsg(false)} dismissible>
+                    <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                    <p>{errorMsg}</p>
+                </Alert>}
                 <Modal.Header closeButton>
                     <Modal.Title>Change Profile Image</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group
-                            className="mb-3"
-                        >
-                            <Form.Label>Profile Image</Form.Label>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Profile Image (size limit: 1MB)</Form.Label>
                             <Form.Control
                                 type="file"
-                                id = "new-profile-description"
+                                id = "new-profile-image"
                                 accept="image/*"
-                                name="images[]"
+                                name="image"
+                                onChange={changePreview}
                             />
                         </Form.Group>
+                        {showPreview &&
+                            <Form.Group className="mb-3">
+                                <Form.Label>Image Preview</Form.Label>
+                            </Form.Group>
+                        }
                     </Form>
+                    <div className="image-container"><img id='preview' src="" hidden={!showPreview}/></div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={props.handleClose}>
+                    <Button variant="secondary" onClick={()=>{setShowPreview(false); props.handleClose()}}>
                         Close
                     </Button>
-                    <Button variant="primary">
+                    <Button variant="primary" onClick={changeImage}>
                         Save Changes
                     </Button>
                 </Modal.Footer>

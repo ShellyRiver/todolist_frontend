@@ -15,12 +15,12 @@ export default function ConfirmationModal(props: any) {
     }
     return (
         <>
-            <Modal show={props.show} onHide={props.handleClose} size="lg">
+            <Modal show={props.show} onHide={props.handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {props.body}
+                    <Form.Label>{props.body}</Form.Label>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.handleClose}>

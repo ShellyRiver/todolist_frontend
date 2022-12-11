@@ -10,53 +10,96 @@ import ChangeProfileModal from "../components/ChangeProfileModal";
 import ChangeImageModal from "../components/ChangeImageModal";
 import Form from "react-bootstrap/Form";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 function Profile() {
   const email = localStorage.getItem("email");
-  const userString = localStorage.getItem("user");
-  const userJSON = JSON.parse(userString || "");
+  var userString = localStorage.getItem("user");
+  var userJSON = JSON.parse(userString || "");
   const [group, setGroup] = useState([]);
+  const [leadingGroup, setLeadingGroup] = useState([]);
   const [clickedGroup, setClickedGroup] = useState({});
+  const [clickedLeadingGroup, setClickedLeadingGroup] = useState({});
   const [showGroupInfo, setShowGroupInfo] = useState(false);
+  const [showLeadingGroupInfo, setShowLeadingGroupInfo] = useState(false);
   const [showChangeProfile, setShowChangeProfile] = useState(false);
   const [showChangeImage, setShowChangeImage] = useState(false);
+  const [reloadUser, setReloadUser] = useState(0);
   const handleCloseGroupInfo = () => setShowGroupInfo(false);
+  const handleCloseLeadingGroupInfo = () => setShowLeadingGroupInfo(false);
+  var imageURL;
 
   useEffect(()=>{
-      if (userJSON.belongingGroups && userJSON.belongingGroups.length > 0)
-      axios({
-          method: "get",
-          url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`
-      }).then(r => {
-          setGroup(r.data.data);
-      });
-  },[])
+      userString = localStorage.getItem("user");
+      userJSON = JSON.parse(userString || "");
+      if (userJSON) {
+          if (userJSON.image) {
+              imageURL = `data:image/jpeg;base64,${userJSON.image}`
+              const img = document.getElementById('profile-image');
+              // @ts-ignore
+              img.setAttribute('src', imageURL);
+          } else {
+              const img = document.getElementById('profile-image');
+              // @ts-ignore
+              img.setAttribute('src', Unknown)
+          }
+          if (userJSON.belongingGroups && userJSON.belongingGroups.length > 0)
+              axios({
+                  method: "get",
+                  url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.belongingGroups)}}}`
+              }).then(r => {
+                  setGroup(r.data.data);
+              });
+          if (userJSON.leadingGroups && userJSON.leadingGroups.length > 0)
+              axios({
+                  method: "get",
+                  url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.leadingGroups)}}}`
+              }).then(r => {
+                  setLeadingGroup(r.data.data);
+              });
+      }
+  },[reloadUser])
 
   if (email == null || email == ""){
       return <Navigate replace to="/login" />
   }
-  return (
+  // @ts-ignore
+    return (
     <>
         <div className="profile-container">
             <div className="figure-container">
-                <div><img src={Unknown} onClick={()=>setShowChangeImage(true)}/></div>
-                <div><h2>{userJSON.name}</h2></div>
-                <div className="profile-email">{userJSON.email}</div>
-                <Button variant="secondary" size="lg" onClick={() => setShowChangeProfile(true)}>
-                    edit profile
-                </Button>
+                {/*<div><img src={Unknown} onClick={()=>setShowChangeImage(true)}/></div>*/}
+                <div><img src="" onClick={()=>setShowChangeImage(true)} id="profile-image"/></div>
+                <div>
+                    <div><h2>{userJSON.name}</h2></div>
+                    <div className="profile-email">{userJSON.email}</div>
+                    <Button variant="secondary" size="lg" onClick={() => setShowChangeProfile(true)}>
+                        edit profile
+                    </Button>
+                </div>
             </div>
             <div className="info-container">
-                <div><h3>Your Groups</h3></div>
+                {leadingGroup.length > 0 &&
+                    <>
+                        <div><h3>Your Leading Groups</h3></div>
+                        <ListGroup>
+                            {leadingGroup.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
+                                setShowLeadingGroupInfo(true);
+                                setClickedLeadingGroup(leadingGroup[index]);
+                            }}>{g.name}</ListGroup.Item>)}
+                        </ListGroup>
+                    </>
+                }
                 {group.length > 0 &&
+                    <>
+                    <div><h3>Your Belonging Groups</h3></div>
                     <ListGroup>
                         {group.map((g:any, index) => <ListGroup.Item action key={index} onClick={() => {
                             setShowGroupInfo(true);
                             setClickedGroup(group[index]);
-                            // console.log(group[index]);
                         }}>{g.name}</ListGroup.Item>)}
                     </ListGroup>
+                    </>
                 }
                 <div><h3>Personal Description</h3></div>
                 {!userJSON.description &&
@@ -66,25 +109,14 @@ function Profile() {
                 }
                 {userJSON.description &&
                     <div>{userJSON.description}</div>
-
                 }
-                {/*<Form.Group*/}
-                {/*    className="mb-3"*/}
-                {/*>*/}
-                {/*    <Form.Label for="new-profile-description">Personal Description</Form.Label>*/}
-                {/*    <Form.Control*/}
-                {/*        type="file"*/}
-                {/*        placeholder="Personal Description"*/}
-                {/*        id = "new-profile-description"*/}
-                {/*    />*/}
-                {/*</Form.Group>*/}
-
             </div>
         </div>
         <div className="modal">
             <GroupInfoModal show={showGroupInfo} handleClose={handleCloseGroupInfo} data={clickedGroup}/>
+            <GroupInfoModal show={showLeadingGroupInfo} handleClose={handleCloseLeadingGroupInfo} data={clickedLeadingGroup} />
             <ChangeProfileModal show={showChangeProfile} handleClose={()=>setShowChangeProfile(false)} data={userJSON}/>
-            <ChangeImageModal show={showChangeImage} handleClose={()=>setShowChangeImage(false)} data={userJSON}/>
+            <ChangeImageModal show={showChangeImage} handleClose={()=>setShowChangeImage(false)} data={userJSON} setReload={()=>setReloadUser((counter)=>{return counter+1;})}/>
         </div>
     </>
   );

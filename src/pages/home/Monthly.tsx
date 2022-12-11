@@ -33,7 +33,7 @@ let dates: any = [[-19,-18,-17,-16,-15,-14,-13],
 // display tasks for the month of "today"
 let today: any = Date.now();
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 function Monthly() {
 
@@ -443,18 +443,18 @@ function Monthly() {
   
   return (
     <>
-      <ListGroup horizontal className='weekTitles'>
-        <ListGroup.Item className='weekTitlesBox'>Sun</ListGroup.Item>
-        <ListGroup.Item className='weekTitlesBox'>Mon</ListGroup.Item>
-        <ListGroup.Item className='weekTitlesBox'>Tue</ListGroup.Item>
-        <ListGroup.Item className='weekTitlesBox'>Wed</ListGroup.Item>
-        <ListGroup.Item className='weekTitlesBox'>Thu</ListGroup.Item>
-        <ListGroup.Item className='weekTitlesBox'>Fri</ListGroup.Item>
-        <ListGroup.Item className='weekTitlesBox'>Sat</ListGroup.Item>
-      </ListGroup>
-      <ListGroup className='listGroupCol'>
-        {componentList}
-      </ListGroup>
+      {/*<ListGroup horizontal className='weekTitles'>*/}
+      {/*  <ListGroup.Item className='weekTitlesBox'>Sun</ListGroup.Item>*/}
+      {/*  <ListGroup.Item className='weekTitlesBox'>Mon</ListGroup.Item>*/}
+      {/*  <ListGroup.Item className='weekTitlesBox'>Tue</ListGroup.Item>*/}
+      {/*  <ListGroup.Item className='weekTitlesBox'>Wed</ListGroup.Item>*/}
+      {/*  <ListGroup.Item className='weekTitlesBox'>Thu</ListGroup.Item>*/}
+      {/*  <ListGroup.Item className='weekTitlesBox'>Fri</ListGroup.Item>*/}
+      {/*  <ListGroup.Item className='weekTitlesBox'>Sat</ListGroup.Item>*/}
+      {/*</ListGroup>*/}
+      {/*<ListGroup className='listGroupCol'>*/}
+      {/*  {componentList}*/}
+      {/*</ListGroup>*/}
       <div id='calendar'></div>
       <TaskModal show={showTask} handleClose={handleCloseTask} data={clickedTask}/>
     </>

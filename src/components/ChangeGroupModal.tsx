@@ -5,7 +5,7 @@ import React from "react";
 import Button from 'react-bootstrap/Button';
 import {updateUser} from "./updateUser";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function ChangeGroupModal(props: any) {
     const data = props.data;

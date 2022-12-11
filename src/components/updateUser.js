@@ -1,5 +1,5 @@
 import axios from "axios";
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export async function updateUser(reloadCallback) {
     const userString = localStorage.getItem("user");
