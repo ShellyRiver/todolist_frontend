@@ -1,4 +1,60 @@
 .navigator-logo img {
     height: 45px;
     margin: 0 10px;
+    border-radius: 0%;
+    cursor: pointer;
 }
+
+.navigator-home img {
+    display: none;
+}
+
+.nav-outer-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nav-image-container img {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    object-fit: cover;
+    margin: 0px 7px;
+}
+
+.nav-left-container {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+
+.nav-right-container {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    float: right;
+    font-family: "Georgia"
+}
+
+@media screen and (max-width: 900px) {
+    #nav-greeting {
+        display: none;
+    }
+
+    .navigator-logo img {
+        display: none;
+    }
+
+    .navigator-home img {
+        height: 45px;
+        display: block;
+    }
+
+    .nav-image-container img {
+        margin-right: 10px;
+    }
+}
+

@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import {updateUser} from "./updateUser";
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function TaskInfoModal(props: any) {
     const data = props.data;

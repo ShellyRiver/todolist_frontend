@@ -6,8 +6,9 @@ import React, {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import Alert from "react-bootstrap/Alert";
+import {updateUser} from "./updateUser";
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function InviteCollaboratorModal(props: any) {
     const data = props.data;
@@ -36,7 +37,7 @@ export default function InviteCollaboratorModal(props: any) {
         try {
             invitedUserInfo = await axios({
                 method: "get",
-                url: `${homeurl}/users?where={"email": ${JSON.stringify(invitedCollaborator)}}`
+                url: `${homeurl}/users?where={"email": ${JSON.stringify(invitedCollaborator)}}&select={"_id": 1}`
             })
             if (invitedUserInfo.data.data.length === 0) {
                 setShowErrorMsg(true);
@@ -70,7 +71,7 @@ export default function InviteCollaboratorModal(props: any) {
                 data: requestBody
             });
             setShowErrorMsg(false);
-            props.setReload();
+            await updateUser(props.setReload);
             props.handleClose();
         }
         catch (e) {

@@ -4,7 +4,7 @@ import axios from "axios";
 import React from "react";
 import Button from 'react-bootstrap/Button';
 
-const homeurl = 'http://localhost:4000/api'
+const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function ChangeProfileModal(props: any) {
     const data = props.data;
