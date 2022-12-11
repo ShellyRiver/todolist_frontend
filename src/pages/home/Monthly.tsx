@@ -14,6 +14,8 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
 import axios from "axios";
 
+import TaskModal from "./TaskModal";
+
 
 const COLORSLEADING = ['rgb(7,140,190)', 'rgb(255,179,255)', 'rgb(77,77,255)', 'rgb(255,77,106)', 'rgb(255,166,77)', 'rgb(196,255,77)', 'rgb(0,128,153)', 'rgb(0,153,51)', 'rgb(255,230,102)']
 const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(210,181,207)', 'rgb(235,165,176)', 'rgb(230,168,138)', 'rgb(230,204,165)', 'rgb(151,227,136)', 'rgb(138,230,184)']
@@ -58,6 +60,11 @@ function Monthly() {
   const [belongingGroupIDs, setBelongingGroupIDs] = useState<any>([]);
   const [leadingGroupIDs, setLeadingGroupIDs] = useState<any>([]);
 
+  const [showTask, setShowTask] = useState(false);
+  const handleCloseTask = () => setShowTask(false);
+
+  const [clickedTask, setClickedTask] = useState({});
+
   useEffect(() => {
     __updateTaskIDs()
   }, [])  // TODO: add dependency?
@@ -85,7 +92,25 @@ function Monthly() {
       editable: true,
       dayMaxEvents: true, // allow "more" link when too many events
       resources: [...belongingResources, ...leadingResources],
-      events: [...individualEvents, ...belongingEvents, ...leadingEvents]
+      events: [...individualEvents, ...belongingEvents, ...leadingEvents],
+
+      eventClick: function(info) {
+        // alert('Event: ' + info.event.title);
+        // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+        // alert('View: ' + info.view.type);
+        axios({
+          method: "get",
+          url: `${homeurl}/tasks/${info.event.id}`
+        }).then((r) => {
+          console.log("endtime", r.data.data[0].endTime)
+          setClickedTask(r.data.data[0])
+          
+          setShowTask(true)
+          
+        })
+        // change the border color just for fun
+        info.el.style.borderColor = 'red';
+      }
       // resources: [
       //   {
       //     id: 'completed',
@@ -281,7 +306,7 @@ function Monthly() {
       if (individualTaskIDs.length > 0) {
         const response = await axios({
           method: "get",
-          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(individualTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "_id": 0}`
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(individualTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1}`
         });
         newIndividualTaskInfo = newIndividualTaskInfo.concat(response.data.data);
         __updateIndividualEvents(newIndividualTaskInfo);
@@ -289,7 +314,7 @@ function Monthly() {
       if (belongingTaskIDs.length > 0) {
         const response = await axios({
           method: "get",
-          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(belongingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1, "_id": 0}`
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(belongingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1}`
         });
         newBelongingTaskInfo = newBelongingTaskInfo.concat(response.data.data);
         __updateBelongingGroupEvents(newBelongingTaskInfo);
@@ -297,7 +322,7 @@ function Monthly() {
       if (leadingTaskIDs.length > 0) {
         const response = await axios({
           method: "get",
-          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(leadingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1, "_id": 0}`
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(leadingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1}`
         });
         console.log('response.data.data', response.data.data)
         newLeadingTaskInfo = newLeadingTaskInfo.concat(response.data.data);
@@ -324,6 +349,7 @@ function Monthly() {
     taskInfo.forEach((element:any) => {
       // console.log("element", element.name, element.endTime)
       events.push({
+        id: element._id,
         title: element.name,
         start: element.endTime.slice(0, 10)
       })
@@ -350,9 +376,10 @@ function Monthly() {
       count ++;
     });
 
+    ////////////////////// TODO: set completed task style
     taskInfo.forEach((element:any) => {
       events.push({
-        id: element.name,
+        id: element._id,
         title: element.name,
         resourceIds: [element.assignedGroup],
         start: element.endTime.slice(0, 10)
@@ -429,6 +456,7 @@ function Monthly() {
         {componentList}
       </ListGroup>
       <div id='calendar'></div>
+      <TaskModal show={showTask} handleClose={handleCloseTask} data={clickedTask}/>
     </>
   );
 };
