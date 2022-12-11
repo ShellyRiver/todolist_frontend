@@ -5,6 +5,7 @@ import axios from "axios";
 import GroupInvitationModal from "../components/GroupInvitationModal";
 import TaskInfoModal from "../components/TaskInfoModal";
 import './Message.css';
+import chatbot from '../imgs/chatbot.png';
 import MessageBox from '../imgs/inbox.png';
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
@@ -12,8 +13,11 @@ function Message() {
 
   const email = localStorage.getItem("email");
   const [invitingGroupInfo, setInvitingGroupInfo] = useState([]);
+  const [invitingGroupImages, setInvitingGroupImages] = useState([]);
   const [invitingLeadingGroupInfo, setInvitingLeadingGroupInfo] = useState([]);
+  const [invitingLeadingGroupImages, setInvitingLeadingGroupImages] = useState([]);
   const [unreadTaskInfo, setUnreadTaskInfo] = useState([]);
+  const [unreadTaskImages, setUnreadTaskImages] = useState([]);
   const [showGroupInfo, setShowGroupInfo] = useState(false);
   const [showTaskInfo, setShowTaskInfo] = useState(false);
   const handleCloseGroupInfo = () => setShowGroupInfo(false);
@@ -34,6 +38,8 @@ function Message() {
           url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.invitingGroups)}}}`
         }).then((response) => {
           setInvitingGroupInfo(response.data.data);
+          // @ts-ignore
+          setInvitingGroupImages(Array.from({length: response.data.data.length}, ()=>""));
         })
       } else {
         setInvitingGroupInfo([]);
@@ -61,6 +67,45 @@ function Message() {
     }
   }, [reloadUser])  // TODO: add dependency?
 
+  useEffect(() => {
+    for (let i = 0; i < invitingGroupInfo.length; i++) {
+      // @ts-ignore
+      const memberId = invitingGroupInfo[i].leaders[0];
+      if (memberId) {
+        axios({
+          method: "get",
+          url: `${homeurl}/users/${memberId}`
+        }).then((r) => {
+          if (r.data.data[0].image) {
+            const img = document.getElementById(`invite-group-member-${i}`);
+            if (img) {
+              img.setAttribute('src', `data:image/jpeg;base64,${r.data.data[0].image}`)
+            }
+          }
+        })
+      }
+    }
+  }, [invitingGroupInfo]);
+
+  useEffect(() => {
+    for (let i = 0; i < invitingLeadingGroupInfo.length; i++) {
+      // @ts-ignore
+      const leaderId = invitingLeadingGroupInfo[i].leaders[0];
+      if (leaderId) {
+        axios({
+          method: "get",
+          url: `${homeurl}/users/${leaderId}`
+        }).then((r) => {
+          if (r.data.data[0].image) {
+            const img = document.getElementById(`invite-group-leader-${i}`);
+            if (img) {
+              img.setAttribute('src', `data:image/jpeg;base64,${r.data.data[0].image}`)
+            }
+          }
+        })
+      }
+    }
+  }, [invitingLeadingGroupInfo]);
 
   if (email == null || email == ""){
       return <Navigate replace to="/login" />
@@ -68,7 +113,7 @@ function Message() {
 
   return (
     <>
-      <div className='page-title'><img src={MessageBox}/>Incoming Messages</div>
+      {/*<div className='page-title'><img src={MessageBox}/>Incoming Messages</div>*/}
       <div className='message-box'>
         {unreadTaskInfo.length > 0 &&
             <ListGroup>
@@ -77,8 +122,13 @@ function Message() {
                 setClickedTask(unreadTaskInfo[index]);
               }}>
                 <div className="ms-2 me-auto messages">
-                  <div className="fw-bold">New Group Task - {t.name}</div>
-                  {t.description}
+                  <div className='chatbot-container'>
+                    <img src={chatbot}/>
+                  </div>
+                  <div>
+                    <div className="fw-bold">New Group Task - {t.name}</div>
+                    {t.description}
+                  </div>
                 </div>
               </ListGroup.Item>)}
             </ListGroup>
@@ -91,8 +141,13 @@ function Message() {
                 setGroupRole('member');
               }}>
                 <div className="ms-2 me-auto messages">
-                  <div className="fw-bold">New group invitation (Member) - {g.name}</div>
-                  {g.description}
+                  <div className='chatbot-container'>
+                    <img src={chatbot} id={`invite-group-member-${index}`}/>
+                  </div>
+                  <div>
+                    <div className="fw-bold">New group invitation (Member) - {g.name}</div>
+                    {g.description}
+                  </div>
                 </div>
               </ListGroup.Item>)}
             </ListGroup>
@@ -105,8 +160,13 @@ function Message() {
                 setGroupRole('leader');
               }}>
                 <div className="ms-2 me-auto messages">
-                  <div className="fw-bold">New group invitation (Leader) - {g.name}</div>
-                  {g.description}
+                  <div className='chatbot-container'>
+                    <img src={chatbot} id={`invite-group-leader-${index}`}/>
+                  </div>
+                  <div>
+                    <div className="fw-bold">New group invitation (Leader) - {g.name}</div>
+                    {g.description}
+                  </div>
                 </div>
               </ListGroup.Item>)}
             </ListGroup>

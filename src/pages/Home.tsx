@@ -1,22 +1,18 @@
+import './Home.css'
+import axios from "axios";
+import add from '../imgs/add.png';
 import { Outlet, Link } from "react-router-dom";
-
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Accordion from 'react-bootstrap/Accordion';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
-import Form from 'react-bootstrap/Form';
-
 import React, { useEffect } from 'react';
-import { useState, createContext, useContext } from 'react';
-import './Home.css'
-import {Alert, Offcanvas} from "react-bootstrap";
-import {useAuthContext} from "../context/authContext";
-import Auth from './Auth';
+import {useState} from 'react';
+import {Offcanvas} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
 import AddTaskModal from "../components/AddTaskModal";
-import axios from "axios";
 import AddTaskModalGroup from "../components/AddTaskModalGroup";
 import GroupInfoModal from "../components/GroupInfoModal";
 import InviteCollaboratorModal from "../components/InviteCollaboratorModal";
@@ -329,7 +325,9 @@ function GroupList() {
                 {componentList}
                 <div className="groupItem" key={"addNewGroup"}>
                     <Card>
-                        <Card.Header onClick={()=>setShowAddGroup(true)} style={{cursor: 'pointer'}}>&nbsp;Create Group</Card.Header>
+                        <Card.Header onClick={()=>setShowAddGroup(true)} style={{cursor: 'pointer'}}>
+                            <img src={add}/>&nbsp;Create Group
+                        </Card.Header>
                     </Card>
                 </div>
             </Accordion>
