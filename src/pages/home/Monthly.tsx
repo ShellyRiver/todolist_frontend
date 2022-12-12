@@ -14,11 +14,12 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import axios from "axios";
 
 import TaskModal from "./TaskModal";
+import { readBuilderProgram } from 'typescript';
 
 
-const COLORSLEADING = ['rgb(7,140,190)', 'rgb(255,179,255)', 'rgb(77,77,255)', 'rgb(255,77,106)', 'rgb(255,166,77)', 'rgb(196,255,77)', 'rgb(0,128,153)', 'rgb(0,153,51)', 'rgb(255,230,102)']
-const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(210,181,207)', 'rgb(235,165,176)', 'rgb(230,168,138)', 'rgb(230,204,165)', 'rgb(151,227,136)', 'rgb(138,230,184)']
-const COLORCOMPLETED = 'rgb(163,163,163)'
+const COLORSLEADING = ['rgb(255,77,106)', 'rgb(7,160,195)', 'rgb(220,160,255)', 'rgb(107,100,190)', 'rgb(255,166,77)', 'rgb(100,100,100)', 'rgb(0,128,153)', 'rgb(0,153,51)', 'rgb(20,10,92)']
+const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(200,201,50)', 'rgb(220,165,176)', 'rgb(20,88,20)', 'rgb(90,150,150)', 'rgb(151,227,136)', 'rgb(138,230,184)']
+const WHITE = 'rgb(255,255,255)'
 
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
@@ -81,11 +82,7 @@ function Monthly(props: any) {
       // editable: true,
       // selectable: true,
       dayMaxEvents: true, // allow "more" link when too many events
-      resources: [{
-        id: "resourceForCompleted",
-        eventBorderColor: COLORCOMPLETED
-      },
-      ...belongingResources, ...leadingResources],
+      resources: [...belongingResources, ...leadingResources],
       events: [...individualEvents, ...belongingEvents, ...leadingEvents],
       handleWindowResize: true,
       windowResize: function(arg) {
@@ -300,7 +297,9 @@ function Monthly(props: any) {
     leadingGroupIDs.forEach((element:any) => {
       resources.push({
         id: element,
-        eventColor: COLORSLEADING[(count)]
+        eventBorderColor: COLORSLEADING[(count)],
+        eventBackgroundColor: WHITE,
+        eventTextColor: COLORSLEADING[(count)],
       })
       count ++;
     });
@@ -342,7 +341,9 @@ function Monthly(props: any) {
     belongingGroupIDs.forEach((element:any) => {
       resources.push({
         id: element,
-        eventColor: COLORSBELONGING[(count)]
+        eventBorderColor: COLORSBELONGING[(count)],
+        eventBackgroundColor: WHITE,
+        eventTextColor: COLORSBELONGING[(count)],
       })
       count ++;
     });
