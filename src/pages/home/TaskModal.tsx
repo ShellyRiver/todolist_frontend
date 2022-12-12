@@ -13,31 +13,34 @@ export default function TaskInfoModal(props: any) {
         name: undefined,
     });
 
-    async function clickComplete () {
-        /* set completed to true */
+    async function changeTask() {
+        // @ts-ignore
+        var taskName = (document.getElementById("new-task-name-calendar") ? document.getElementById("new-task-name-calendar").value : "");
+        // @ts-ignore
+        var taskDescription = (document.getElementById("new-task-description-calendar") ? document.getElementById("new-task-description-calendar").value : "");
+        // @ts-ignore
+        var taskDeadline = (document.getElementById("new-task-endtime-calendar") ? document.getElementById("new-task-endtime-calendar").value : "");
+        // @ts-ignore
+        var taskStatus = (document.getElementById("new-task-status-calendar") ? document.getElementById("new-task-status-calendar").value : "");
+        taskStatus = taskStatus === "complete" ? true : false;
+        var requestBody = {
+            'name': taskName,
+            'description': taskDescription,
+            'endTime': taskDeadline,
+            'completed': taskStatus
+        };
         try {
-            if (data.completed) {
-                await axios({
-                    method: "put",
-                    url: `${homeurl}/tasks/${data._id}`,
-                    data: {
-                        'completed': false,
-                    }
-                });
-            } else {
-                await axios({
-                    method: "put",
-                    url: `${homeurl}/tasks/${data._id}`,
-                    data: {
-                        'completed': true,
-                    }
-                });
-            }
+            await axios({
+                method: "put",
+                url: `${homeurl}/tasks/${data._id}`,
+                data: requestBody
+            });
             props.setToggledComplete(!props.toggledComplete);
             props.handleClose()
         }
         catch (e) {
             console.log(e);
+            props.handleClose()
         }
     }
 
@@ -64,42 +67,40 @@ export default function TaskInfoModal(props: any) {
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Task Name</Form.Label>
-                    <ListGroup>
-                        <ListGroup.Item>
-                            {data.name}
-                        </ListGroup.Item>
-                    </ListGroup>
+                    <Form.Control
+                        placeholder="Task Name"
+                        autoFocus
+                        defaultValue= {data.name || ""}
+                        id = "new-task-name-calendar"
+                    />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                     <Form.Label>Task Description</Form.Label>
-                    <ListGroup>
-                        <ListGroup.Item>
-                            {data.description}
-                        </ListGroup.Item>
-                    </ListGroup>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Task Description"
+                        defaultValue={data.description || ""}
+                        id = "new-task-description-calendar"
+                    />
                 </Form.Group>
 
                 {data.endTime &&
                     <Form.Group className="mb-3">
                         <Form.Label>Task Deadline</Form.Label>
-                        <ListGroup>
-                            <ListGroup.Item>
-                                {data.endTime.slice(0, 10)}
-                                {/*{data.endTime}*/}
-                            </ListGroup.Item>
-                        </ListGroup>
+                        <Form.Control type="date" id='new-task-endtime-calendar' defaultValue={data.endTime.slice(0, 10) || ""}/>
                     </Form.Group>
                 }
 
                 <Form.Group className="mb-3">
                     <Form.Label>Task Status</Form.Label>
-                    <ListGroup>
-                        <ListGroup.Item>
-                            {data.completed ? "Completed" : "Not completed"}
+                            {/*{data.completed ? "Completed" : "Not completed"}*/}
                             {/*{data.endTime}*/}
-                        </ListGroup.Item>
-                    </ListGroup>
+                            <Form.Select aria-label="Default select example" id="new-task-status-calendar" defaultValue={data.completed ? "complete" : "incomplete"}>
+                                <option key={"complete"} value={"complete"}>Complete</option>
+                                <option key={"incomplete"} value={"incomplete"}>Incomplete</option>
+                            </Form.Select>
                 </Form.Group>
 
                 {groupInfo.name &&
@@ -115,12 +116,14 @@ export default function TaskInfoModal(props: any) {
             </Form>
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="primary" onClick={clickComplete}>
-                {data.completed ? "Not Completed" : "Completed"}
-            </Button>
             <Button variant="secondary" onClick={props.handleClose}>
                 Close
             </Button>
+            <Button variant="primary" onClick={changeTask}>
+                {/*{data.completed ? "Not Completed" : "Completed"}*/}
+                Save Changes
+            </Button>
+
         </Modal.Footer>
     </Modal>}
     </>
