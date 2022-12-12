@@ -79,6 +79,7 @@ function Monthly(props: any) {
       initialDate: '2022-12-08',
       // navLinks: true, // can click day/week names to navigate views
       // editable: true,
+      // selectable: true,
       dayMaxEvents: true, // allow "more" link when too many events
       resources: [{
         id: "resourceForCompleted",
@@ -86,6 +87,10 @@ function Monthly(props: any) {
       },
       ...belongingResources, ...leadingResources],
       events: [...individualEvents, ...belongingEvents, ...leadingEvents],
+      handleWindowResize: true,
+      windowResize: function(arg) {
+        calendar.updateSize();
+      },
 
       eventClick: function(info) {
         
@@ -149,32 +154,37 @@ function Monthly(props: any) {
     var resp1;
     var resp2;
     try {
-      resp1 = await axios({
-        method: "get",
-        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(belongingGroups)}}}&select={"name": 1, "groupTasks": 1}`
-      });
-      if (resp1 !== undefined) { 
-        resp1.data.data.forEach((element:any) => {
-          newBelongingGroupNames.push(element.name);
-          newBelongingGroupIDs.push(element._id);
-          newBelongingTaskIDs = newBelongingTaskIDs.concat(element.groupTasks);
+      if (belongingGroups && belongingGroups.length > 0) {
+        resp1 = await axios({
+          method: "get",
+          url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(belongingGroups)}}}&select={"name": 1, "groupTasks": 1}`
         });
+        if (resp1 !== undefined) { 
+          resp1.data.data.forEach((element:any) => {
+            newBelongingGroupNames.push(element.name);
+            newBelongingGroupIDs.push(element._id);
+            newBelongingTaskIDs = newBelongingTaskIDs.concat(element.groupTasks);
+          });
+        }
       }
-      resp2 = await axios({
-        method: "get",
-        url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(leadingGroups)}}}&select={"name": 1, "groupTasks": 1}`
-      });
-      if (resp2 !== undefined) { 
-        resp2.data.data.forEach((element:any) => {
-          // console.log('element.groupName', element.name)
-          newLeadingGroupNames.push(element.name);
-          newLeadingGroupIDs.push(element._id);
-          newLeadingTaskIDs = newLeadingTaskIDs.concat(element.groupTasks);
-          // console.log('leading task num', element.groupTasks.length)
-          // console.log('element.groupTasks', element.groupTasks)
-          // console.log('leading task num', newLeadingGroupTaskNums)
+      if (leadingGroups && leadingGroups.length > 0) {
+        resp2 = await axios({
+          method: "get",
+          url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(leadingGroups)}}}&select={"name": 1, "groupTasks": 1}`
         });
+        if (resp2 !== undefined) { 
+          resp2.data.data.forEach((element:any) => {
+            // console.log('element.groupName', element.name)
+            newLeadingGroupNames.push(element.name);
+            newLeadingGroupIDs.push(element._id);
+            newLeadingTaskIDs = newLeadingTaskIDs.concat(element.groupTasks);
+            // console.log('leading task num', element.groupTasks.length)
+            // console.log('element.groupTasks', element.groupTasks)
+            // console.log('leading task num', newLeadingGroupTaskNums)
+          });
+        }
       }
+      
     }
     catch (e: any) {
         // @ts-ignore

@@ -6,9 +6,34 @@ import GroupInvitationModal from "../components/GroupInvitationModal";
 import TaskInfoModal from "../components/TaskInfoModal";
 import './Message.css';
 import chatbot from '../imgs/chatbot.png';
-import MessageBox from '../imgs/inbox.png';
+import a from '../imgs/a.png';
+import b from '../imgs/b.png';
+import c from '../imgs/c.png';
+import d from '../imgs/d.png';
+import e from '../imgs/e.png';
+import f from '../imgs/f.png';
+import g from '../imgs/g.png';
+import h from '../imgs/h.png';
+import i from '../imgs/i.png';
+import j from '../imgs/j.png';
+import k from '../imgs/k.png';
+import l from '../imgs/l.png';
+import m from '../imgs/m.png';
+import n from '../imgs/n.png';
+import o from '../imgs/o.png';
+import p from '../imgs/p.png';
+import q from '../imgs/q.png';
+import r from '../imgs/r.png';
+import s from '../imgs/s.png';
+import t from '../imgs/t.png';
+import u from '../imgs/u.png';
+import v from '../imgs/v.png';
+import w from '../imgs/w.png';
+import x from '../imgs/x.png';
+import y from '../imgs/y.png';
+import z from '../imgs/z.png';
 const homeurl = 'https://grouptodos.herokuapp.com/api'
-
+const imgs = [a, b, c, d, e, f, g ,h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z];
 function Message() {
 
   const email = localStorage.getItem("email");
@@ -107,6 +132,19 @@ function Message() {
     }
   }, [invitingLeadingGroupInfo]);
 
+  useEffect(() => {
+    for (let i = 0; i < unreadTaskInfo.length; i++) {
+      // @ts-ignore
+      const charIndex = unreadTaskInfo[i].name.toLowerCase().charCodeAt(0)-'a'.charCodeAt(0);
+      if (charIndex >= 0 && charIndex < 26) {
+        const img = document.getElementById(`unread-task-${i}`);
+        if (img) {
+          img.setAttribute('src', imgs[charIndex])
+        }
+      }
+    }
+  }, [unreadTaskInfo])
+
   if (email == null || email == ""){
       return <Navigate replace to="/login" />
   }
@@ -123,7 +161,7 @@ function Message() {
               }}>
                 <div className="ms-2 me-auto messages">
                   <div className='chatbot-container'>
-                    <img src={chatbot}/>
+                    <img src={chatbot} id={`unread-task-${index}`}/>
                   </div>
                   <div>
                     <div className="fw-bold message-title">Group Task - {t.name}</div>

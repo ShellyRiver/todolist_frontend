@@ -50,13 +50,11 @@ function Home() {
                 <div className="home">
                       <div className="show-my-group-container">
                             {/*<Navigator />*/}
-                          <Navbar bg="light" variant="light">
-                              <Container className="navContainer">
-                                  <Nav className="me-auto">
+                              <Container className="navContainer my-groups-container">
+                                  <Nav className="me-auto my-groups">
                                       <Nav.Link onClick={()=>setShowCanvas(true)}> My Groups</Nav.Link>
                                   </Nav>
                               </Container>
-                          </Navbar>
                       </div>
                       <div className="content">
                             <div className="groupList">
@@ -96,7 +94,7 @@ function GroupList(props: any) {
     const handleCloseAddGroup = () => setShowAddGroup(false);
 
     const [showAddTaskGroup, setShowAddTaskGroup] = useState(false);
-    const handleCloseAddTaskGroup = () => setShowAddTaskGroup(false);
+    const handleCloseAddTaskGroup = () => {setShowAddTaskGroup(false); props.setRefreshCalender();}
 
     const [showGroupInfo, setShowGroupInfo] = useState(false);
     const handleCloseGroupInfo = () => setShowGroupInfo(false);
@@ -111,13 +109,13 @@ function GroupList(props: any) {
     const handleCloseInviteCollaborator = () => setShowInviteCollaborator(false);
 
     const [showLeaveGroup, setShowLeaveGroup] = useState(false);
-    const handleCloseLeaveGroup = () => setShowLeaveGroup(false);
+    const handleCloseLeaveGroup = () => {setShowLeaveGroup(false); props.setRefreshCalender();};
 
     const [showLeaderLeaveGroup, setShowLeaderLeaveGroup] = useState(false);
-    const handleCloseLeaderLeaveGroup = () => setShowLeaderLeaveGroup(false);
+    const handleCloseLeaderLeaveGroup = () => {setShowLeaderLeaveGroup(false); props.setRefreshCalender();}
 
     const [showDeleteGroup, setShowDeleteGroup] = useState(false);
-    const handleCloseDeleteGroup = () => setShowDeleteGroup(false);
+    const handleCloseDeleteGroup = () => {setShowDeleteGroup(false); props.setRefreshCalender();}
 
     const [showDeleteMember, setShowDeleteMember] = useState(false);
     const handleCloseDeleteMember = () => setShowDeleteMember(false);
