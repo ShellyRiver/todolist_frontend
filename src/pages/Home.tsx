@@ -96,7 +96,7 @@ function GroupList(props: any) {
     const handleCloseAddGroup = () => setShowAddGroup(false);
 
     const [showAddTaskGroup, setShowAddTaskGroup] = useState(false);
-    const handleCloseAddTaskGroup = () => setShowAddTaskGroup(false);
+    const handleCloseAddTaskGroup = () => {setShowAddTaskGroup(false); props.setRefreshCalender();}
 
     const [showGroupInfo, setShowGroupInfo] = useState(false);
     const handleCloseGroupInfo = () => setShowGroupInfo(false);
