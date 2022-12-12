@@ -58,7 +58,7 @@ export default function AddGroupModal(props: any) {
                     'operation': "add"
                 }
             })
-            updateUser(props.setReload);
+            await updateUser(props.setReload);
             props.handleClose();
         }
         catch (e) {
