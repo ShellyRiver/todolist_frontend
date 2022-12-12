@@ -1,10 +1,12 @@
 
 .completed {
-    opacity: 0.4;
+    opacity: 0.3;
 }
 
 .pointer {
     cursor: pointer;
+    border-width: 1.5px !important;
+    font-weight: 400;
 }
 
 #calendar {

@@ -24,7 +24,9 @@ import NotFound from "./pages/NotFound";
 */
 function App() {
   const [email, setEmail] = useState("");
+  document.title = "GroupToDo";
   return (
+    <>
     <AuthContext.Provider value={{email: email, setEmail: setEmail}}>
       <div className="App">
         <BrowserRouter basename='/grouptodo'>
@@ -42,6 +44,8 @@ function App() {
         </BrowserRouter>
       </div>
     </AuthContext.Provider>
+    </>
+    
   );
 }
 
