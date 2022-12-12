@@ -32,10 +32,7 @@ function App() {
         <BrowserRouter basename='/grouptodo'>
           <Routes>
             <Route path='/' element={<Navigator />}>
-              <Route path='/' element={<Home />}>
-                <Route path='/monthly' element={<Monthly />}/>
-                <Route path='/daily' element={<Daily />}/>
-              </Route>
+              <Route path='/' element={<Home />}></Route>
               {/*<Route index element={<Home />}/>*/}
               <Route path='/message' element={<Message />}/>
               <Route path='/profile' element={<Profile />}/>

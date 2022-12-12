@@ -33,6 +33,7 @@ export default function TaskInfoModal(props: any) {
                     }
                 });
             }
+            props.setToggledComplete(!props.toggledComplete);
             props.handleClose()
         }
         catch (e) {

@@ -21,26 +21,14 @@ const COLORSLEADING = ['rgb(7,140,190)', 'rgb(255,179,255)', 'rgb(77,77,255)', '
 const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(210,181,207)', 'rgb(235,165,176)', 'rgb(230,168,138)', 'rgb(230,204,165)', 'rgb(151,227,136)', 'rgb(138,230,184)']
 const COLORCOMPLETED = 'rgb(163,163,163)'
 
-// date list: should change based today's date and week
-// represent by date difference
-// should be updated everyday
-                // Sun Mon Tue Wed Thu Fri Sat
-let dates: any = [[-19,-18,-17,-16,-15,-14,-13],
-                  [-12,-11,-10, -9, -8, -7, -6],
-                  [ -5, -4, -3, -2, -1,  0,  1],
-                  [  2,  3,  4,  5,  6,  7,  8],
-                  [  9, 10, 11, 12, 13, 14, 15]];
-// display tasks for the month of "today"
-let today: any = Date.now();
-
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
-function Monthly() {
+function Monthly(props: any) {
 
   const email = localStorage.getItem("email");
-  
-  const [componentList, setComponentList] = useState([]);
 
+  const [userID, setUserID] = useState(undefined);
+  
   const [individualTaskIDs, setIndividualTaskIDs] = useState([]);
   const [belongingTaskIDs, setBelongingTaskIDs] = useState([]);
   const [leadingTaskIDs, setLeadingTaskIDs] = useState([]);
@@ -65,9 +53,11 @@ function Monthly() {
 
   const [clickedTask, setClickedTask] = useState({});
 
+  const [toggledComplete, setToggledComplete] = useState(0);
+
   useEffect(() => {
     __updateTaskIDs()
-  }, [showTask])  // TODO: add dependency?
+  }, [toggledComplete, props.refresh])  // TODO: add dependency?
 
 
   useEffect(() => {
@@ -85,11 +75,11 @@ function Monthly() {
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
-        right: 'resourceTimelineDay, dayGridMonth,listWeek'  // timeGridWeek,timeGridDay,
+        right: 'dayGridMonth,listWeek'  // timeGridWeek,timeGridDay,
       },
       initialDate: '2022-12-08',
-      navLinks: true, // can click day/week names to navigate views
-      editable: true,
+      // navLinks: true, // can click day/week names to navigate views
+      // editable: true,
       dayMaxEvents: true, // allow "more" link when too many events
       resources: [{
         id: "resourceForCompleted",
@@ -109,88 +99,11 @@ function Monthly() {
         })
         
       },      
-
-      // resources: [
-      //   {
-      //     id: 'completed',
-      //     eventColor: COLORCOMPLETED
-      //   },
-      //   {
-      //     id: 'a',
-      //     title: 'Room A',
-      //     eventColor: 'rgb(255,0,0)'
-      //   },
-      //   {
-      //     id: 'b',
-      //     title: 'Room B'
-      //   }
-      // ],
-      // events: [
-      //   {
-      //     id: 't1',
-      //     title: 'All Day Event',
-      //     resourceIds: ['a'],
-      //     start: '2022-12-07',
-      //   },
-      //   {
-      //     title: 'Long Event',
-      //     start: '2022-12-08',
-      //     end: '2022-12-08'
-      //   },
-      //   {
-      //     title: 'Repeating Event',
-      //     start: '2022-12-08T16:00:00'
-      //   },
-      //   {
-      //     title: 'Repeating Event',
-      //     start: '2022-12-08T16:00:00'
-      //   },
-      //   {
-      //     title: 'Conference',
-      //     start: '2022-12-08',
-      //     end: '2022-12-08'
-      //   },
-      //   {
-      //     title: 'Meeting',
-      //     start: '2022-12-08T10:30:00',
-      //     end: '2022-12-08T12:30:00'
-      //   },
-      //   {
-      //     title: 'Lunch',
-      //     resourceIds: ['a'],
-      //     start: '2022-12-08T12:00:00'
-      //   },
-      //   {
-      //     title: 'Meeting',
-      //     start: '2022-12-08T14:30:00'
-      //   },
-      //   {
-      //     title: 'Happy Hour',
-      //     start: '2022-12-08T17:30:00'
-      //   },
-      //   {
-      //     title: 'Dinner',
-      //     start: '2022-12-08T20:00:00'
-      //   },
-      //   {
-      //     title: 'Birthday Party',
-      //     start: '2022-12-08T07:00:00'
-      //   },
-        
-      // ]
     });
-
-    // __updateTaskIDs();
-    
-    // __updateEvents(calendar);
 
     calendar.render();
     
   }, [individualEvents, belongingEvents, leadingEvents]);
-
-  // useEffect(() => {
-  //   __updateComponent();
-  // }, [])  // TODO: add dependency?
 
 
   async function __updateTaskIDs() {
@@ -230,6 +143,8 @@ function Monthly() {
 
       belongingGroups = data.belongingGroups;
       leadingGroups = data.leadingGroups;
+      setUserID(data._id)
+      console.log("set userID", data._id);
     }
 
     var resp1;
@@ -266,9 +181,6 @@ function Monthly() {
         // @ts-ignore
     }
 
-    
-    
-
     // console.log("newIndividualTaskIDs", newIndividualTaskIDs);
     // console.log("newBelongingTaskIDs", newBelongingTaskIDs);
     console.log("newLeadingTaskIDs", newLeadingTaskIDs);
@@ -298,7 +210,7 @@ function Monthly() {
 
     // console.log("IndividualTaskIDs", individualTaskIDs);
     // console.log("BelongingTaskIDs", belongingTaskIDs);
-    console.log("LeadingTaskIDs", leadingTaskIDs);
+    // console.log("LeadingTaskIDs", leadingTaskIDs);
 
     try {
       if (individualTaskIDs.length > 0) {
@@ -312,7 +224,7 @@ function Monthly() {
       if (belongingTaskIDs.length > 0) {
         const response = await axios({
           method: "get",
-          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(belongingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1}`
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(belongingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1, "assignedUsers": 1}`
         });
         newBelongingTaskInfo = newBelongingTaskInfo.concat(response.data.data);
         __updateBelongingGroupEvents(newBelongingTaskInfo);
@@ -320,9 +232,9 @@ function Monthly() {
       if (leadingTaskIDs.length > 0) {
         const response = await axios({
           method: "get",
-          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(leadingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1}`
+          url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(leadingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1, "assignedUsers": 1}`
         });
-        console.log('response.data.data', response.data.data)
+        // console.log('response.data.data', response.data.data)
         newLeadingTaskInfo = newLeadingTaskInfo.concat(response.data.data);
         __updateLeadingGroupEvents(newLeadingTaskInfo);
       }
@@ -346,11 +258,21 @@ function Monthly() {
 
     taskInfo.forEach((element:any) => {
       // console.log("element", element.name, element.endTime)
-      events.push({
-        id: element._id,
-        title: element.name,
-        start: element.endTime.slice(0, 10)
-      })
+      if (element.completed) {
+        events.push({
+          id: element._id,
+          title: element.name,
+          start: element.endTime.slice(0, 10),
+          classNames: ['completed'],
+        })
+      } else {
+        events.push({
+          id: element._id,
+          title: element.name,
+          start: element.endTime.slice(0, 10),
+          classNames: ['pointer'],
+        })
+      }
     })
 
     // console.log("individual events", events);
@@ -363,8 +285,8 @@ function Monthly() {
 
     let count = 0;
 
-    console.log("taskinfo", taskInfo)
-    console.log('leadingGroupNames', leadingGroupNames)
+    // console.log("taskinfo", taskInfo)
+    // console.log('leadingGroupNames', leadingGroupNames)
 
     leadingGroupIDs.forEach((element:any) => {
       resources.push({
@@ -376,21 +298,24 @@ function Monthly() {
 
     ////////////////////// TODO: set completed task style
     taskInfo.forEach((element:any) => {
-      if (element.completed) {
-        events.push({
-          id: element._id,
-          title: element.name,
-          resourceIds: [element.assignedGroup],
-          start: element.endTime.slice(0, 10),
-          classNames: ['completed'],
-        })
-      } else {
-        events.push({
-          id: element._id,
-          title: element.name,
-          resourceIds: [element.assignedGroup],
-          start: element.endTime.slice(0, 10)
-        })
+      if (element.assignedUsers[0] === userID) {
+        if (element.completed) {
+          events.push({
+            id: element._id,
+            title: element.name,
+            resourceIds: [element.assignedGroup],
+            start: element.endTime.slice(0, 10),
+            classNames: ['completed', 'pointer'],
+          })
+        } else {
+          events.push({
+            id: element._id,
+            title: element.name,
+            resourceIds: [element.assignedGroup],
+            start: element.endTime.slice(0, 10),
+            classNames: ['pointer'],
+          })
+        }
       }
     });
 
@@ -414,21 +339,24 @@ function Monthly() {
     });
 
     taskInfo.forEach((element:any) => {
-      if (element.completed) {
-        events.push({
-          id: element._id,
-          title: element.name,
-          resourceIds: [element.assignedGroup],
-          start: element.endTime.slice(0, 10),
-          classNames: ['completed'],
-        })
-      } else {
-        events.push({
-          id: element._id,
-          title: element.name,
-          resourceIds: [element.assignedGroup],
-          start: element.endTime.slice(0, 10)
-        })
+      if (element.assignedUsers[0] === userID) {
+        if (element.completed) {
+          events.push({
+            id: element._id,
+            title: element.name,
+            resourceIds: [element.assignedGroup],
+            start: element.endTime.slice(0, 10),
+            classNames: ['completed', 'pointer'],
+          })
+        } else {
+          events.push({
+            id: element._id,
+            title: element.name,
+            resourceIds: [element.assignedGroup],
+            start: element.endTime.slice(0, 10),
+            classNames: ['pointer'],
+          })
+        }
       }
     });
 
@@ -436,85 +364,13 @@ function Monthly() {
     setBelongingEvents(events)
 
   }
-
-  // update all date boxes
-  function __updateComponent() {
-    let newComponentList: any = [];
-    for (let i in dates) {
-      let listGroupRowComponent: any = [];
-      for (let j in dates[i]) {
-        listGroupRowComponent.push(
-          <div key={j} className='dateBox'>
-            {DateBox(dates[i][j])}
-          </div>
-        );
-      }
-      newComponentList.push(
-        <ListGroup horizontal className='listGroupRow' key={dates[i]}>
-          {listGroupRowComponent}
-        </ListGroup>
-      );
-    }
-
-    setComponentList(newComponentList);
-  }
   
   return (
     <>
-      {/*<ListGroup horizontal className='weekTitles'>*/}
-      {/*  <ListGroup.Item className='weekTitlesBox'>Sun</ListGroup.Item>*/}
-      {/*  <ListGroup.Item className='weekTitlesBox'>Mon</ListGroup.Item>*/}
-      {/*  <ListGroup.Item className='weekTitlesBox'>Tue</ListGroup.Item>*/}
-      {/*  <ListGroup.Item className='weekTitlesBox'>Wed</ListGroup.Item>*/}
-      {/*  <ListGroup.Item className='weekTitlesBox'>Thu</ListGroup.Item>*/}
-      {/*  <ListGroup.Item className='weekTitlesBox'>Fri</ListGroup.Item>*/}
-      {/*  <ListGroup.Item className='weekTitlesBox'>Sat</ListGroup.Item>*/}
-      {/*</ListGroup>*/}
-      {/*<ListGroup className='listGroupCol'>*/}
-      {/*  {componentList}*/}
-      {/*</ListGroup>*/}
       <div id='calendar'></div>
-      <TaskModal show={showTask} handleClose={handleCloseTask} data={clickedTask}/>
+      <TaskModal show={showTask} handleClose={handleCloseTask} data={clickedTask} toggledComplete={toggledComplete} setToggledComplete={setToggledComplete}/>
     </>
   );
 };
-
-// date box that displays tasks of that day
-function DateBox(difference: number) {
-  // TODO: get target day's date based on difference in days
-  // return: a date, can be used to obtain target day's tasks
-  function __getDate(difference: number) {
-    let date: number = today;
-    return date;
-  }
-  
-  let targetDate = __getDate(difference);
-  // TODO: obtain a list of task names based on target date
-  let taskNames: string[] = ["CS 409 prototype", "Paper Reading"];
-
-  let taskComponent: any = [];
-
-  for (let i in taskNames) {
-    let taskName: string = taskNames[i];
-    taskComponent.push(
-      <p key={taskName+i}>{taskName}</p>  // TODO: display complete, toggle complete
-    );
-  }
-
-  return (
-    <ListGroup.Item>
-      {/* <p>{today}</p>   // TODO: display today's date  */}
-      {taskComponent}
-    </ListGroup.Item>
-  );
-}
-
-
-
-// TODO: update the date list dates based on today's date and week
-function updateDateList() {
-  
-}
-  
 
   export default Monthly;
