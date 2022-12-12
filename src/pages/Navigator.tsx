@@ -80,7 +80,7 @@ function Navigator() {
             // <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
                 {/*<Nav.Link href="/">Home</Nav.Link>*/}
-                <Nav.Link onClick={()=>navigate('/message')}>Message
+                <Nav.Link onClick={()=>navigate('/message')}>Message&nbsp;
                   {(userJSON.invitingGroups.length > 0 || userJSON.unreadTasks.length > 0 || userJSON.invitingLeadingGroups.length > 0) && <Badge bg="secondary">New</Badge>}
                   {/*{(JSON.parse(localStorage.getItem('user')||'').invitingGroups.length > 0 || JSON.parse(localStorage.getItem('user')||'').unreadTasks.length > 0 || JSON.parse(localStorage.getItem('user')||'').invitingLeadingGroups.length > 0) && <Badge bg="secondary">New</Badge>}*/}
                 </Nav.Link>

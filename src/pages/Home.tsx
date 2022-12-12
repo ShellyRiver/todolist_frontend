@@ -70,7 +70,7 @@ function Home() {
                         <Offcanvas.Title>My Groups</Offcanvas.Title>
                     </Offcanvas.Header>
                     <Offcanvas.Body>
-                        <GroupList/>
+                        <GroupList setRefreshCalender={()=>setRefreshCalendar((val)=>{return !val;})}/>
                     </Offcanvas.Body>
                 </Offcanvas>
             </>

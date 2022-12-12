@@ -59,4 +59,7 @@ body {
     .fc-header-toolbar {
         font-size: x-small;
     }
+    #calendar {
+        font-size: small;
+    }
 }
