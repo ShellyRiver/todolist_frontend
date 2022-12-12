@@ -17,8 +17,9 @@ import TaskModal from "./TaskModal";
 import { readBuilderProgram } from 'typescript';
 
 
-const COLORSLEADING = ['rgb(255,77,106)', 'rgb(7,160,195)', 'rgb(220,160,255)', 'rgb(107,100,190)', 'rgb(255,166,77)', 'rgb(100,100,100)', 'rgb(0,128,153)', 'rgb(0,153,51)', 'rgb(20,10,92)']
-const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(200,201,50)', 'rgb(220,165,176)', 'rgb(20,88,20)', 'rgb(90,150,150)', 'rgb(151,227,136)', 'rgb(138,230,184)']
+const COLORSLEADING = ['rgb(255,77,106)', 'rgb(7,160,195)', 'rgb(220,120,220)', 'rgb(107,100,190)', 'rgb(255,166,77)', 'rgb(100,100,100)', 'rgb(0,128,153)', 'rgb(0,153,51)', 'rgb(20,10,92)', 'rgb(51,0,153)', 'rgb(0,102,100)', 'rgb(100,32,102)', 'rgb(85,128,0)', 'rgb(128,85,0)', 'rgb(70,0,1)', 'rgb(93,138,168)']
+const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(200,201,50)', 'rgb(220,165,176)', 'rgb(20,88,20)', 'rgb(90,150,150)', 'rgb(151,227,136)', 'rgb(138,230,184)', 'rgb(13,201,235)', 'rgb(255,238,153)', 'rgb(235,187,153)', 'rgb(255,199,221)', 'rgb(188,196,191)']
+const INDIVIDUAL = 'rgba(77,136,255,0.8)'
 const WHITE = 'rgb(255,255,255)'
 
 const homeurl = 'https://grouptodos.herokuapp.com/api'
@@ -82,7 +83,10 @@ function Monthly(props: any) {
       // editable: true,
       // selectable: true,
       dayMaxEvents: true, // allow "more" link when too many events
-      resources: [...belongingResources, ...leadingResources],
+      resources: [{
+        id: "resourceIndividual",
+        eventColor: INDIVIDUAL
+      }, ...belongingResources, ...leadingResources],
       events: [...individualEvents, ...belongingEvents, ...leadingEvents],
       handleWindowResize: true,
       windowResize: function(arg) {
@@ -269,6 +273,7 @@ function Monthly(props: any) {
           id: element._id,
           title: element.name,
           start: element.endTime.slice(0, 10),
+          resourceIds: ["resourceIndividual"],
           classNames: ['completed'],
         })
       } else {
@@ -276,6 +281,7 @@ function Monthly(props: any) {
           id: element._id,
           title: element.name,
           start: element.endTime.slice(0, 10),
+          resourceIds: ["resourceIndividual"],
           classNames: ['pointer'],
         })
       }
@@ -297,9 +303,9 @@ function Monthly(props: any) {
     leadingGroupIDs.forEach((element:any) => {
       resources.push({
         id: element,
-        eventBorderColor: COLORSLEADING[(count)],
+        eventBorderColor: COLORSLEADING[(count) % COLORSLEADING.length],
         eventBackgroundColor: WHITE,
-        eventTextColor: COLORSLEADING[(count)],
+        eventTextColor: COLORSLEADING[(count) % COLORSLEADING.length],
       })
       count ++;
     });
@@ -341,9 +347,9 @@ function Monthly(props: any) {
     belongingGroupIDs.forEach((element:any) => {
       resources.push({
         id: element,
-        eventBorderColor: COLORSBELONGING[(count)],
+        eventBorderColor: COLORSBELONGING[(count) % COLORSBELONGING.length],
         eventBackgroundColor: WHITE,
-        eventTextColor: COLORSBELONGING[(count)],
+        eventTextColor: COLORSBELONGING[(count) % COLORSBELONGING.length],
       })
       count ++;
     });
