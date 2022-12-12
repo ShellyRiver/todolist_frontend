@@ -9,8 +9,6 @@ import Navigator from './pages/Navigator';
 import Home from "./pages/Home";
 import Message from './pages/Message';
 import Profile from './pages/Profile';
-import Daily from './pages/home/Daily';
-import Monthly from './pages/home/Monthly';
 import Auth from './pages/Auth';
 import {AuthContext} from './context/authContext';
 import NotFound from "./pages/NotFound";
