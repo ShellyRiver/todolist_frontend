@@ -36,6 +36,31 @@
     width: 100%;
 }
 
+.my-groups {
+    background-color: #6c757d;
+    font-size: 15px;
+    font-weight: 500;
+    
+}
+
+.show-my-group-container {
+    background-color: #ffffff;
+    margin-top: 10px;
+}
+
+.my-groups .nav-link {
+    padding: 5px;
+    color: #f8f9fa;
+}
+
+.my-groups-container {
+    background-color: #6c757d;
+    margin: 0;
+    width: 120px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
 @media screen and (max-width: 1000px) {
     .groupList {
         width: 35%;

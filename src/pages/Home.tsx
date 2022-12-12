@@ -50,13 +50,11 @@ function Home() {
                 <div className="home">
                       <div className="show-my-group-container">
                             {/*<Navigator />*/}
-                          <Navbar bg="light" variant="light">
-                              <Container className="navContainer">
-                                  <Nav className="me-auto">
+                              <Container className="navContainer my-groups-container">
+                                  <Nav className="me-auto my-groups">
                                       <Nav.Link onClick={()=>setShowCanvas(true)}> My Groups</Nav.Link>
                                   </Nav>
                               </Container>
-                          </Navbar>
                       </div>
                       <div className="content">
                             <div className="groupList">
