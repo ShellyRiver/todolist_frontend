@@ -24,4 +24,4 @@ yarn-error.log*
 
 .idea
 
-#src/authentication/secret.js
+src/authentication/secret.js
