@@ -1,1 +1,27 @@
+.App {
+    height: 1100px;
+}
 
+@media screen and (max-height: 900px) {
+    .App {
+        height: 900px;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .App {
+        height: 500px;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .App {
+        height: 700px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .App {
+        height: 500px;
+    }
+}

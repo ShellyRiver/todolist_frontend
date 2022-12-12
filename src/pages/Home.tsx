@@ -111,13 +111,13 @@ function GroupList(props: any) {
     const handleCloseInviteCollaborator = () => setShowInviteCollaborator(false);
 
     const [showLeaveGroup, setShowLeaveGroup] = useState(false);
-    const handleCloseLeaveGroup = () => setShowLeaveGroup(false);
+    const handleCloseLeaveGroup = () => {setShowLeaveGroup(false); props.setRefreshCalender();};
 
     const [showLeaderLeaveGroup, setShowLeaderLeaveGroup] = useState(false);
-    const handleCloseLeaderLeaveGroup = () => setShowLeaderLeaveGroup(false);
+    const handleCloseLeaderLeaveGroup = () => {setShowLeaderLeaveGroup(false); props.setRefreshCalender();}
 
     const [showDeleteGroup, setShowDeleteGroup] = useState(false);
-    const handleCloseDeleteGroup = () => setShowDeleteGroup(false);
+    const handleCloseDeleteGroup = () => {setShowDeleteGroup(false); props.setRefreshCalender();}
 
     const [showDeleteMember, setShowDeleteMember] = useState(false);
     const handleCloseDeleteMember = () => setShowDeleteMember(false);

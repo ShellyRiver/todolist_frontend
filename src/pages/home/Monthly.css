@@ -1,22 +1,3 @@
-.weekTitles {
-    width: 100%;
-}
-
-.weekTitlesBox {
-    width: 100%;
-}
-
-.listGroupCol {
-    width: 100%;
-}
-
-.listGroupRow {
-    width: 100%;
-}
-
-.dateBox {
-    width: 100%;
-}
 
 .completed {
     opacity: 0.4;
@@ -26,6 +7,11 @@
     cursor: pointer;
 }
 
+#calendar {
+    margin: 15px;
+    height: 100%;
+}
+
 #calendar a {
     text-decoration: none;
     color: rgb(68, 68, 68);
@@ -33,4 +19,42 @@
 
 body {
     text-decoration: none;
+}
+
+.content {
+    height: 100% !important;
+}
+.fc-col-header, .fc-timegrid-body { 
+    width: 100% !important; 
+    height: 100% !important;
+}
+.fc-scrollgrid-sync-table { 
+    width: 100% !important; 
+    height: 100% !important;
+} 
+.fc-daygrid-body {
+    width: 100% !important;
+    height: 100% !important;
+}
+.fc-daygrid-body-balanced {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+@media screen and (max-width: 850px) {
+    .fc-header-toolbar {
+        font-size: medium;
+    }
+    .fc-header-toolbar {
+        font-size: small;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .fc-header-toolbar {
+        font-size: small;
+    }
+    .fc-header-toolbar {
+        font-size: x-small;
+    }
 }
