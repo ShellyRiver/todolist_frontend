@@ -116,13 +116,14 @@ export default function TaskInfoModal(props: any) {
             </Form>
         </Modal.Body>
         <Modal.Footer>
+            <Button variant="secondary" onClick={props.handleClose}>
+                Close
+            </Button>
             <Button variant="primary" onClick={changeTask}>
                 {/*{data.completed ? "Not Completed" : "Completed"}*/}
                 Save Changes
             </Button>
-            <Button variant="secondary" onClick={props.handleClose}>
-                Close
-            </Button>
+
         </Modal.Footer>
     </Modal>}
     </>
