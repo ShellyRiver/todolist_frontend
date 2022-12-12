@@ -51,6 +51,13 @@ function Navigator() {
     }
   },[localStorage.getItem("email"), localStorage.getItem('refreshImg')])
 
+  // useEffect(() => {
+  //   userName = localStorage.getItem("user") || "";
+  //   userJSON = JSON.parse(userName);
+  //   console.log("Inside UUUUUUUUUUUu");
+  //   console.log(userJSON);
+  // }, [localStorage.getItem("refreshNav")])
+
   async function clickSignOut(){
     const response = await signOutUser();
     if (response === true) {
