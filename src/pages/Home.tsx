@@ -23,6 +23,7 @@ import HandleDeleteGroup from "../methods/HandleDeleteGroup";
 import HandleMemberLeaveGroup from "../methods/HandleMemberLeaveGroup";
 import HandleLeaderLeaveGroup from "../methods/HandleLeaderLeaveGroup";
 import DeleteGroupMemberModal from "../components/DeleteGroupMemberModal";
+import Monthly from './home/Monthly';
 
 // different methods to manipulate a group based on the role
 // 4 roles in a group:
@@ -38,6 +39,7 @@ const homeurl = 'https://grouptodos.herokuapp.com/api'
 function Home() {
     const email = localStorage.getItem("email");
     const [showCanvas, setShowCanvas] = useState(false);
+    const [refreshCalendar, setRefreshCalendar] = useState(false);
     if (email == null || email == ""){
         return <Navigate replace to="/login" />
     }
@@ -58,10 +60,10 @@ function Home() {
                       </div>
                       <div className="content">
                             <div className="groupList">
-                                <GroupList/>
+                                <GroupList setRefreshCalender={()=>setRefreshCalendar((val)=>{return !val;})}/>
                             </div>
                             <div className="taskBoard">
-                                <Outlet />
+                                <Monthly refresh={refreshCalendar}/>
                             </div>
                       </div>
                 </div>
@@ -79,7 +81,7 @@ function Home() {
 };
 
 // the group list on the left
-function GroupList() {
+function GroupList(props: any) {
     const [group, setGroup]: [any, any] = useState([]);
     const [clickedGroup, setClickedGroup] = useState({});
     const [leadingGroup, setLeadingGroup]: [any, any] = useState([]);
@@ -88,7 +90,7 @@ function GroupList() {
     const [componentList, setComponentList] = useState([]);
 
     const [showAddTask, setShowAddTask] = useState(false);
-    const handleCloseAddTask = () => setShowAddTask(false);
+    const handleCloseAddTask = () => {setShowAddTask(false); props.setRefreshCalender();}
 
     const [showAddGroup, setShowAddGroup] = useState(false);
     const handleCloseAddGroup = () => setShowAddGroup(false);
@@ -344,21 +346,6 @@ function GroupList() {
                 <ConfirmationModal show={showLeaderLeaveGroup} title="Leave Group (Leader)" body={"Are you sure to leave this group? If you are the only leader of the group, the whole group will be delete!"} handleClose={handleCloseLeaderLeaveGroup} handleConfirm={()=>HandleLeaderLeaveGroup(leadingGroupId, clickedLeadingGroup)} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
                 <DeleteGroupMemberModal show={showDeleteMember} handleClose={handleCloseDeleteMember} groupId={leadingGroupId} data={clickedLeadingGroup} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
             </div>
-        </>
-    )
-}
-
-// navigate to monthly view or daily view
-function Navigator() {
-    return (
-        <>
-            <Navbar bg="light" variant="light">
-                <Container className="navContainer">
-                    <Nav className="me-auto">
-                        <Nav.Link href="/monthly">Monthly</Nav.Link>
-                    </Nav>
-                </Container>
-            </Navbar>
         </>
     )
 }
