@@ -8,7 +8,7 @@ import Alert from 'react-bootstrap/Alert';
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function AddTaskModal(props: any) {
-    console.log("localStorage.getItem('refresh-calendar') added a task", localStorage.getItem('refresh-calendar'))
+    // console.log("localStorage.getItem('refresh-calendar') added a task", localStorage.getItem('refresh-calendar'))
     const [errorMsg, setErrorMsg] = useState("");
     const [showErrorMsg, setShowErrorMsg] = useState(false);
     async function postTask() {
@@ -41,7 +41,7 @@ export default function AddTaskModal(props: any) {
         if (taskDescription == "") {
             delete requestBody.description;
         }
-        console.log(requestBody);
+        // console.log(requestBody);
         /* Post the user information to the backend database */
         var resp;
         try {

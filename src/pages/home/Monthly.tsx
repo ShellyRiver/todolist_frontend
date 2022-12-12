@@ -148,7 +148,7 @@ function Monthly(props: any) {
       belongingGroups = data.belongingGroups;
       leadingGroups = data.leadingGroups;
       setUserID(data._id)
-      console.log("set userID", data._id);
+      // console.log("set userID", data._id);
     }
 
     var resp1;
@@ -174,12 +174,12 @@ function Monthly(props: any) {
         });
         if (resp2 !== undefined) { 
           resp2.data.data.forEach((element:any) => {
-            console.log('element.groupName', element.name)
+            // console.log('element.groupName', element.name)
             newLeadingGroupNames.push(element.name);
             newLeadingGroupIDs.push(element._id);
             newLeadingTaskIDs = newLeadingTaskIDs.concat(element.groupTasks);
-            console.log('leading task num', element.groupTasks.length)
-            console.log('element.groupTasks', element.groupTasks)
+            // console.log('leading task num', element.groupTasks.length)
+            // console.log('element.groupTasks', element.groupTasks)
             // console.log('leading task num', newLeadingGroupTaskNums)
           });
         }
@@ -192,8 +192,8 @@ function Monthly(props: any) {
 
     // console.log("newIndividualTaskIDs", newIndividualTaskIDs);
     // console.log("newBelongingTaskIDs", newBelongingTaskIDs);
-    console.log("newLeadingTaskIDs", newLeadingTaskIDs);
-    console.log("newLeadingGroupIDs", newLeadingGroupIDs);
+    // console.log("newLeadingTaskIDs", newLeadingTaskIDs);
+    // console.log("newLeadingGroupIDs", newLeadingGroupIDs);
 
     setIndividualTaskIDs(newIndividualTaskIDs);
     setBelongingTaskIDs(newBelongingTaskIDs);

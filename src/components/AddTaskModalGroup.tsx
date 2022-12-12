@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import home from "../pages/Home";
+import {updateUser} from "./updateUser";
 
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
@@ -89,6 +90,18 @@ export default function AddTaskModalGroup(props: any) {
                     'operation': "add"
                 }
             })
+            await updateUser(props.setReload);
+            // if (localStorage.getItem("refreshNav")) {
+            //     if (localStorage.getItem("refreshNav") === 'true') {
+            //         localStorage.setItem("refreshNav", 'false');
+            //     }
+            //     else {
+            //         localStorage.setItem("refreshNav", 'true');
+            //     }
+            // }
+            // else {
+            //     localStorage.setItem("refreshNav", 'true');
+            // }
             props.handleClose();
         }
         catch (e) {

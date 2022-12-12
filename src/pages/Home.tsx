@@ -131,7 +131,7 @@ function GroupList(props: any) {
     const [leadingGroupIndex, setLeadingGroupIndex] = useState(-1);
 
     useEffect(()=>{
-        console.log(`Inside useEffect: ${reloadGroup}`)
+        // console.log(`Inside useEffect: ${reloadGroup}`)
         const userString = localStorage.getItem("user");
         // console.log(userString);
         const userJSON = JSON.parse(userString || "");
@@ -310,14 +310,14 @@ function GroupList(props: any) {
                         setGroupId(group[Number(eventKey)-leadingGroup.length]._id);
                         setClickedGroup(group[Number(eventKey)-leadingGroup.length]);
                         setGroupIndex(Number(eventKey)-leadingGroup.length);
-                        console.log("Clicking the membership group");
-                        console.log(eventKey);
+                        // console.log("Clicking the membership group");
+                        // console.log(eventKey);
                     }
                     else {
                         setLeadingGroupId(leadingGroup[eventKey]._id);
                         setClickedLeadingGroup(leadingGroup[eventKey]);
                         setLeadingGroupIndex(eventKey);
-                        console.log("Clicking the leading group");
+                        // console.log("Clicking the leading group");
                     }
                 }
                 catch (e) {}
@@ -334,7 +334,7 @@ function GroupList(props: any) {
             <div className="modal">
                 <AddTaskModal show={showAddTask} handleClose={handleCloseAddTask}/>
                 <AddGroupModal show={showAddGroup} handleClose={handleCloseAddGroup} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
-                <AddTaskModalGroup show={showAddTaskGroup} handleClose={handleCloseAddTaskGroup} groupId={leadingGroupId}/>
+                <AddTaskModalGroup show={showAddTaskGroup} handleClose={handleCloseAddTaskGroup} groupId={leadingGroupId} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
                 <GroupInfoModal show={showGroupInfo} handleClose={handleCloseGroupInfo} data={clickedGroup}/>
                 <GroupInfoModal show={showLeadingGroupInfo} handleClose={handleCloseLeadingGroupInfo} data={clickedLeadingGroup}/>
                 <InviteCollaboratorModal show={showInviteCollaborator} handleClose={handleCloseInviteCollaborator} data={clickedLeadingGroup} groupId={leadingGroupId} setReload={()=>setReloadGroup((counter)=>{return counter+1;})}/>
