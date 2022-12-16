@@ -20,7 +20,6 @@ export default function GroupInfoModal(props: any) {
         /* Only run the function is props.show is true */
         setShowMySelf(props.show);
         if (props.show === true) {
-            var peopleIds: any = [];
             if (data.leaders && data.leaders.length > 0) {
                 axios({
                     method: "get",

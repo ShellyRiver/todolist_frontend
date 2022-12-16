@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import React, {useState} from "react";
+import {useState} from "react";
 import Button from 'react-bootstrap/Button';
 import './ChangeImageModal.css';
 import {updateUser} from "./updateUser";
@@ -18,8 +18,8 @@ export default function ChangeImageModal(props: any) {
         // @ts-ignore
         const newImage = document.getElementById("new-profile-image").files[0];
         const windowURL = window.URL || window.webkitURL;
-        const img = document.getElementById('preview');　　
-        if(newImage) {　　
+        const img = document.getElementById('preview');
+        if(newImage) {
             const dataURl = windowURL.createObjectURL(newImage);
             // @ts-ignore
             img.setAttribute('src',dataURl);
@@ -106,7 +106,7 @@ export default function ChangeImageModal(props: any) {
                             </Form.Group>
                         }
                     </Form>
-                    <div className="image-container"><img id='preview' src="" hidden={!showPreview}/></div>
+                    <div className="image-container"><img id='preview' src="" alt="preview img" hidden={!showPreview}/></div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={()=>{setShowPreview(false); props.handleClose()}}>

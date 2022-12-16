@@ -1,5 +1,5 @@
 import {Navigate} from "react-router-dom";
-import React, { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import Unknown from '../imgs/unknown.png';
 import './Profile.css';
 import Button from 'react-bootstrap/Button';
@@ -8,7 +8,6 @@ import axios from "axios";
 import GroupInfoModal from "../components/GroupInfoModal";
 import ChangeProfileModal from "../components/ChangeProfileModal";
 import ChangeImageModal from "../components/ChangeImageModal";
-import Form from "react-bootstrap/Form";
 
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
@@ -27,9 +26,9 @@ function Profile() {
   const [reloadUser, setReloadUser] = useState(0);
   const handleCloseGroupInfo = () => setShowGroupInfo(false);
   const handleCloseLeadingGroupInfo = () => setShowLeadingGroupInfo(false);
-  var imageURL;
 
   useEffect(()=>{
+      var imageURL;
       userString = localStorage.getItem("user");
       userJSON = JSON.parse(userString || "");
       if (userJSON) {
@@ -60,7 +59,7 @@ function Profile() {
       }
   },[reloadUser])
 
-  if (email == null || email == ""){
+  if (email == null || email === ""){
       return <Navigate replace to="/login" />
   }
   // @ts-ignore

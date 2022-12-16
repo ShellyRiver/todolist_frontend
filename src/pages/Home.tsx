@@ -1,14 +1,12 @@
 import './Home.css'
 import axios from "axios";
 import add from '../imgs/add.png';
-import { Outlet, Link } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
 import Accordion from 'react-bootstrap/Accordion';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
-import React, { useEffect } from 'react';
+import {useEffect} from 'react';
 import {useState} from 'react';
 import {Offcanvas} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
@@ -40,7 +38,7 @@ function Home() {
     const email = localStorage.getItem("email");
     const [showCanvas, setShowCanvas] = useState(false);
     const [refreshCalendar, setRefreshCalendar] = useState(false);
-    if (email == null || email == ""){
+    if (email == null || email === ""){
         return <Navigate replace to="/login" />
     }
     else{

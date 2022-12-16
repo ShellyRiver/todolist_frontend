@@ -1,6 +1,4 @@
-import axios from 'axios';
-import { BrowserRouter, Routes, Route, Link, Outlet, Navigate, useNavigate, useParams, HashRouter} from "react-router-dom";
-import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route} from "react-router-dom";
 import { useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,7 +8,7 @@ import Home from "./pages/Home";
 import Message from './pages/Message';
 import Profile from './pages/Profile';
 import Auth from './pages/Auth';
-import {AuthContext} from './context/authContext';
+import {AuthContext} from './components/authContext';
 import NotFound from "./pages/NotFound";
 
 /* 

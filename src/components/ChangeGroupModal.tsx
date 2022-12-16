@@ -8,7 +8,6 @@ import {updateUser} from "./updateUser";
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function ChangeGroupModal(props: any) {
-    const data = props.data;
     async function changeGroup() {
         // @ts-ignore
         var newName = (document.getElementById("new-group-name") ? document.getElementById("new-group-name").value : null);
@@ -18,10 +17,10 @@ export default function ChangeGroupModal(props: any) {
             'name': newName,
             'description': newDescription
         };
-        if (newName == props.data.name || newName == "") {
+        if (newName === props.data.name || newName === "") {
             delete requestBody.name;
         }
-        if (newDescription == props.data.description || newDescription == "") {
+        if (newDescription === props.data.description || newDescription === "") {
             newDescription = null;
             delete requestBody.description;
         }

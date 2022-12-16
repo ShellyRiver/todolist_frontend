@@ -7,7 +7,6 @@ import axios from "axios";
 
 // Your web app's Firebase configuration
 import {firebaseConfig} from "./secret";
-import alert from "bootstrap/js/src/alert";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -48,7 +47,7 @@ export async function signUp() {
             }
         }
         try {
-            const response = await axios({
+            await axios({
                 method: "post",
                 url: `${homeurl}/users`,
                 data: {

@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import React, {useState} from "react";
+import {useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import {updateUser} from "./updateUser";
@@ -16,7 +16,7 @@ export default function AddGroupModal(props: any) {
         var groupName = (document.getElementById("group-name-new") ? document.getElementById("group-name-new").value : "");
         // @ts-ignore
         var groupDescription = (document.getElementById("group-description-new") ? document.getElementById("group-description-new").value : "");
-        if (groupName == "") {
+        if (groupName === "") {
             setErrorMsg("Group name cannot be empty!")
             setShowErrorMsg(true);
             return;
@@ -30,7 +30,7 @@ export default function AddGroupModal(props: any) {
             'name': groupName,
             'description': groupDescription
         };
-        if (groupDescription == "") {
+        if (groupDescription === "") {
             delete requestBody.description;
         }
         /* Post the group information to the backend database */

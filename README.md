@@ -2,6 +2,10 @@
 The leader can assign tasks to group members.
 The group members can view and manipulate their individual tasks and assigned tasks.
 
+```
+npm install
+```
+
 # React Bootstrap
 https://react-bootstrap.github.io/components/alerts/
 

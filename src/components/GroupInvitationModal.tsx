@@ -78,15 +78,15 @@ export default function GroupInvitationModal(props: any) {
             console.log(e);
         }
         try {
-            var requestBody;
+            var requestBody_2;
             if (props.role === 'member') {
-                requestBody = {
+                requestBody_2 = {
                     'belongingGroups': data._id,
                     'operation': 'add',
                 }
             }
             else {
-                requestBody = {
+                requestBody_2 = {
                     'leadingGroups': data._id,
                     'operation': 'add',
                 }
@@ -94,7 +94,7 @@ export default function GroupInvitationModal(props: any) {
             await axios({
                 method: "patch",
                 url: `${homeurl}/users/${userJSON._id}`,
-                data: requestBody
+                data: requestBody_2
             })
             await updateUser(props.handleReload);
             closeAcceptConfirm();

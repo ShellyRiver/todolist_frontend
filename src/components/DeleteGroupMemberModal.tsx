@@ -10,30 +10,31 @@ const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function DeleteGroupMemberModal(props: any) {
     const [errorMsg, setErrorMsg] = useState("");
-    const [groupInfo, setGroupInfo] = useState({
-        leaders: undefined,
-        members: undefined
-    });
     const [groupMemberInfo, setGroupMemberInfo] = useState([]);
     const [showErrorMsg, setShowErrorMsg] = useState(false);
     async function deleteMember() {
         // @ts-ignore
         var deletedMember = (document.getElementById("deleted-member") ? document.getElementById("deleted-member").value : "");
+        if (deletedMember === "") {
+            setErrorMsg("No member in the group!");
+            setShowErrorMsg(true);
+            return;
+        }
         var memberType;
         for (let i = 0; i <  props.data.members.length; i++) {
-            if ( props.data.members[i] == deletedMember){
+            if ( props.data.members[i] === deletedMember){
                 memberType = "member";
                 break;
             }
         }
         for (let i = 0; i <  props.data.pendingMembers.length; i++) {
-            if ( props.data.pendingMembers[i] == deletedMember){
+            if ( props.data.pendingMembers[i] === deletedMember){
                 memberType = "pendingMember";
                 break;
             }
         }
         var requestBody;
-        if (memberType == "member") {
+        if (memberType === "member") {
             requestBody = {
                 'members': deletedMember,
                 'operation': 'remove'
@@ -61,7 +62,7 @@ export default function DeleteGroupMemberModal(props: any) {
     }
     useEffect(()=>{
         /* Get the information of all members and pendingMembers*/
-        if (props.show == true) {
+        if (props.show === true) {
             const members = props.data.members;
             const pendingMembers = props.data.pendingMembers;
             const allMembers = members.concat(pendingMembers);

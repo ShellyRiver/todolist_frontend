@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import './UserInfoModal.css';
 const homeurl = 'https://grouptodos.herokuapp.com/api'
@@ -28,7 +28,7 @@ export default function UserInfoModal(props: any) {
     }, [props.show])
 
     return (<>
-            <Modal show={props.show} onHide={props.handleClose}>
+    <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
             <Modal.Title>User Information</Modal.Title>
         </Modal.Header>

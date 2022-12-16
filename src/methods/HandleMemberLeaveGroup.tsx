@@ -1,7 +1,4 @@
 import axios from "axios";
-import React, {useState} from "react";
-import home from "../pages/Home";
-
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default async function HandleMemberLeaveGroup(groupId: any) {

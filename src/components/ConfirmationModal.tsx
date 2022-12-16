@@ -1,7 +1,5 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import ListGroup from "react-bootstrap/ListGroup";
-import React from "react";
 import Button from "react-bootstrap/Button";
 import {updateUser} from "./updateUser";
 
