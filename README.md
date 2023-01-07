@@ -28,3 +28,12 @@ npm start
 ```
 then the project will be hosted on ```localhost:3000/grouptodo```.
 
+
+## Application Pages
+<img src='public/login.png'/>
+
+<img src='public/calendar-month.png'/>
+
+<img src='public/calendar-list.png'/>
+
+<img src='public/profile.png'/>
