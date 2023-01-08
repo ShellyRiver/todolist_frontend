@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 
@@ -95,8 +95,6 @@ export default function TaskInfoModal(props: any) {
 
                 <Form.Group className="mb-3">
                     <Form.Label>Task Status</Form.Label>
-                            {/*{data.completed ? "Completed" : "Not completed"}*/}
-                            {/*{data.endTime}*/}
                             <Form.Select aria-label="Default select example" id="new-task-status-calendar" defaultValue={data.completed ? "complete" : "incomplete"}>
                                 <option key={"complete"} value={"complete"}>Complete</option>
                                 <option key={"incomplete"} value={"incomplete"}>Incomplete</option>
@@ -120,10 +118,8 @@ export default function TaskInfoModal(props: any) {
                 Close
             </Button>
             <Button variant="primary" onClick={changeTask}>
-                {/*{data.completed ? "Not Completed" : "Completed"}*/}
                 Save Changes
             </Button>
-
         </Modal.Footer>
     </Modal>}
     </>

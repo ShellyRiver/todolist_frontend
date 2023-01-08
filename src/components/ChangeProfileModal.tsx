@@ -1,13 +1,11 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import React from "react";
 import Button from 'react-bootstrap/Button';
 
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function ChangeProfileModal(props: any) {
-    const data = props.data;
     async function changeProfile() {
 
         // @ts-ignore
@@ -18,16 +16,15 @@ export default function ChangeProfileModal(props: any) {
             'name': newName,
             'description': newDescription
         };
-        if (newName == props.data.name || newName == "") {
+        if (newName === props.data.name || newName === "") {
             delete requestBody.name;
         }
-        if (newDescription == props.data.description || newDescription == "") {
+        if (newDescription === props.data.description || newDescription === "") {
             newDescription = null;
             delete requestBody.description;
         }
         /* Update the profile to the backend database */
         try {
-            // console.log(`${homeurl}/users/${props.data._id}`);
             await axios({
                 method: "put",
                 url: `${homeurl}/users/${props.data._id}`,
@@ -44,7 +41,6 @@ export default function ChangeProfileModal(props: any) {
                 url: `${homeurl}/users/${props.data._id}`
             });
             localStorage.setItem('user', JSON.stringify(response.data.data[0]));
-            // console.log(response.data.data[0]);
             props.handleClose();
         }
         catch (e) {
@@ -54,7 +50,6 @@ export default function ChangeProfileModal(props: any) {
 
 
     }
-    // console.log(data);
     // @ts-ignore
     return (
         <>

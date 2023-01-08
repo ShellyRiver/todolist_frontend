@@ -2,6 +2,7 @@
   "name": "todolist_frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage" : "http://localhost:3000/grouptodo",
   "dependencies": {
     "@fullcalendar/adaptive": "^5.11.3",
     "@fullcalendar/core": "^5.11.3",

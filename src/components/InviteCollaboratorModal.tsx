@@ -2,7 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';import ListGroup from "react-bootstrap/ListGroup";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import Alert from "react-bootstrap/Alert";
@@ -26,7 +26,7 @@ export default function InviteCollaboratorModal(props: any) {
         var invitedRole = document.getElementById('invited-role').value;
         // Check if the given email is already in the group
         for (let i = 0; i < memberEmails.length; i++) {
-            if (memberEmails[i] == invitedCollaborator) {
+            if (memberEmails[i] === invitedCollaborator) {
                 setShowErrorMsg(true);
                 setErrorMsg("The user is already in the group!");
                 return;
@@ -86,7 +86,6 @@ export default function InviteCollaboratorModal(props: any) {
         if (props.show === true) {
             setShowErrorMsg(false);
             setMemberEmails([]);
-            var peopleIds: any = [];
             if (data.leaders && data.leaders.length > 0) {
                 axios({
                     method: "get",

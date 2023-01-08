@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import {Navigate} from "react-router-dom";
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from "axios";
@@ -38,11 +38,8 @@ function Message() {
 
   const email = localStorage.getItem("email");
   const [invitingGroupInfo, setInvitingGroupInfo] = useState([]);
-  const [invitingGroupImages, setInvitingGroupImages] = useState([]);
   const [invitingLeadingGroupInfo, setInvitingLeadingGroupInfo] = useState([]);
-  const [invitingLeadingGroupImages, setInvitingLeadingGroupImages] = useState([]);
   const [unreadTaskInfo, setUnreadTaskInfo] = useState([]);
-  const [unreadTaskImages, setUnreadTaskImages] = useState([]);
   const [showGroupInfo, setShowGroupInfo] = useState(false);
   const [showTaskInfo, setShowTaskInfo] = useState(false);
   const handleCloseGroupInfo = () => setShowGroupInfo(false);
@@ -63,8 +60,6 @@ function Message() {
           url: `${homeurl}/groups?where={"_id": {"$in": ${JSON.stringify(userJSON.invitingGroups)}}}`
         }).then((response) => {
           setInvitingGroupInfo(response.data.data);
-          // @ts-ignore
-          setInvitingGroupImages(Array.from({length: response.data.data.length}, ()=>""));
         })
       } else {
         setInvitingGroupInfo([]);
@@ -145,7 +140,7 @@ function Message() {
     }
   }, [unreadTaskInfo])
 
-  if (email == null || email == ""){
+  if (email == null || email === ""){
       return <Navigate replace to="/login" />
   }
 

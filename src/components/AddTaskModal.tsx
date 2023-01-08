@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import React, {useState} from "react";
+import {useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
@@ -18,12 +18,12 @@ export default function AddTaskModal(props: any) {
         var taskDescription = (document.getElementById("task-description-new") ? document.getElementById("task-description-new").value : "");
         // @ts-ignore
         var taskDeadline = (document.getElementById("task-deadline-new") ? document.getElementById("task-deadline-new").value : "");
-        if (taskName == "") {
+        if (taskName === "") {
             setErrorMsg("Task name cannot be empty!")
             setShowErrorMsg(true);
             return;
         }
-        else if (taskDeadline == "") {
+        else if (taskDeadline === "") {
             setErrorMsg("Task deadline cannot be empty!")
             setShowErrorMsg(true);
             return
@@ -38,7 +38,7 @@ export default function AddTaskModal(props: any) {
             'description': taskDescription,
             'endTime': taskDeadline,
         };
-        if (taskDescription == "") {
+        if (taskDescription === "") {
             delete requestBody.description;
         }
         // console.log(requestBody);

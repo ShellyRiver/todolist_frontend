@@ -1,20 +1,15 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
-import home from "../pages/Home";
 import {updateUser} from "./updateUser";
 
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 export default function AddTaskModalGroup(props: any) {
     const [errorMsg, setErrorMsg] = useState("");
-    const [groupInfo, setGroupInfo] = useState({
-        leaders: undefined,
-        members: undefined
-    });
     const [groupMemberInfo, setGroupMemberInfo] = useState([]);
     const [showErrorMsg, setShowErrorMsg] = useState(false);
     async function postTask() {
@@ -26,12 +21,12 @@ export default function AddTaskModalGroup(props: any) {
         var taskDeadline = (document.getElementById("task-deadline-new-group") ? document.getElementById("task-deadline-new-group").value : "");
         // @ts-ignore
         var taskMember = (document.getElementById("task-member-new-group") ? document.getElementById("task-member-new-group").value : "");
-        if (taskName == "") {
+        if (taskName === "") {
             setErrorMsg("Task name cannot be empty!")
             setShowErrorMsg(true);
             return;
         }
-        else if (taskDeadline == "") {
+        else if (taskDeadline === "") {
             setErrorMsg("Task deadline cannot be empty!")
             setShowErrorMsg(true);
             return;
@@ -44,7 +39,7 @@ export default function AddTaskModalGroup(props: any) {
             'description': taskDescription,
             'endTime': taskDeadline,
         };
-        if (taskDescription == "") {
+        if (taskDescription === "") {
             delete requestBody.description;
         }
         /* Post the task information to the backend database */
@@ -91,17 +86,6 @@ export default function AddTaskModalGroup(props: any) {
                 }
             })
             await updateUser(props.setReload);
-            // if (localStorage.getItem("refreshNav")) {
-            //     if (localStorage.getItem("refreshNav") === 'true') {
-            //         localStorage.setItem("refreshNav", 'false');
-            //     }
-            //     else {
-            //         localStorage.setItem("refreshNav", 'true');
-            //     }
-            // }
-            // else {
-            //     localStorage.setItem("refreshNav", 'true');
-            // }
             props.handleClose();
         }
         catch (e) {
@@ -112,12 +96,11 @@ export default function AddTaskModalGroup(props: any) {
         }
     }
     useEffect(()=>{
-        if (props.show == true) {
+        if (props.show === true) {
             axios({
                 method: "get",
                 url: `${homeurl}/groups/${props.groupId}`
             }).then(r => {
-                setGroupInfo(r.data.data[0]);
                 const members = r.data.data[0].members;
                 const leaders = r.data.data[0].leaders;
                 const allUsers = members.concat(leaders);

@@ -1,54 +1,39 @@
 # CS 409 final project: GroupTODO
-The leader can assign tasks to group members.
-The group members can view and manipulate their individual tasks and assigned tasks.
+People like to use todolist too plan and manage tasks to improve work efficiency. Currently, most todolists in the market are designed for individuals. However, people usually play different roles in various groups, so it would be helpful to have a todolist suitable for group collaboration, in which group leaders can assign tasks to group members, and every user can check both their personal tasks and assigned group tasks in a single web application.
 
-# React Bootstrap
-https://react-bootstrap.github.io/components/alerts/
+A video demonstration of this web application can be found on [Youtube](https://youtu.be/LsAwws9SEzo).
 
 
-# Getting Started with Create React App
+## How to Run the Code
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+First install all the dependencies.
+```
+npm install
+```
 
-## Available Scripts
+Add your **own** Firebase user authentication project information as a file ```src/authentication/secret.js```. The content of the file should look like something below:
+```
+export const firebaseConfig = {
+    apiKey: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    authDomain: "project-123.firebaseapp.com",
+    projectId: "project-123",
+    storageBucket: project-123.appspot.com",
+    messagingSenderId: "1234567890",
+    appId: "1:1234567890:web:12345678901234567890"
+};
+```
+Then you can start running the code by running
+```
+npm start
+```
+then the project will be hosted on ```localhost:3000/grouptodo```.
 
-In the project directory, you can run:
 
-### `npm start`
+## Application Pages
+<img src='public/login.png'/>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<img src='public/calendar-month.png'/>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<img src='public/calendar-list.png'/>
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+<img src='public/profile.png'/>

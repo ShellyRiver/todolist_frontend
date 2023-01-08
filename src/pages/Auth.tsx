@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
-import React, {useState } from 'react';
-import {signUp, signIn, signOutUser, changeToRegister} from '../authentication/auth'
+import {useState } from 'react';
+import {signUp, signIn, changeToRegister} from '../authentication/auth'
 import Form from 'react-bootstrap/Form';
 import './Auth.css';
 import logo from '../imgs/group-todo-logo.png';

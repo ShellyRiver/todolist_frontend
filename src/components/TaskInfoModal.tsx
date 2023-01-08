@@ -1,7 +1,7 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import {updateUser} from "./updateUser";
@@ -27,7 +27,6 @@ export default function TaskInfoModal(props: any) {
                 }
             });
             await updateUser(props.handleReload);
-            // props.handleReload();
             props.handleClose();
         }
         catch (e) {

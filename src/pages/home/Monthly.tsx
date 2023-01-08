@@ -1,59 +1,36 @@
-
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-
+import {useEffect} from 'react';
+import {useState} from 'react';
 import './Monthly.css'
-// import '../../components/canlendar';
-import {Calendar, constrainPoint} from "@fullcalendar/core";
+import {Calendar} from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
-
 import axios from "axios";
-
 import TaskModal from "./TaskModal";
-import { readBuilderProgram } from 'typescript';
-
-
 const COLORSLEADING = ['rgb(255,77,106)', 'rgb(7,160,195)', 'rgb(220,120,220)', 'rgb(107,100,190)', 'rgb(255,166,77)', 'rgb(100,100,100)', 'rgb(0,128,153)', 'rgb(0,153,51)', 'rgb(20,10,92)', 'rgb(51,0,153)', 'rgb(0,102,100)', 'rgb(100,32,102)', 'rgb(85,128,0)', 'rgb(128,85,0)', 'rgb(70,0,1)', 'rgb(93,138,168)']
 const COLORSBELONGING = ['rgb(161,206,230)', 'rgb(165,165,235)', 'rgb(200,201,50)', 'rgb(220,165,176)', 'rgb(20,88,20)', 'rgb(90,150,150)', 'rgb(151,227,136)', 'rgb(138,230,184)', 'rgb(13,201,235)', 'rgb(255,238,153)', 'rgb(235,187,153)', 'rgb(255,199,221)', 'rgb(188,196,191)']
 const INDIVIDUAL = 'rgba(77,136,255,0.8)'
 const WHITE = 'rgb(255,255,255)'
-
 const homeurl = 'https://grouptodos.herokuapp.com/api'
 
 function Monthly(props: any) {
-
   const email = localStorage.getItem("email");
-
   const [userID, setUserID] = useState(undefined);
-  
   const [individualTaskIDs, setIndividualTaskIDs] = useState([]);
   const [belongingTaskIDs, setBelongingTaskIDs] = useState([]);
   const [leadingTaskIDs, setLeadingTaskIDs] = useState([]);
-  const [individualTaskInfo, setIndividualTaskInfo] = useState([]);
-  const [belongingTaskInfo, setBelongingTaskInfo] = useState([]);
-  const [leadingTaskInfo, setLeadingTaskInfo] = useState([]);
-
   const [belongingResources, setBelongingResources] = useState<any>([]);
   const [leadingResources, setLeadingResources] = useState<any>([]);
   const [individualEvents, setIndividualEvents] = useState<any>([]);
   const [belongingEvents, setBelongingEvents] = useState<any>([]);
   const [leadingEvents, setLeadingEvents] = useState<any>([]);
-
-  const [belongingGroupNames, setBelongingGroupNames] = useState<any>([]);
-  const [leadingGroupNames, setLeadingGroupNames] = useState<any>([]);
-
   const [belongingGroupIDs, setBelongingGroupIDs] = useState<any>([]);
   const [leadingGroupIDs, setLeadingGroupIDs] = useState<any>([]);
-
   const [showTask, setShowTask] = useState(false);
   const handleCloseTask = () => setShowTask(false);
-
   const [clickedTask, setClickedTask] = useState({});
-
   const [toggledComplete, setToggledComplete] = useState(0);
 
   useEffect(() => {
@@ -92,9 +69,7 @@ function Monthly(props: any) {
       windowResize: function(arg) {
         calendar.updateSize();
       },
-
       eventClick: function(info) {
-        
         axios({
           method: "get",
           url: `${homeurl}/tasks/${info.event.id}`
@@ -102,7 +77,6 @@ function Monthly(props: any) {
           setClickedTask(r.data.data[0])
           setShowTask(true)
         })
-        
       },      
     });
 
@@ -110,18 +84,14 @@ function Monthly(props: any) {
     
   }, [individualEvents, belongingEvents, leadingEvents]);
 
-
   async function __updateTaskIDs() {
     let newIndividualTaskIDs: any = [];
     let newBelongingTaskIDs: any = [];
     let newLeadingTaskIDs: any = [];
-
     let newBelongingGroupNames: any = [];
     let newLeadingGroupNames: any = [];
-
     let newBelongingGroupIDs: any = [];
     let newLeadingGroupIDs: any = [];
-    
     var resp;
     try {
         resp = await axios({
@@ -132,7 +102,6 @@ function Monthly(props: any) {
     catch (e: any) {
         // @ts-ignore
     }
-
     let belongingGroups: any;
     let leadingGroups: any;
 
@@ -143,13 +112,9 @@ function Monthly(props: any) {
       data.individualTasks.forEach((element:any) => {
         newIndividualTaskIDs.push(element);
       });
-
-      // console.log("newIndividualTaskIDs", newIndividualTaskIDs);
-
       belongingGroups = data.belongingGroups;
       leadingGroups = data.leadingGroups;
       setUserID(data._id)
-      // console.log("set userID", data._id);
     }
 
     var resp1;
@@ -175,13 +140,9 @@ function Monthly(props: any) {
         });
         if (resp2 !== undefined) { 
           resp2.data.data.forEach((element:any) => {
-            // console.log('element.groupName', element.name)
             newLeadingGroupNames.push(element.name);
             newLeadingGroupIDs.push(element._id);
             newLeadingTaskIDs = newLeadingTaskIDs.concat(element.groupTasks);
-            // console.log('leading task num', element.groupTasks.length)
-            // console.log('element.groupTasks', element.groupTasks)
-            // console.log('leading task num', newLeadingGroupTaskNums)
           });
         }
       }
@@ -190,22 +151,11 @@ function Monthly(props: any) {
     catch (e: any) {
         // @ts-ignore
     }
-
-    // console.log("newIndividualTaskIDs", newIndividualTaskIDs);
-    // console.log("newBelongingTaskIDs", newBelongingTaskIDs);
-    // console.log("newLeadingTaskIDs", newLeadingTaskIDs);
-    // console.log("newLeadingGroupIDs", newLeadingGroupIDs);
-
     setIndividualTaskIDs(newIndividualTaskIDs);
     setBelongingTaskIDs(newBelongingTaskIDs);
     setLeadingTaskIDs(newLeadingTaskIDs);
-
-    setBelongingGroupNames(newBelongingGroupNames);
-    setLeadingGroupNames(newLeadingGroupNames);
-
     setBelongingGroupIDs(newBelongingGroupIDs);
     setLeadingGroupIDs(newLeadingGroupIDs);
-
   }
 
   async function __updateTaskInfo() {
@@ -217,10 +167,6 @@ function Monthly(props: any) {
     setIndividualEvents([])
     setBelongingEvents([])
     setLeadingEvents([])
-
-    // console.log("IndividualTaskIDs", individualTaskIDs);
-    // console.log("BelongingTaskIDs", belongingTaskIDs);
-    // console.log("LeadingTaskIDs", leadingTaskIDs);
 
     try {
       if (individualTaskIDs.length > 0) {
@@ -244,7 +190,6 @@ function Monthly(props: any) {
           method: "get",
           url: `${homeurl}/tasks?where={"_id": {"$in": ${JSON.stringify(leadingTaskIDs)}}}&select={"name": 1, "description": 1, "endTime": 1, "completed": 1, "assignedGroup": 1, "assignedUsers": 1}`
         });
-        // console.log('response.data.data', response.data.data)
         newLeadingTaskInfo = newLeadingTaskInfo.concat(response.data.data);
         __updateLeadingGroupEvents(newLeadingTaskInfo);
       }
@@ -252,22 +197,12 @@ function Monthly(props: any) {
     catch (e: any) {
         // @ts-ignore
     }
-
-    // console.log("newIndividualTaskInfo", newIndividualTaskInfo);
-    // console.log("newBelongingTaskInfo", newBelongingTaskInfo);
-    // console.log("newLeadingTaskInfo", newLeadingTaskInfo);
-
-    setIndividualTaskInfo(newIndividualTaskInfo);
-    setBelongingTaskInfo(newBelongingTaskInfo);
-    setLeadingTaskInfo(newLeadingTaskInfo);
-
   }
 
   function __updateIndividualEvents(taskInfo: any) {
     let events: any = [];
 
     taskInfo.forEach((element:any) => {
-      // console.log("element", element.name, element.endTime)
       if (element.completed) {
         events.push({
           id: element._id,
@@ -286,20 +221,13 @@ function Monthly(props: any) {
         })
       }
     })
-
-    // console.log("individual events", events);
     setIndividualEvents(events);
   }
 
   function __updateLeadingGroupEvents(taskInfo: any) {
     let resources: any = [];
     let events: any = [];
-
     let count = 0;
-
-    // console.log("taskinfo", taskInfo)
-    // console.log('leadingGroupNames', leadingGroupNames)
-
     leadingGroupIDs.forEach((element:any) => {
       resources.push({
         id: element,
@@ -309,8 +237,6 @@ function Monthly(props: any) {
       })
       count ++;
     });
-
-    ////////////////////// TODO: set completed task style
     taskInfo.forEach((element:any) => {
       if (element.assignedUsers[0] === userID) {
         if (element.completed) {
@@ -332,18 +258,14 @@ function Monthly(props: any) {
         }
       }
     });
-
     setLeadingResources(resources)
     setLeadingEvents(events)
-
   }
 
   function __updateBelongingGroupEvents(taskInfo: any) {
     let resources: any = [];
     let events: any = [];
-
     let count = 0;
-
     belongingGroupIDs.forEach((element:any) => {
       resources.push({
         id: element,
@@ -375,10 +297,8 @@ function Monthly(props: any) {
         }
       }
     });
-
     setBelongingResources(resources)
     setBelongingEvents(events)
-
   }
   
   return (
